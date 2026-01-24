@@ -33,7 +33,7 @@ curl -sSL https://raw.githubusercontent.com/OMIXEC/Claude-ADK-Skills/main/instal
 
 ```bash
 # Clone the repository
-git clone git@github.com:OMIXEC/Claude-ADK-Skills.git ~/.claude-adk-skills
+git clone [github.com:OMIXEC/Claude-ADK-Skills.git ~/.claude-adk-skills](https://github.com/OMIXEC/Claude-ADK-Skills.git)
 
 # Install dependencies
 cd ~/.claude-adk-skills
