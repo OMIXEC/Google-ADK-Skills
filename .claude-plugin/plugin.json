@@ -1,0 +1,266 @@
+{
+  "name": "claude-adk-skills",
+  "displayName": "Claude ADK Skills - Unified Agent Builder",
+  "version": "2.0.0",
+  "description": "Comprehensive Claude Code plugin for building, orchestrating, and deploying advanced AI agents using Google's ADK with multi-agent support, LangGraph, LiteLLM, and MCP integration.",
+  "author": {
+    "name": "OMIXEC",
+    "email": "omixec@example.com",
+    "url": "https://github.com/OMIXEC"
+  },
+  "homepage": "https://github.com/OMIXEC/Claude-ADK-Skills",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OMIXEC/Claude-ADK-Skills.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "agents",
+    "adk",
+    "google-adk",
+    "multi-agent",
+    "orchestration",
+    "langgraph",
+    "rag",
+    "vector-search",
+    "voice-ai",
+    "llm",
+    "gemini",
+    "autonomous-agents",
+    "bidi-streaming",
+    "mcp"
+  ],
+  "skills": {
+    "directory": "skills",
+    "autoDiscovery": true,
+    "definitions": [
+      {
+        "id": "adk-quick-start",
+        "file": "adk-quick-start/SKILL.md",
+        "triggers": [
+          "what can I build",
+          "I want to create an agent",
+          "tell me about ADK",
+          "agent builder guide",
+          "ADK quick start"
+        ],
+        "category": "Discovery",
+        "priority": "high"
+      },
+      {
+        "id": "adk-simple-agents",
+        "file": "adk-simple-agents/SKILL.md",
+        "triggers": [
+          "build a fitness coach",
+          "create a researcher",
+          "make a teaching assistant",
+          "simple agent template",
+          "pre-built agent",
+          "domain expert agent"
+        ],
+        "category": "Agent Development",
+        "priority": "high"
+      },
+      {
+        "id": "adk-custom-agent-builder",
+        "file": "adk-custom-agent-builder/SKILL.md",
+        "triggers": [
+          "build a custom agent",
+          "design an agent from scratch",
+          "create a specialized agent",
+          "agent architecture",
+          "adaptive agent builder"
+        ],
+        "category": "Agent Development",
+        "priority": "high"
+      },
+      {
+        "id": "adk-multi-agent-workflows",
+        "file": "adk-multi-agent-workflows/SKILL.md",
+        "triggers": [
+          "multi-agent system",
+          "agent coordination",
+          "agent team",
+          "orchestration patterns",
+          "langgraph workflow",
+          "agent workflow"
+        ],
+        "category": "Orchestration",
+        "priority": "high"
+      },
+      {
+        "id": "adk-knowledge-systems",
+        "file": "adk-knowledge-systems/SKILL.md",
+        "triggers": [
+          "build RAG",
+          "vector search",
+          "agent memory",
+          "knowledge base",
+          "semantic search",
+          "pinecone integration"
+        ],
+        "category": "Knowledge Management",
+        "priority": "medium"
+      },
+      {
+        "id": "adk-real-time-agents",
+        "file": "adk-real-time-agents/SKILL.md",
+        "triggers": [
+          "voice agent",
+          "real-time streaming",
+          "live session",
+          "multimodal agent",
+          "audio agent",
+          "bidirectional streaming"
+        ],
+        "category": "Real-Time",
+        "priority": "medium"
+      },
+      {
+        "id": "adk-integration-tools",
+        "file": "adk-integration-tools/SKILL.md",
+        "triggers": [
+          "MCP integration",
+          "connect external tools",
+          "add MCP server",
+          "external service integration",
+          "model context protocol"
+        ],
+        "category": "Integration",
+        "priority": "medium"
+      },
+      {
+        "id": "adk-production-deployment",
+        "file": "adk-production-deployment/SKILL.md",
+        "triggers": [
+          "deploy agent",
+          "production deployment",
+          "cloud run",
+          "vertex AI",
+          "GKE deployment",
+          "containerize agent"
+        ],
+        "category": "Deployment",
+        "priority": "medium"
+      }
+    ]
+  },
+  "commands": [
+    {
+      "name": "adk:init",
+      "description": "Initialize a new ADK project with scaffolding and examples"
+    },
+    {
+      "name": "adk:test",
+      "description": "Run a local test of an agent or agent code"
+    },
+    {
+      "name": "adk:examples",
+      "description": "Display project structure, examples, and next steps"
+    },
+    {
+      "name": "adk:docs",
+      "description": "Search and access ADK documentation and quick reference"
+    },
+    {
+      "name": "adk:config",
+      "description": "Manage plugin settings and environment variables"
+    },
+    {
+      "name": "adk:status",
+      "description": "Check ADK environment, dependencies, and configuration status"
+    }
+  ],
+  "agents": [
+    {
+      "id": "adk-code-validator",
+      "description": "Validates generated agent code for best practices, security, and ADK conventions"
+    },
+    {
+      "id": "adk-code-improver",
+      "description": "Suggests improvements and optimizations for agent code"
+    },
+    {
+      "id": "adk-architecture-advisor",
+      "description": "Helps choose orchestration patterns and architecture decisions"
+    }
+  ],
+  "python": {
+    "package": "adk_bidi",
+    "minimumVersion": "3.11",
+    "entryPoints": {
+      "cli": "adk_bidi.cli:main"
+    }
+  },
+  "environment": {
+    "required": [
+      "GOOGLE_API_KEY"
+    ],
+    "optional": [
+      "GOOGLE_CLOUD_PROJECT",
+      "PINECONE_API_KEY",
+      "PINECONE_INDEX_HOST",
+      "DEFAULT_MODEL",
+      "DEPLOYMENT_PROJECT",
+      "DEPLOYMENT_REGION",
+      "BRAVE_API_KEY",
+      "GITHUB_TOKEN",
+      "NOTION_TOKEN",
+      "SLACK_BOT_TOKEN",
+      "GOOGLE_APPLICATION_CREDENTIALS"
+    ]
+  },
+  "dependencies": [
+    "google-adk>=1.0.0",
+    "vertexai>=1.0.0",
+    "google-generativeai>=0.8.0",
+    "langgraph>=0.2.0",
+    "langchain-core>=0.3.0",
+    "langchain-google-vertexai>=1.0.0",
+    "pinecone>=5.0.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.20.0",
+    "websockets>=12.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "mcp>=1.0.0",
+    "aiohttp>=3.9.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+    "rich>=13.0.0",
+    "litellm>=1.0.0"
+  ],
+  "optionalDependencies": {
+    "dev": [
+      "pytest>=8.0.0",
+      "pytest-asyncio>=0.23.0",
+      "pytest-cov>=4.0.0",
+      "black>=24.0.0",
+      "ruff>=0.3.0",
+      "mypy>=1.0.0"
+    ]
+  },
+  "capabilities": {
+    "skills": true,
+    "commands": true,
+    "agents": true,
+    "hooks": true,
+    "mcpServers": true,
+    "pythonPackage": true,
+    "pythonEntryPoints": true
+  },
+  "settings": {
+    "pythonPath": null,
+    "packageDir": "adk_bidi",
+    "skillsDir": "skills",
+    "commandsDir": "commands",
+    "agentsDir": "agents",
+    "hooksDir": "hooks"
+  },
+  "configuration": {
+    "configFile": "root_agent.yaml",
+    "environmentFile": ".env",
+    "exampleEnvironmentFile": ".env.example",
+    "settingsFile": ".claude/adk-skills.local.md"
+  }
+}

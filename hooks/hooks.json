@@ -1,0 +1,25 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "This tool is about to write or edit a Python file that may contain agent code. Check if the code follows ADK conventions and best practices. Alert the user about any critical issues before the write happens.",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "SessionStart": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "The Claude Code session has started with the ADK Skills plugin enabled. Check if required environment variables (GOOGLE_API_KEY at minimum) are configured. If not, suggest that the user run /adk:config to set up required credentials. This helps users get started quickly.",
+          "timeout": 5
+        }
+      ]
+    }
+  ]
+}

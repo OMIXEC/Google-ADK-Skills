@@ -1,0 +1,137 @@
+# Claude-ADK-Skills: Enterprise Orchestrator Configuration
+#
+# This is an example configuration for the UnifiedOrchestrator.
+# Copy this file and customize for your use case.
+#
+# Usage:
+#   python -m adk_bidi --config root_agent.yaml
+#
+# Environment variables can be referenced as ${VAR_NAME}
+
+name: enterprise_adk_orchestrator
+mode: multimodal  # text, voice, multimodal, autonomous
+model: gemini-live-2.5-flash-native-audio
+
+# Specialist agents for delegation
+agents:
+  - name: researcher
+    instruction: |
+      You are a research specialist.
+      - Search for information from multiple sources
+      - Cross-reference and verify facts
+      - Provide citations when possible
+      - Summarize findings clearly
+    description: Research and information gathering
+    model: gemini-2.5-flash
+    tools:
+      - brave_search
+
+  - name: analyst
+    instruction: |
+      You analyze data and extract insights.
+      - Identify patterns and trends
+      - Provide data-driven recommendations
+      - Highlight key findings
+      - Create visualizations when helpful
+    description: Data analysis and insights
+    model: gemini-2.5-pro
+    tools:
+      - sqlite
+
+  - name: coder
+    instruction: |
+      You help with coding tasks.
+      - Write clean, well-documented code
+      - Review and debug code
+      - Explain technical concepts
+      - Follow best practices
+    description: Code and development assistance
+    model: gemini-2.5-flash
+    tools:
+      - github
+
+# MCP server connections for external tools
+mcp_servers:
+  - name: sqlite
+    command: uvx
+    args:
+      - mcp-server-sqlite
+      - --db-path
+      - data/enterprise.db
+    timeout: 30
+
+  - name: brave_search
+    command: npx
+    args:
+      - -y
+      - "@anthropic/mcp-server-brave-search"
+    env:
+      BRAVE_API_KEY: "${BRAVE_API_KEY}"
+    timeout: 30
+
+  - name: github
+    command: npx
+    args:
+      - -y
+      - "@modelcontextprotocol/server-github"
+    env:
+      GITHUB_TOKEN: "${GITHUB_TOKEN}"
+    timeout: 30
+
+# Memory configuration
+memory:
+  working_memory_size: 30
+  enable_shared_memory: true
+  enable_persistent_memory: false  # Set true and configure pinecone_index for persistence
+  pinecone_index: "${PINECONE_INDEX_HOST}"
+  conflict_strategy: last_write_wins
+  recency_weight: 0.4
+  importance_weight: 0.4
+  access_weight: 0.2
+
+# Voice settings (for voice and multimodal modes)
+voice:
+  personality: professional  # professional, friendly, casual, formal, enthusiastic, calm
+  speaking_rate: normal
+  enable_emotions: true
+  enable_interruption: true
+  silence_threshold_ms: 500
+  use_native_audio: true
+
+# Vision settings (for multimodal mode)
+vision:
+  enable_image: true
+  enable_video: true
+  image_detail: auto  # auto, low, high
+  video_frame_rate: 1
+  max_image_size: 4096
+
+# Multi-agent supervisor settings
+supervisor:
+  delegation_strategy: single  # single, parallel, sequential, consensus
+  max_delegation_depth: 3
+  enable_parallel_execution: true
+  consensus_threshold: 0.7
+
+# Autonomous mode settings (for autonomous mode)
+autonomous:
+  goal: null  # Set a goal to enable autonomous behavior
+  enable_proactivity: true
+  max_reasoning_steps: 50
+  max_thoughts: 100
+  reasoning_loop: ooda  # ooda, react, custom
+  enable_long_term_memory: true
+
+# Server settings (for serve command)
+server:
+  host: "0.0.0.0"
+  port: 8000
+  enable_cors: true
+  cors_origins:
+    - "*"
+  max_connections: 100
+
+# Session settings
+continuous_session: false
+session_timeout_seconds: 3600
+enable_session_resumption: true

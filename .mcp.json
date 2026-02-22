@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "pinecone": {
+      "command": "python",
+      "args": ["-m", "adk_bidi.integrations.pinecone_mcp"],
+      "env": {
+        "PINECONE_API_KEY": "${PINECONE_API_KEY}",
+        "PINECONE_INDEX_HOST": "${PINECONE_INDEX_HOST}"
+      },
+      "alwaysAllow": ["search", "upsert", "delete", "describe_index_stats"]
+    }
+  },
+  "tools": {
+    "pinecone_search": {
+      "description": "Search Pinecone vector database for similar documents",
+      "server": "pinecone"
+    },
+    "pinecone_upsert": {
+      "description": "Store vectors in Pinecone database",
+      "server": "pinecone"
+    },
+    "pinecone_delete": {
+      "description": "Delete vectors from Pinecone database",
+      "server": "pinecone"
+    }
+  }
+}

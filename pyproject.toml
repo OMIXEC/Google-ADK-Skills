@@ -1,0 +1,145 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "claude-adk-skills"
+version = "1.0.0"
+description = "Production-ready multi-agent AI system with 13 specialized skills for building advanced AI agents using Google's ADK"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "OMIXEC", email = "contact@omixec.com" }]
+keywords = [
+    "agents",
+    "adk",
+    "google-adk",
+    "multi-agent",
+    "rag",
+    "voice-ai",
+    "orchestration",
+    "llm",
+    "gemini",
+    "langgraph",
+    "mcp"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "google-adk>=1.0.0",
+    "vertexai>=1.0.0",
+    "google-generativeai>=0.8.0",
+    "langgraph>=0.2.0",
+    "langchain-core>=0.3.0",
+    "pinecone>=5.0.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.20.0",
+    "websockets>=12.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "mcp>=1.0.0",
+    "aiohttp>=3.9.0",
+    "httpx>=0.27.0",
+    "python-dotenv>=1.0.0",
+    "rich>=13.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "black>=24.0.0",
+    "ruff>=0.3.0",
+    "mypy>=1.0.0",
+]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=4.0.0",
+]
+
+[project.scripts]
+adk = "adk_bidi.cli:main"
+adk-bidi = "adk_bidi.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/OMIXEC/Claude-ADK-Skills"
+Repository = "https://github.com/OMIXEC/Claude-ADK-Skills.git"
+Documentation = "https://github.com/OMIXEC/Claude-ADK-Skills/blob/main/README.md"
+Issues = "https://github.com/OMIXEC/Claude-ADK-Skills/issues"
+
+[tool.setuptools]
+packages = ["adk_bidi"]
+
+[tool.setuptools.package-data]
+adk_bidi = ["**/*.py", "**/*.yaml", "**/*.json"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-select = ["E", "F", "W"]
+ignore = ["E501"]  # Line too long (handled by black)
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-v --strict-markers --disable-warnings"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.isort]
+profile = "black"
+multi_line_mode = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 100
+
+[tool.coverage.run]
+source = ["adk_bidi"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "^\\s*@abstractmethod",
+]

@@ -1,0 +1,136 @@
+{
+  "marketplace": {
+    "category": "Development",
+    "subcategories": [
+      "AI/ML",
+      "Agent Development",
+      "Multi-Agent Systems",
+      "LLM Tools"
+    ],
+    "tags": [
+      "agents",
+      "adk",
+      "google-adk",
+      "multi-agent",
+      "rag",
+      "voice-ai",
+      "orchestration",
+      "llm",
+      "gemini",
+      "langgraph",
+      "mcp",
+      "pinecone"
+    ],
+    "rating": 5,
+    "downloads": 0,
+    "documentation": "https://github.com/OMIXEC/Claude-ADK-Skills/blob/main/README.md",
+    "support": "https://github.com/OMIXEC/Claude-ADK-Skills/issues",
+    "changelog": {
+      "1.0.0": {
+        "date": "2026-01-25",
+        "changes": [
+          "Initial release with 13 production-ready skills",
+          "Complete Python package with ADK integration",
+          "Multi-agent orchestration system",
+          "RAG and knowledge management capabilities",
+          "Voice and multimodal support",
+          "MCP server integration",
+          "Real-time bidirectional streaming"
+        ],
+        "highlights": [
+          "13 specialized AI agent skills",
+          "Production-ready ADK orchestrator",
+          "5-tier memory system",
+          "Multi-modal interaction support",
+          "Comprehensive documentation"
+        ]
+      }
+    },
+    "screenshots": [
+      {
+        "title": "Agent Builder Interface",
+        "description": "Build AI agents with adaptive context awareness",
+        "url": "https://github.com/OMIXEC/Claude-ADK-Skills/raw/main/docs/screenshots/agent-builder.png"
+      },
+      {
+        "title": "Multi-Agent Orchestration",
+        "description": "Coordinate multiple specialized agents",
+        "url": "https://github.com/OMIXEC/Claude-ADK-Skills/raw/main/docs/screenshots/orchestration.png"
+      },
+      {
+        "title": "Voice Agent Interaction",
+        "description": "Real-time bidirectional voice streaming",
+        "url": "https://github.com/OMIXEC/Claude-ADK-Skills/raw/main/docs/screenshots/voice-agent.png"
+      }
+    ],
+    "features": {
+      "Agent Development": [
+        "Adaptive Agent Generator - Context-aware agent creation",
+        "Autonomous Agent - Self-reasoning with OODA loop",
+        "Persona Builder - Character design and management",
+        "Domain Expert Builder - Specialized domain agents"
+      ],
+      "Orchestration": [
+        "LangGraph Orchestrator - Workflow and graph execution",
+        "Multi-Agent Orchestrator - Team coordination",
+        "Skill Dispatcher - Intent-based skill routing"
+      ],
+      "Knowledge Management": [
+        "RAG Builder - Retrieval augmented generation setup",
+        "Pinecone RAG - Vector search integration",
+        "Memory Manager - Persistent agent memory"
+      ],
+      "Real-Time Capabilities": [
+        "Bidirectional Multi-Agent - Real-time streaming",
+        "Voice Support - Native audio interaction",
+        "Multimodal Processing - Voice, vision, text"
+      ],
+      "Integration": [
+        "MCP Integration - Model Context Protocol support",
+        "Deployment Manager - Cloud Run deployment",
+        "13+ MCP Servers - Pre-configured integrations"
+      ]
+    },
+    "useCases": [
+      "Building multi-agent AI systems",
+      "Real-time voice AI assistants",
+      "Knowledge-augmented agents",
+      "Domain-specific expert systems",
+      "Team coordination and orchestration",
+      "Autonomous task execution",
+      "Voice and vision-enabled agents"
+    ],
+    "requirements": {
+      "os": [
+        "Linux",
+        "macOS",
+        "Windows (with WSL recommended)"
+      ],
+      "python": ">=3.11",
+      "memory": "4GB minimum, 8GB recommended",
+      "apiKeys": [
+        "Google Cloud / Gemini API (required)",
+        "Pinecone (optional, for RAG)",
+        "Various MCP servers (optional)"
+      ]
+    },
+    "performance": {
+      "skillInitTime": "< 100ms",
+      "agentCreationTime": "1-5 seconds",
+      "orchestrationLatency": "< 500ms",
+      "voiceStreamingLatency": "< 200ms"
+    },
+    "license": "MIT",
+    "author": {
+      "name": "OMIXEC",
+      "email": "contact@omixec.com",
+      "github": "https://github.com/OMIXEC",
+      "twitter": "@OMIXEC"
+    },
+    "community": {
+      "github": "https://github.com/OMIXEC/Claude-ADK-Skills",
+      "discussions": "https://github.com/OMIXEC/Claude-ADK-Skills/discussions",
+      "issues": "https://github.com/OMIXEC/Claude-ADK-Skills/issues"
+    }
+  }
+}
