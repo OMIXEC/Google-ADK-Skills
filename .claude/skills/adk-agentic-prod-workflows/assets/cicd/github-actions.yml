@@ -1,0 +1,86 @@
+# GitHub Actions CI/CD for ADK Workflows
+# Reference template — package_workflow.py generates project-specific copies.
+
+name: ADK Workflow CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  SERVICE_NAME: ${{ github.event.repository.name }}
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint
+        run: ruff check app/ tests/
+
+      - name: Type check
+        run: pyright app/ || true
+
+      - name: Unit tests
+        run: pytest tests/ -v --junitxml=test-results.xml
+
+      - name: Eval tests
+        run: python evals/test_harness.py
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Secret detection
+        uses: gitleaks/gitleaks-action@aa6c132071730e14d28e89080e0adeebc4df4512  # v2.1.0
+
+      - name: Dependency audit
+        run: pip-audit
+
+  build-and-deploy:
+    needs: [lint-and-test, security-scan]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@5a50e581162a13f4baa8916d01180d2acbc04363  # v2.1.0
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
+      - name: Build and push
+        run: |
+          docker build -t $REGION-docker.pkg.dev/$PROJECT_ID/$SERVICE_NAME/$SERVICE_NAME:${{ github.sha }} .
+          docker push $REGION-docker.pkg.dev/$PROJECT_ID/$SERVICE_NAME/$SERVICE_NAME:${{ github.sha }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image $REGION-docker.pkg.dev/$PROJECT_ID/$SERVICE_NAME/$SERVICE_NAME:${{ github.sha }} \
+            --region $REGION \
+            --allow-unauthenticated \
+            --set-env-vars "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
+
+      - name: Health check
+        run: |
+          URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format='value(status.url)')
+          curl -f $URL/health || (echo "Health check failed" && exit 1)
