@@ -84,6 +84,28 @@ _CONDITION_SAFE_RE = re.compile(
     r")*$"
 )
 
+_IDENT_RE = re.compile(r"^[a-zA-Z_][a-zA-Z0-9_]*$")
+
+
+def _sanitize_identifier(name: str) -> str:
+    """Validate that a node/agent name is a safe identifier.
+
+    Rejects names containing anything other than alphanumeric + underscore,
+    which prevents injection of quotes, newlines, or code.
+
+    Raises ValueError if the name is not a valid identifier.
+    """
+    stripped = name.strip()
+    if not stripped:
+        raise ValueError("Node/agent name must not be empty")
+    if not _IDENT_RE.match(stripped):
+        raise ValueError(
+            f"Invalid node/agent name '{stripped}'. "
+            f"Must match pattern: a-z, A-Z, 0-9, underscore."
+        )
+    return stripped
+
+
 _BLOCKED_PATTERNS = [
     "__", "import", "exec", "eval", "compile", "open", "subprocess",
     "os.", "sys.", "shutil", "pathlib", "globals", "locals", "getattr",
@@ -207,8 +229,8 @@ def generate_python_edges(edges: list) -> str:
 
     edge_strs = []
     for edge in edges:
-        source = edge["source"]
-        target = edge["target"]
+        source = _sanitize_identifier(edge["source"])
+        target = _sanitize_identifier(edge["target"])
         condition = edge.get("condition")
         if condition:
             condition = _sanitize_condition(condition)
@@ -380,7 +402,9 @@ func New{safe_name}Workflow() *{safe_name}Workflow {{
 """)
 
     for edge in edges_cfg:
-        lines.append(f"""    wf.Edges = append(wf.Edges, struct{{ Source, Target string }}{{Source: "{edge['source']}", Target: "{edge['target']}"}})
+        src = _sanitize_identifier(edge["source"])
+        tgt = _sanitize_identifier(edge["target"])
+        lines.append(f"""    wf.Edges = append(wf.Edges, struct{{ Source, Target string }}{{Source: "{src}", Target: "{tgt}"}})
 """)
 
     lines.append("""    return wf
@@ -488,12 +512,14 @@ const {tname}Tool = new FunctionTool({tname}, {{ schema: {tname.title()}Input }}
 
     edge_strs = []
     for edge in edges_cfg:
+        src = _sanitize_identifier(edge["source"])
+        tgt = _sanitize_identifier(edge["target"])
         condition = edge.get("condition")
         if condition:
             condition = _sanitize_condition(condition)
-            edge_strs.append(f"  {{ source: '{edge['source']}', target: '{edge['target']}', condition: (state) => {condition} }},")
+            edge_strs.append(f"  {{ source: '{src}', target: '{tgt}', condition: (state) => {condition} }},")
         else:
-            edge_strs.append(f"  {{ source: '{edge['source']}', target: '{edge['target']}' }},")
+            edge_strs.append(f"  {{ source: '{src}', target: '{tgt}' }},")
     lines.append("const edges: Edge[] = [\n" + "\n".join(edge_strs) + "\n];\n" if edge_strs else "const edges: Edge[] = [];\n")
 
     lines.append(f"""const workflow = new GraphAgent({{
