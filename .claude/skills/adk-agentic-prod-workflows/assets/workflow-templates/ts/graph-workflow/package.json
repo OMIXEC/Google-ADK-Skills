@@ -1,0 +1,19 @@
+{
+  "name": "@workflow/graph-workflow-ts",
+  "version": "1.0.0",
+  "description": "ADK Graph Workflow — DAG-based routing with conditional edges (TypeScript)",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "tsx index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@google/adk": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.5.0"
+  }
+}
