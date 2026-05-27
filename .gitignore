@@ -1,6 +1,12 @@
 # Debug logs
 firebase-debug.log
 
+# User-specific MCP config
+.claude/settings.local.json
+
+# Claude session metadata
+.claude/sessions/
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -23,3 +29,12 @@ node_modules/
 .vscode/
 .idea/
 
+
+# ffts-grep database files (auto-generated)
+.ffts-index.db
+.ffts-index.db-shm
+.ffts-index.db-wal
+.ffts-index.db.tmp*
+
+# External repos embedded for reference (do not track)
+docs/adk-docs/gcp-blogs/

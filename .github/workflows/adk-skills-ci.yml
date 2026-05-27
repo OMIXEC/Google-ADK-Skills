@@ -36,7 +36,7 @@ jobs:
           python -c "
           import yaml, sys, pathlib
           errors = 0
-          for f in pathlib.Path('adk-python/.agents').glob('*.yaml'):
+          for f in pathlib.Path('agents').glob('*.yaml'):
               try:
                   agent = yaml.safe_load(f.read_text())
                   for key in ('name', 'model', 'instruction'):
@@ -62,7 +62,7 @@ jobs:
       - name: Validate skill definitions
         run: |
           pip install pyyaml
-          for skill_dir in .claude/skills/*/; do
+          for skill_dir in skills/*/; do
             if [ -f "$skill_dir/scripts/quick_validate.py" ]; then
               python "$skill_dir/scripts/quick_validate.py" --project "$skill_dir"
             else
@@ -83,7 +83,7 @@ jobs:
 
       - name: Fetch latest models
         run: |
-          cd .claude/skills/adk-agentic-prod-workflows
+          cd skills/adk-agentic-prod-workflows
           python scripts/fetch_models.py --output references/model-cache.json
         # Always passes — model changes are informational, not a build failure
 
@@ -119,7 +119,7 @@ jobs:
         run: |
           python -c "
           import sys
-          sys.path.insert(0, 'adk-python/.agents')
+          sys.path.insert(0, 'adk-python')
           from tools.model_tools import model_validate, classify_complexity
           result = model_validate('gemini-2.0-flash')
           assert result['valid'] is False, 'Blocked model should be rejected'
@@ -133,5 +133,5 @@ jobs:
 
       - name: Run skill script tests
         run: |
-          cd .claude/skills/adk-agentic-prod-workflows
+          cd skills/adk-agentic-prod-workflows
           python scripts/quick_validate.py --project .
