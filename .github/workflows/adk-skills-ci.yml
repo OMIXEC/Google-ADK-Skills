@@ -1,0 +1,137 @@
+# GitHub Actions CI/CD — ADK Skills & Agents
+#
+# Keeps agents in sync with skills, validates all definitions,
+# and detects model deprecations automatically.
+#
+# Triggered: push to main, PRs, weekly cron (model refresh)
+
+name: ADK Skills CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly model catalog refresh — Monday 09:00 UTC
+    - cron: "37 9 * * 1"
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # ── Validate all agent definitions ──
+  validate-agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Validate agent YAML files
+        run: |
+          pip install pyyaml
+          python -c "
+          import yaml, sys, pathlib
+          errors = 0
+          for f in pathlib.Path('adk-python/.agents').glob('*.yaml'):
+              try:
+                  agent = yaml.safe_load(f.read_text())
+                  for key in ('name', 'model', 'instruction'):
+                      if key not in agent:
+                          print(f'ERROR: {f.name} missing {key!r}')
+                          errors += 1
+              except Exception as e:
+                  print(f'ERROR: {f.name}: {e}')
+                  errors += 1
+          sys.exit(1 if errors else 0)
+          "
+
+  # ── Validate all skills ──
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Validate skill definitions
+        run: |
+          pip install pyyaml
+          for skill_dir in .claude/skills/*/; do
+            if [ -f "$skill_dir/scripts/quick_validate.py" ]; then
+              python "$skill_dir/scripts/quick_validate.py" --project "$skill_dir"
+            else
+              echo "No validator for $skill_dir — checking SKILL.md exists"
+              test -f "$skill_dir/SKILL.md" || { echo "MISSING: $skill_dir/SKILL.md"; exit 1; }
+            fi
+          done
+
+  # ── Refresh model catalog & check for deprecations ──
+  model-refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Fetch latest models
+        run: |
+          cd .claude/skills/adk-agentic-prod-workflows
+          python scripts/fetch_models.py --output references/model-cache.json
+        # Always passes — model changes are informational, not a build failure
+
+  # ── Security: detect secrets and vulnerabilities ──
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned to commit SHA for supply-chain security
+      - uses: gitleaks/gitleaks-action@aa6c132071730e14d28e89080e0adeebc4df4512  # v2.1.0
+
+  # ── Build and verify Python package ──
+  build:
+    runs-on: ubuntu-latest
+    needs: [validate-agents, validate-skills, security-scan]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install google-adk pyyaml pydantic
+          # Install from adk-python if requirements exist
+          if [ -f adk-python/requirements.txt ]; then
+            pip install -r adk-python/requirements.txt
+          fi
+
+      - name: Verify agent imports
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, 'adk-python/.agents')
+          from tools.model_tools import model_validate, classify_complexity
+          result = model_validate('gemini-2.0-flash')
+          assert result['valid'] is False, 'Blocked model should be rejected'
+          assert result['status'] == 'blocked'
+          print('model_validate: PASS')
+          result = classify_complexity('design a multi-agent orchestration system')
+          assert result['complexity'] == 'high'
+          print('classify_complexity: PASS')
+          print('All agent tool checks passed')
+          "
+
+      - name: Run skill script tests
+        run: |
+          cd .claude/skills/adk-agentic-prod-workflows
+          python scripts/quick_validate.py --project .
