@@ -1,4 +1,4 @@
-# CLAUDE-ADK-SKILLS
+# Google-ADK-Skills
 
 **25 Production-Grade Google ADK Skills for Claude Code**
 
