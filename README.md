@@ -1,570 +1,199 @@
 # CLAUDE-ADK-SKILLS
 
-**Production-Grade Google ADK Agent Development Skills for Claude Code**
+**25 Production-Grade Google ADK Skills for Claude Code**
 
-Build sophisticated AI agents using Google's Agent Development Kit (ADK) with voice-driven generation, expert personas, multimodal RAG pipelines, LangGraph orchestration, real-time bidirectional streaming, and production deployment.
-
-## Features
-
-- **Adaptive Agent Generation** - Describe what you need, get production-ready code
-- **30+ Expert Personas** - Pre-built personas for any domain
-- **Multimodal RAG** - Pinecone integration for text, image, audio, video
-- **LangGraph Orchestration** - Stateful multi-agent workflows
-- **MCP Integration** - External tools via Model Context Protocol
-- **Real-Time Bidi Streaming** - Native audio, multi-agent coordination, autonomous agents
-- **Production Deployment** - Cloud Run, Vertex AI Agent Engine, GKE
+Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-agent orchestration, LangGraph state machines, LiteLLM multi-provider routing, real-time bidirectional streaming, RAG pipelines, MCP tool integration, autonomous agents, and production deployment.
 
 ## Installation
 
-### Quick Install (Recommended)
+### Option 1 — Script (canonical, no auth required)
 
 ```bash
-# With SSH (for developers with SSH keys configured)
-curl -sSL https://raw.githubusercontent.com/OMIXEC/Claude-ADK-Skills/main/install.sh | bash -s -- --ssh
+# Auto-detect your IDE
+curl -fsSL https://raw.githubusercontent.com/OMIXEC/Claude-ADK-Skills/main/install.sh | bash
 
-# With GitHub Personal Access Token
-curl -sSL https://raw.githubusercontent.com/OMIXEC/Claude-ADK-Skills/main/install.sh | bash -s -- --token YOUR_GITHUB_PAT
-
-# Interactive (prompts for authentication method)
-curl -sSL https://raw.githubusercontent.com/OMIXEC/Claude-ADK-Skills/main/install.sh | bash
+# Or clone first, then install
+git clone https://github.com/OMIXEC/Claude-ADK-Skills.git
+cd Claude-ADK-Skills
+bash install.sh --target claude-code
 ```
 
-### Manual Installation
+Flags: `--target <claude-code|gemini-cli|opencode|cursor|all>`, `--copy` (copy files instead of symlink), `--install-dir <path>`, `--with-evals` (include tests/ and scripts/).
+
+### Option 2 — npx
 
 ```bash
-# Clone the repository
-git clone [github.com:OMIXEC/Claude-ADK-Skills.git ~/.claude-adk-skills](https://github.com/OMIXEC/Claude-ADK-Skills.git)
+npx claude-adk-skills
+npx claude-adk-skills --target cursor --copy
+```
 
-# Install dependencies
-cd ~/.claude-adk-skills
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+### Option 3 — Claude Plugin Marketplace
 
-# Symlink skills to Claude Code
-mkdir -p ~/.claude/skills
-ln -sf ~/.claude-adk-skills/skills/*.md ~/.claude/skills/
+```
+/plugin marketplace add OMIXEC/Claude-ADK-Skills
+/plugin install claude-adk-skills
 ```
 
 ### Prerequisites
 
 - Python 3.11+
-- Git
-- Google Cloud credentials (`GOOGLE_API_KEY`)
-- Optional: Pinecone API key (for RAG features)
+- Git (optional — installer falls back to tarball download when git is unavailable)
+- `GOOGLE_API_KEY` (Gemini)
+- Optional: `PINECONE_API_KEY` (RAG), `LITELLM_*` keys (multi-provider)
 
-### Standalone Orchestrator
+---
 
-After installation, run the multi-agent orchestrator:
-
-```bash
-# Text mode (default)
-python -m adk_bidi
-
-# Voice mode (native audio)
-python -m adk_bidi --mode voice
-
-# Multimodal (voice + vision)
-python -m adk_bidi --mode multimodal
-
-# With configuration file
-python -m adk_bidi --config root_agent.yaml
-
-# WebSocket server mode
-python -m adk_bidi serve --port 8000
-```
-
-## Skills Overview
+## Skills (25)
 
 | Skill | Description |
 |-------|-------------|
-| `adk-skill-dispatcher` | **Auto-routing** - Automatically routes to the right ADK skill |
-| `adk-adaptive-agent-generator` | Voice-driven custom agent creation |
-| `adk-persona-builder` | 30+ pre-built expert personas |
-| `adk-domain-expert-builder` | Custom domain expert agents |
-| `adk-multi-agent-orchestrator` | Multi-agent coordination patterns |
-| `adk-langgraph-orchestrator` | LangGraph stateful workflows |
-| `adk-pinecone-rag` | Multimodal RAG with Pinecone |
-| `adk-mcp-integration` | MCP external tool integration |
-| `adk-rag-builder` | Vertex AI RAG integration |
-| `adk-deployment-manager` | Production deployment |
-| `adk-bidi-multi-agent` | Real-time multi-agent streaming |
-| `adk-memory-manager` | Multi-agent memory systems |
-| `adk-autonomous-agent` | Self-reasoning autonomous agents |
+| `adk-a2a` | Agent-to-Agent protocol — remote agent calls, agent cards, HTTP delegation, distributed agent networks |
+| `adk-agent-builder` | Build, configure, and iterate on ADK agents — task mode, single-turn mode, graph-based workflows |
+| `adk-agentic-prod-workflows` | Production multi-agent workflow scaffold — graph/parallel/sequential/loop patterns, CI/CD, evals, observability |
+| `adk-agents` | Multi-agent composition — routing patterns, sequential/parallel execution, supervisor architectures |
+| `adk-architecture` | ADK internals — graph orchestration, event flow, BaseNode, NodeRunner, resumption, checkpointing |
+| `adk-autonomous-agent` | Self-reasoning agents — OODA loop, goal-directed execution, autonomous planning without per-step prompts |
+| `adk-backend` | Backend services — runtime event loops, session management, state handling, Runner/Agent execution model |
+| `adk-bidi-live` | Real-time streaming — Live API, native audio (`gemini-live-2.5-flash-native-audio`), WebSocket, LiveRequestQueue |
+| `adk-configs` | Agent configuration — YAML agent definitions, environment variables, agent cards, deployment configs |
+| `adk-debug` | Debugging — session inspection, tool call tracing, event flow diagnosis, model troubleshooting |
+| `adk-deployment` | Production deployment — Cloud Run, GKE, Vertex AI Agent Engine, Docker, CI/CD pipelines |
+| `adk-domain-expert` | Bespoke specialist agents for any domain not covered by standard personas (tax law, marine biology, etc.) |
+| `adk-git` | Git operations — commit, push, pull, rebase, branch, PR, cherry-pick with ADK commit conventions |
+| `adk-langgraph` | LangGraph orchestration — state machines, conditional edges, LLM-driven routing, ADK↔LangGraph interop |
+| `adk-litellm` | 100+ LLM providers — OpenAI, Anthropic, Bedrock, OpenRouter, Ollama, vLLM; model switching, cost optimization |
+| `adk-mcp` | MCP integration — MCPToolset, StdioServerParameters, SseServerParams, database toolboxes |
+| `adk-memory` | Memory and state — session state, long-term memory, persistence backends, cross-session recall |
+| `adk-persona` | 30+ pre-built personas — tutor, coach, analyst, support rep; ready-made templates with optimized instructions |
+| `adk-prompts` | Prompt engineering — agent instructions, few-shot examples, system prompts, token cost optimization |
+| `adk-rag` | Retrieval-augmented generation — Pinecone (self-managed) or Vertex AI RAG (managed), embeddings, ingestion |
+| `adk-runtime` | Runtime architecture — event loops, Runner model, callbacks, Reason-Act cycle, internals |
+| `adk-sample-creator` | Author new samples and examples for the ADK Python repository |
+| `adk-setup` | Local dev environment setup — install dependencies, configure credentials, prepare for contributing |
+| `adk-style` | Code style — Python idioms, codebase conventions, imports, typing, Pydantic patterns, formatting |
+| `adk-tools` | Tools — custom function tools, Google built-in tools (Search, Code Execution), OpenAPI integrations |
+
+Skills are routed automatically via CLAUDE.md trigger words. You can also invoke any skill explicitly:
+
+```
+Build a customer support agent with session memory and Cloud Run deployment
+```
+
+Claude Code matches the request to `adk-agent-builder` + `adk-memory` + `adk-deployment` and loads the relevant skills.
 
 ---
 
 ## Quick Start
 
-### Create an Agent from Description
+### Create a multi-agent workflow
 
-```bash
-/adk-adaptive-agent-generator Build a customer service agent that handles support tickets and searches a knowledge base
+```
+Design a research pipeline with a web-search agent, an analyst, and a writer — deploy to Cloud Run
 ```
 
-### Use a Pre-built Persona
+Triggers: `adk-agents` → `adk-agentic-prod-workflows` → `adk-deployment`
 
-```bash
-/adk-persona-builder --persona fitness_coach --specialization "strength training"
+### Use a non-Google model
+
+```
+Route this agent to Claude claude-opus-4-7 via LiteLLM with a Gemini fallback
 ```
 
-### Create Multimodal RAG Pipeline
+Triggers: `adk-litellm`
 
-```bash
-/adk-pinecone-rag --action "setup" --index_name "knowledge_base"
-/adk-pinecone-rag --action "ingest" --source "docs/" --namespace "product_docs"
-/adk-pinecone-rag --action "create_agent"
+### Add RAG to an agent
+
+```
+Build a knowledge base agent with Pinecone ingestion for PDF documents
 ```
 
-### Deploy to Production
+Triggers: `adk-rag`
 
-```bash
-/adk-deployment-manager --target "cloud-run" --project "my-project"
+### Real-time voice agent
+
+```
+Create a voice assistant using the native audio model with WebSocket streaming
 ```
 
----
+Triggers: `adk-bidi-live`
 
-## Adaptive Agent Generation
+### LangGraph orchestration
 
-Describe what you need in natural language. The system extracts intent, designs architecture, and generates production-ready code.
-
-```bash
-/adk-adaptive-agent-generator Create a research assistant that searches the web, analyzes documents, and writes reports with citations
+```
+Build a stateful customer onboarding workflow with conditional branching using LangGraph
 ```
 
-**What Happens:**
-1. Intent extraction: domain, capabilities, tools needed
-2. Architecture design: multi-agent vs single agent
-3. Code generation: complete project structure
-4. Approval: review and approve before deployment
-
-**Generated Code:**
-```python
-from google.adk.agents import Agent
-from google.adk.tools import FunctionTool
-
-research_agent = Agent(
-    name="research_assistant",
-    model="gemini-2.5-flash",
-    instruction="""You are a research assistant.
-    - Search the web for information
-    - Analyze documents and extract key points
-    - Write comprehensive reports with citations
-    """,
-    tools=[
-        FunctionTool(web_search),
-        FunctionTool(document_analyzer),
-        FunctionTool(report_writer),
-    ],
-)
-```
-
----
-
-## Expert Personas
-
-30+ pre-built personas across 5 categories:
-
-### Expert Personas
-- Historian, Scientist, Creative Writer
-- Philosopher, Economist, Psychologist
-
-### Professional Advisors
-- Fitness Coach, Financial Advisor, Therapist
-- Career Counselor, Nutritionist
-
-### Language Tutors
-- English, Spanish, Mandarin, French
-- Conversational practice with pronunciation feedback
-
-### Role-Playing
-- Dungeon Master, Storyteller, Game Master
-- Interactive fiction characters
-
-### Domain Experts
-- Coding Expert, Cooking Expert, Gardening Expert
-- Mechanic, Photographer, Music Teacher
-
-```bash
-/adk-persona-builder --persona fitness_coach
-```
-
-**Generated Agent:**
-```python
-fitness_coach = Agent(
-    name="fitness_coach",
-    model="gemini-2.5-flash",
-    instruction="""You are a certified fitness coach.
-
-**Personality:** Motivational, encouraging, safety-focused
-**Communication:** Direct, actionable, supportive
-
-**Behavior:**
-1. Prioritize safety - correct poor form immediately
-2. Encourage progressive overload
-3. Adapt to user's fitness level
-4. Provide specific, measurable feedback
-""",
-)
-```
-
----
-
-## Multimodal RAG with Pinecone
-
-Build knowledge bases with text, image, audio, and video search.
-
-### Setup Pinecone Index
-
-```bash
-/adk-pinecone-rag --action "setup" --index_name "multimodal_kb"
-```
-
-### Ingest Multimodal Content
-
-```python
-from pinecone import Pinecone, EmbedModel
-
-pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-index = pc.Index(host=os.getenv("PINECONE_INDEX_HOST"))
-
-# Text embedding
-text_embedding = pc.inference.embed(
-    model=EmbedModel.Multilingual_E5_Large,
-    inputs=["Your document text"],
-    parameters={"input_type": "passage"}
-).data[0].values
-
-# Image embedding
-image_embedding = pc.inference.embed(
-    model="pinecone-clip-vit-base-patch32",
-    inputs=[{"image": base64_image}]
-).data[0].values
-
-# Audio embedding (transcribe + embed)
-transcription = pc.inference.transcribe(
-    model="openai-whisper-large-v3",
-    audio=base64_audio
-)
-audio_embedding = pc.inference.embed(
-    model=EmbedModel.Multilingual_E5_Large,
-    inputs=[transcription.text]
-).data[0].values
-```
-
-### Cross-Modal Search
-
-Search images with text, find text with images:
-
-```python
-def multimodal_search(query: str = None, image: str = None, audio: str = None) -> list:
-    """Search with any modality."""
-    if query:
-        embedding = embed_text(query)
-    elif image:
-        embedding = embed_image(image)
-    elif audio:
-        embedding = embed_audio(audio)
-
-    return index.query(vector=embedding, top_k=5, include_metadata=True)
-```
-
----
-
-## LangGraph Orchestration
-
-Build stateful multi-agent workflows with LangGraph.
-
-### Supervisor Pattern
-
-```bash
-/adk-langgraph-orchestrator --pattern "supervisor" \
-  --agents "researcher,analyst,writer"
-```
-
-```python
-from langgraph.graph import StateGraph, START, END
-
-class WorkflowState(TypedDict):
-    messages: Annotated[list, operator.add]
-    research_data: dict
-    analysis_results: dict
-    final_output: str
-
-builder = StateGraph(WorkflowState)
-builder.add_node("researcher", researcher_node)
-builder.add_node("analyst", analyst_node)
-builder.add_node("writer", writer_node)
-
-builder.add_edge(START, "researcher")
-builder.add_edge("researcher", "analyst")
-builder.add_edge("analyst", "writer")
-builder.add_edge("writer", END)
-
-graph = builder.compile()
-```
-
-### Conditional Routing
-
-```bash
-/adk-langgraph-orchestrator --pattern "conditional" \
-  --router "intent_classifier"
-```
-
-### RAG Pipeline with LangGraph
-
-```bash
-/adk-langgraph-orchestrator --pattern "rag_workflow" \
-  --vector_db "pinecone"
-```
-
----
-
-## MCP Integration
-
-Connect to external tools via Model Context Protocol.
-
-### Supported Servers
-
-| Server | Use Case |
-|--------|----------|
-| Pinecone | Multimodal vector search |
-| SQLite | Local database |
-| PostgreSQL | Production database |
-| Brave Search | Web search |
-| GitHub | Repository access |
-| GitLab | GitLab repositories |
-| Notion | Notes and databases |
-| Slack | Team messaging |
-
-### Configuration
-
-```bash
-/adk-mcp-integration --servers "[pinecone,sqlite,brave_search,github]"
-```
-
-```python
-from google.adk.tools.mcp_tool import McpToolset
-from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
-from mcp import StdioServerParameters
-
-sqlite_tools = McpToolset(
-    connection_params=StdioConnectionParams(
-        server_params=StdioServerParameters(
-            command='uvx',
-            args=["mcp-server-sqlite", "--db-path", "data.db"],
-        ),
-    ),
-)
-
-agent = Agent(
-    name="db_agent",
-    model="gemini-2.5-flash",
-    tools=[sqlite_tools],
-)
-```
-
----
-
-## Production Deployment
-
-### Cloud Run
-
-```bash
-/adk-deployment-manager --target "cloud-run" --project "my-project"
-```
-
-**Generated Dockerfile:**
-```dockerfile
-FROM python:3.11-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY src/ ./src/
-ENV PYTHONPATH=/app
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
-```
-
-### Vertex AI Agent Engine
-
-```bash
-/adk-deployment-manager --target "agent-engine" --project "my-project"
-```
-
-### GKE (Kubernetes)
-
-```bash
-/adk-deployment-manager --target "gke" --cluster "my-cluster"
-```
-
----
-
-## Real-Time Bidirectional Streaming (adk_bidi)
-
-Build production-ready real-time agents with native audio, multi-agent coordination, and autonomous behavior.
-
-### Voice Assistant
-
-```bash
-/adk-bidi-multi-agent --type "voice" --personality "friendly"
-```
-
-```python
-from adk_bidi import VoiceAgent
-from adk_bidi.agents.voice_agent import VoicePersonality
-
-agent = VoiceAgent(
-    name="voice_assistant",
-    instruction="You are a helpful voice assistant.",
-    personality=VoicePersonality.FRIENDLY,
-)
-# Uses gemini-live-2.5-flash-native-audio
-```
-
-### Multi-Agent Real-Time Coordination
-
-```bash
-/adk-bidi-multi-agent --type "supervisor" --agents "researcher,analyst,writer"
-```
-
-```python
-from adk_bidi import MultiAgentSupervisor, SharedMemory
-from google.adk.agents import Agent
-
-# Create specialist agents
-researcher = Agent(name="researcher", model="gemini-live-2.5-flash-native-audio", ...)
-analyst = Agent(name="analyst", model="gemini-live-2.5-flash-native-audio", ...)
-
-# Coordinate with supervisor
-supervisor = MultiAgentSupervisor(
-    agents=[researcher, analyst],
-    shared_memory=SharedMemory(),
-)
-```
-
-### Autonomous Agent
-
-```bash
-/adk-autonomous-agent --type "research" --goal "Find and summarize AI research papers"
-```
-
-```python
-from adk_bidi import AutonomousAgent
-
-agent = AutonomousAgent(
-    name="researcher",
-    goal="Research and synthesize information about AI trends",
-    enable_proactivity=True,
-)
-# Agent reasons autonomously: OBSERVE -> THINK -> PLAN -> ACT -> REFLECT
-```
-
-### Memory Systems
-
-```bash
-/adk-memory-manager --type "shared" --conflict-strategy "last-write-wins"
-```
-
-```python
-from adk_bidi import WorkingMemory, SharedMemory, PersistentMemoryStore
-
-# Working memory (short-term with attention scoring)
-working = WorkingMemory(max_size=20)
-working.add("user_name", "Alice", importance=0.8)
-
-# Shared memory (cross-agent coordination)
-shared = SharedMemory()
-await shared.write("task", "research AI", "agent1")
-
-# Persistent memory (Pinecone vector storage)
-persistent = PersistentMemoryStore(namespace="knowledge")
-persistent.store_memory("fact1", "Python is a programming language", importance=0.7)
-```
-
-### Example Applications
-
-```bash
-# Voice Assistant
-python -m adk_bidi.examples.voice_assistant.main
-
-# Multimodal Chat
-python -m adk_bidi.examples.multimodal_chat.main
-
-# Autonomous Researcher
-python -m adk_bidi.examples.autonomous_researcher.main
-
-# Multi-Agent Support Team
-python -m adk_bidi.examples.multi_agent_support.main
-```
+Triggers: `adk-langgraph`
 
 ---
 
 ## Project Structure
 
 ```
-CLAUDE-ADK-SKILLS/
-+-- .claude-plugin/
-|   +-- plugin.json
-|   +-- marketplace.json
-+-- skills/
-|   +-- adk-adaptive-agent-generator.md
-|   +-- adk-persona-builder.md
-|   +-- adk-domain-expert-builder.md
-|   +-- adk-multi-agent-orchestrator.md
-|   +-- adk-langgraph-orchestrator.md
-|   +-- adk-pinecone-rag.md
-|   +-- adk-mcp-integration.md
-|   +-- adk-rag-builder.md
-|   +-- adk-deployment-manager.md
-|   +-- adk-bidi-multi-agent.md        # NEW
-|   +-- adk-memory-manager.md          # NEW
-|   +-- adk-autonomous-agent.md        # NEW
-+-- adk_bidi/                          # NEW
-|   +-- core/
-|   |   +-- live_session.py            # LiveRequestQueue wrapper
-|   |   +-- streaming_config.py        # Streaming presets
-|   |   +-- websocket_server.py        # FastAPI WebSocket
-|   +-- memory/
-|   |   +-- working_memory.py          # Short-term memory
-|   |   +-- semantic_memory.py         # Knowledge graph
-|   |   +-- shared_memory.py           # Cross-agent state
-|   |   +-- persistent_store.py        # Pinecone persistence
-|   +-- agents/
-|   |   +-- bidi_agent.py              # Base bidirectional agent
-|   |   +-- voice_agent.py             # Native audio agent
-|   |   +-- multimodal_agent.py        # Text + audio + video
-|   |   +-- autonomous_agent.py        # Self-reasoning agent
-|   +-- orchestration/
-|   |   +-- supervisor.py              # Multi-agent supervisor
-|   |   +-- router.py                  # Intent-based routing
-|   |   +-- swarm.py                   # Parallel agent swarm
-|   +-- examples/
-|       +-- voice_assistant/
-|       +-- multimodal_chat/
-|       +-- autonomous_researcher/
-|       +-- multi_agent_support/
-+-- mcp_servers/
-|   +-- CATALOG.md
-+-- README.md
+Claude-ADK-Skills/
+├── .claude-plugin/
+│   ├── plugin.json          ← Claude plugin manifest
+│   └── marketplace.json     ← marketplace listing
+├── skills/                  ← 25 skill directories (each: SKILL.md + references/)
+│   ├── adk-a2a/
+│   ├── adk-agent-builder/
+│   ├── adk-agentic-prod-workflows/
+│   ├── adk-agents/
+│   ├── ... (25 total)
+│   └── adk-tools/
+├── agents/                  ← Claude Code subagents (.md files, auto-loaded by Claude)
+│   ├── architect.md
+│   ├── agent-builder.md
+│   ├── debugger.md
+│   ├── git-ops.md
+│   ├── setup.md
+│   ├── style-checker.md
+│   ├── workflow-builder.md
+│   └── workflow-designer.md
+├── adk-runtime/
+│   └── agents/              ← ADK Python runtime configs (.agent.yaml, loaded by ADK runner)
+│       ├── root_agent.yaml
+│       ├── architect.agent.yaml
+│       └── ... (11 configs)
+├── bin/
+│   └── cli.js               ← npx shim → shells out to install.sh
+├── tests/                   ← pytest skill validation suite
+├── scripts/                 ← quick_validate.py, eval helpers
+├── docs/                    ← local ADK reference docs
+├── mcp_servers/
+│   └── CATALOG.md
+├── install.sh               ← canonical installer (no auth, HTTPS clone + tarball fallback)
+├── package.json             ← npx entry point
+├── CLAUDE.md                ← dispatcher routing rules
+└── requirements.txt
 ```
+
+**`agents/` vs `adk-runtime/agents/`**
+
+- `agents/*.md` — Claude Code subagent definitions. Each auto-loads the matching ADK skill via the Skill tool before executing. These run inside Claude Code.
+- `adk-runtime/agents/*.agent.yaml` — ADK Python runtime agent configs consumed by the ADK runner (`google-adk`). These configure Gemini-based agents in the ADK execution environment.
 
 ---
 
 ## Environment Variables
 
 ```bash
-# Google AI
+# Google AI (required)
 GOOGLE_API_KEY=your_gemini_api_key
 
-# Pinecone (Multimodal RAG)
+# Pinecone (RAG features)
 PINECONE_API_KEY=your_pinecone_api_key
 PINECONE_INDEX_HOST=your_index_host
+
+# LiteLLM providers (optional, use whichever you need)
+ANTHROPIC_API_KEY=your_anthropic_key
+OPENAI_API_KEY=your_openai_key
+AWS_ACCESS_KEY_ID=your_aws_key        # Bedrock
+OPENROUTER_API_KEY=your_openrouter_key
 
 # MCP Servers
 BRAVE_API_KEY=your_brave_api_key
 GITHUB_TOKEN=your_github_token
-NOTION_TOKEN=your_notion_token
-SLACK_BOT_TOKEN=your_slack_token
 
 # GCP Deployment
 GOOGLE_CLOUD_PROJECT=your_project_id
@@ -576,12 +205,12 @@ GOOGLE_CLOUD_PROJECT=your_project_id
 
 ```
 google-adk>=1.0.0
-pinecone>=5.0.0
+litellm>=1.0.0
 langgraph>=0.2.0
-langchain-core>=0.3.0
+pinecone>=5.0.0
 vertexai>=1.0.0
-fastapi>=0.100.0     # For WebSocket server
-uvicorn>=0.20.0      # ASGI server
+fastapi>=0.100.0
+uvicorn>=0.20.0
 ```
 
 ---
@@ -589,12 +218,13 @@ uvicorn>=0.20.0      # ASGI server
 ## Documentation
 
 - [Google ADK Docs](https://google.github.io/adk-docs/)
-- [Pinecone Docs](https://docs.pinecone.io/)
+- [LiteLLM Docs](https://docs.litellm.ai/)
 - [LangGraph Docs](https://langchain-ai.github.io/langgraph/)
 - [MCP Specification](https://modelcontextprotocol.io/)
+- [Pinecone Docs](https://docs.pinecone.io/)
 
 ---
 
 ## License
 
-MIT License - See LICENSE file for details.
+MIT License — see LICENSE for details.

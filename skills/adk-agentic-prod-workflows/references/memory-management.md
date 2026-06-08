@@ -343,6 +343,428 @@ async def use_memory(ctx: InvocationContext):
     )
 ```
 
+## Continuous Learning: Auto-Save + Preload Pattern
+
+Agents that learn across sessions need automatic memory capture. This pattern saves context on exit and preloads it on entry — no manual intervention required.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ Session Start                                            │
+│   │                                                      │
+│   ▼                                                      │
+│ PreloadMemoryTool ─── Fetch user facts, preferences,     │
+│                        past decisions from MemoryService │
+│   │                                                      │
+│   ▼                                                      │
+│ [Agent conversation] ─── Uses preloaded context           │
+│   │                        Accumulates new facts          │
+│   ▼                                                      │
+│ Session End                                              │
+│   │                                                      │
+│   ▼                                                      │
+│ after_agent_callback ─── Auto-save new facts,             │
+│                           updated preferences,            │
+│                           decisions to MemoryService      │
+└──────────────────────────────────────────────────────────┘
+```
+
+### PreloadMemoryTool — Load on Entry
+
+```python
+"""preload_memory_tool.py — Load user memory at session start."""
+from google.adk.tools import ToolContext
+
+
+def preload_memory(tool_context: ToolContext) -> dict:
+    """Tool that loads user memory into session state on first turn.
+
+    Register this as a tool on the entry agent. The model calls it
+    automatically when it needs user context.
+    """
+    user_id = tool_context.user_id
+    memory_service = tool_context.memory_service
+
+    # Search recent memories
+    facts = memory_service.search(f"user {user_id} preferences facts decisions", user_id=user_id)
+
+    # Load into session state for easy access
+    tool_context.state["user_facts"] = [
+        {"content": m.content, "category": m.metadata.get("category", "general")}
+        for m in facts
+    ]
+    tool_context.state["memory_loaded"] = True
+
+    return {
+        "status": "ok",
+        "facts_loaded": len(facts),
+        "summary": "\n".join(f["content"] for f in tool_context.state["user_facts"][:5]),
+    }
+```
+
+### Auto-Save Callback — Save on Exit
+
+```python
+"""auto_save_callback.py — Persist learned facts on session exit."""
+from google.adk.memory import FirestoreMemoryService
+
+
+async def after_agent_auto_save(callback_context):
+    """After each agent turn, extract and save any new facts learned.
+
+    The agent instruction should mark facts with:
+    [REMEMBER: <fact>]
+    or use a structured output tool to record facts.
+    """
+    response = callback_context.state.get("agent_response", "")
+    user_id = callback_context.user_id
+    memory_service = callback_context.memory_service
+
+    # Extract marked facts
+    import re
+    facts = re.findall(r"\[REMEMBER:\s*(.+?)\]", response)
+    for fact in facts:
+        await memory_service.save(
+            content=fact.strip(),
+            user_id=user_id,
+            metadata={
+                "category": "learned_fact",
+                "session_id": callback_context.session_id,
+                "timestamp": callback_context.state.get("timestamp", ""),
+            },
+        )
+
+    # Track what was learned this session
+    if facts:
+        callback_context.state.setdefault("new_facts_this_session", []).extend(facts)
+        logger.info(f"Auto-saved {len(facts)} facts for user {user_id}")
+```
+
+### Wiring
+
+```python
+entry_agent = LlmAgent(
+    name="learning_agent",
+    model="gemini-2.5-flash",
+    instruction="""You are a personal assistant that learns about the user over time.
+    When you learn a new fact about the user, mark it with [REMEMBER: <fact>].
+    Use preload_memory() at the start of each session to recall past facts.""",
+    tools=[preload_memory],
+    after_agent_callback=after_agent_auto_save,
+)
+```
+
+## adk-redis: Redis Memory Service Patterns
+
+Three integration patterns for using Redis as a memory backend with ADK. Redis provides sub-millisecond retrieval for session and memory caching.
+
+### Pattern 1: Framework-Managed (Simplest)
+
+```python
+"""Redis as drop-in MemoryService via ADK Redis plugin."""
+import os
+from google.adk.memory import RedisMemoryService
+
+memory_service = RedisMemoryService(
+    redis_url=os.getenv("REDIS_URL", "redis://localhost:6379"),
+)
+
+runner = Runner(
+    app_name="my_app",
+    agent=root_agent,
+    session_service=session_service,
+    memory_service=memory_service,
+)
+# ADK handles all read/write. No custom code needed.
+```
+
+Best for: Standard use cases, minimal customization, fastest setup.
+
+### Pattern 2: LLM-Controlled REST Tools
+
+```python
+"""Redis as tools the LLM controls explicitly."""
+import redis.asyncio as redis
+
+r = redis.from_url(os.getenv("REDIS_URL", "redis://localhost:6379"))
+
+
+async def search_memory(query: str, user_id: str, top_k: int = 5) -> dict:
+    """Vector search over user memories stored in Redis with RedisVL."""
+    # RedisVL vector search
+    results = await r.ft("memories_idx").search(
+        query=f"(@user_id:{user_id}) => [KNN {top_k} @embedding $vec AS score]",
+        query_params={"vec": embed_query(query)},
+    )
+    return {
+        "matches": [
+            {"content": doc.content, "score": float(doc.score)}
+            for doc in results.docs
+        ]
+    }
+
+
+async def save_memory(user_id: str, content: str, metadata: dict = {}) -> dict:
+    """Save a memory with vector embedding for semantic search."""
+    embedding = embed_text(content)
+    await r.hset(
+        f"memory:{user_id}:{uuid4().hex[:12]}",
+        mapping={
+            "content": content,
+            "embedding": embedding.tobytes(),
+            "metadata": json.dumps(metadata),
+            "user_id": user_id,
+        },
+    )
+    return {"status": "ok"}
+
+
+agent = LlmAgent(
+    name="redis_agent",
+    tools=[search_memory, save_memory],  # LLM controls memory ops
+)
+```
+
+Best for: Fine-grained LLM control, custom schema, multi-index search.
+
+### Pattern 3: MCP Tools
+
+```python
+"""Redis exposed via MCP server — language-agnostic, process-isolated."""
+# mcp_servers/redis_memory_server.py
+from mcp.server import Server, stdio
+from mcp.types import Tool, TextContent
+
+server = Server("redis-memory")
+
+
+@server.tool()
+async def search_user_memory(query: str, user_id: str) -> list[dict]:
+    """Semantic search over user memories."""
+    results = await redis_client.ft("memories_idx").search(
+        f"@user_id:{user_id} => [KNN 5 @embedding $vec AS score]",
+        {"vec": embed(query)},
+    )
+    return [{"content": d.content, "score": d.score} for d in results.docs]
+
+
+@server.tool()
+async def save_user_memory(user_id: str, content: str) -> dict:
+    """Persist a fact about the user."""
+    key = f"memory:{user_id}:{uuid4().hex[:12]}"
+    await redis_client.hset(key, mapping={
+        "content": content, "user_id": user_id, "embedding": embed(content),
+    })
+    return {"status": "ok", "key": key}
+
+
+# Client side — MCPToolset
+agent = LlmAgent(
+    name="mcp_redis_agent",
+    tools=[MCPToolset(
+        connection_params=StdioServerParameters(
+            command="python3", args=["mcp_servers/redis_memory_server.py"],
+        ),
+        tool_filter=["search_user_memory", "save_user_memory"],
+    )],
+)
+```
+
+Best for: Cross-language workflows (Python agent, Go memory server), process isolation, reusable memory infrastructure.
+
+### RedisVL Semantic Caching
+
+```python
+"""Cache model responses with semantic similarity matching."""
+import hashlib
+
+async def semantic_cache(query: str, threshold: float = 0.85) -> dict | None:
+    """Check if semantically similar query has a cached response."""
+    results = await r.ft("cache_idx").search(
+        f"=> [KNN 1 @embedding $vec AS score]",
+        {"vec": embed_query(query)},
+    )
+    if results.docs and float(results.docs[0].score) >= threshold:
+        return json.loads(results.docs[0].response)
+    return None
+
+async def cache_response(query: str, response: str, ttl: int = 3600):
+    """Cache response with semantic embedding for future hits."""
+    key = f"cache:{hashlib.sha256(query.encode()).hexdigest()[:16]}"
+    await r.hset(key, mapping={
+        "query": query, "response": response,
+        "embedding": embed_query(query).tobytes(),
+    })
+    await r.expire(key, ttl)
+```
+
+### Redis Hybrid Search
+
+```python
+"""Combine full-text + vector search for precise memory retrieval."""
+async def hybrid_search(user_id: str, query: str, filters: dict = {}) -> list[dict]:
+    """FT.SEARCH with both text and vector components."""
+    filter_parts = [f"@user_id:{user_id}"]
+    for k, v in filters.items():
+        filter_parts.append(f"@{k}:{v}")
+
+    results = await r.ft("memories_idx").search(
+        f"({' '.join(filter_parts)}) => [KNN 10 @embedding $vec AS vector_score]",
+        {"vec": embed_query(query)},
+        sort_by="vector_score",
+        return_fields=["content", "category", "timestamp"],
+    )
+    return [{"content": d.content, "score": d.vector_score, **d.__dict__}
+            for d in results.docs]
+```
+
+## Custom Memory Backend Implementations
+
+### Milvus (Billion-Scale Vector DB)
+
+```python
+"""MilvusMemoryService — user-isolated vector search at scale."""
+from pymilvus import MilvusClient, DataType
+
+
+class MilvusMemoryService:
+    """Billion-scale memory backend with per-user collection partitioning."""
+
+    def __init__(self, uri: str = "http://localhost:19530"):
+        self.client = MilvusClient(uri=uri)
+
+    async def search(self, query: str, user_id: str, top_k: int = 10) -> list[dict]:
+        embedding = embed_query(query)
+        results = self.client.search(
+            collection_name="agent_memories",
+            data=[embedding],
+            anns_field="embedding",
+            limit=top_k,
+            # User isolation via partition key — critical for multi-tenant
+            expr=f'user_id == "{user_id}"',
+            output_fields=["content", "category", "timestamp"],
+        )
+        return [
+            {"content": h.entity.get("content"), "score": h.distance}
+            for h in results[0]
+        ]
+
+    async def save(self, user_id: str, content: str, metadata: dict = {}):
+        embedding = embed_query(content)
+        self.client.insert(
+            collection_name="agent_memories",
+            data=[{
+                "user_id": user_id,  # Partition key
+                "content": content,
+                "embedding": embedding,
+                "category": metadata.get("category", "general"),
+                "timestamp": metadata.get("timestamp", ""),
+            }],
+        )
+
+
+# Create collection with user_id as partition key
+client.create_collection(
+    collection_name="agent_memories",
+    dimension=768,
+    partition_key_field="user_id",  # Enforced user isolation
+    metric_type="COSINE",
+)
+```
+
+### Firestore (GCP NoSQL)
+
+```python
+"""FirestoreMemoryService — serverless document memory."""
+from google.cloud import firestore_async
+
+
+class FirestoreMemoryService:
+    """Memory backend for serverless GCP deployments."""
+
+    def __init__(self, project_id: str):
+        self.db = firestore_async.Client(project=project_id)
+
+    async def search(self, query: str, user_id: str, limit: int = 10) -> list[dict]:
+        """Simple keyword search — for semantic search use with Vertex AI embeddings."""
+        docs = self.db.collection("memories")
+        results = (
+            await docs.where("user_id", "==", user_id)
+            .order_by("timestamp", direction="DESCENDING")
+            .limit(limit)
+            .get()
+        )
+        return [doc.to_dict() for doc in results]
+
+    async def save(self, user_id: str, content: str, metadata: dict = {}):
+        await self.db.collection("memories").add({
+            "user_id": user_id,
+            "content": content,
+            "metadata": metadata,
+            "timestamp": firestore_async.SERVER_TIMESTAMP,
+        })
+
+    async def delete_user_memories(self, user_id: str):
+        """GDPR: delete all memories for a user."""
+        docs = await self.db.collection("memories").where("user_id", "==", user_id).get()
+        for doc in docs:
+            await doc.reference.delete()
+```
+
+### cognee (Knowledge Graph Memory)
+
+```python
+"""CogneeMemoryService — graph-based memory with entity relationships."""
+import cognee
+
+
+class CogneeMemoryService:
+    """Knowledge graph memory for entity-aware reasoning.
+
+    Use when: relationships between facts matter (e.g., "Alice works at Acme",
+    "Acme competitor is BetaCorp", agent should infer competitive context).
+    """
+
+    async def save(self, user_id: str, content: str):
+        """Add fact to knowledge graph. cognee extracts entities and relationships."""
+        await cognee.add(
+            f"user:{user_id}",
+            content,
+            dataset_name=f"user_{user_id}",
+        )
+
+    async def search(self, user_id: str, query: str, top_k: int = 10) -> list[dict]:
+        """Search with graph-aware retrieval — returns related entities too."""
+        results = await cognee.search(
+            query,
+            dataset_name=f"user_{user_id}",
+            k=top_k,
+            include_related=True,  # Follow entity edges
+        )
+        return [
+            {"content": r.content, "entities": r.entities, "score": r.score}
+            for r in results
+        ]
+
+    async def get_entity_graph(self, user_id: str, entity: str) -> dict:
+        """Get all relationships for an entity across all user facts."""
+        graph = await cognee.get_graph(
+            dataset_name=f"user_{user_id}",
+            center_entity=entity,
+            depth=2,  # 2-hop neighborhood
+        )
+        return graph
+```
+
+**Backend selection guide:**
+
+| Backend | Scale | Latency | Best For |
+|---------|-------|---------|----------|
+| Vertex AI Memory Bank | <1M docs | <50ms | GCP-native, simplest setup |
+| adk-redis | <10M docs | <1ms | Ultra-low latency caching, session memory |
+| Milvus | >1B docs | <100ms | Enterprise-scale vector search with user isolation |
+| Firestore | <100K docs | <200ms | Serverless GCP deployments, no ops |
+| cognee | <1M entities | <500ms | Relationship-aware reasoning, entity graphs |
+
 ## Production Checklist
 
 - [ ] SessionService backend matches scale: InMemory for dev, Firestore for serverless, Spanner for global

@@ -298,3 +298,142 @@ Edge(
 4. **Override**: Human can override any automated decision
 
 Use `after_agent_callback` to implement HITL checks without blocking the workflow.
+
+### HITL Approval Tool Pattern
+
+For high-stakes operations (deployments, financial transactions, content publishing), insert explicit human approval:
+
+```python
+"""hitl_tools.py — Human approval tool for high-stakes operations."""
+from google.adk.tools import ToolContext
+
+
+def request_human_approval(
+    action: str,
+    details: dict,
+    tool_context: ToolContext,
+) -> dict:
+    """Request human approval for a high-stakes action.
+
+    This tool pauses the workflow and returns a pending status.
+    The caller (API endpoint or UI) presents the approval request,
+    collects the human decision, and resumes the session.
+
+    Args:
+        action: What action requires approval (e.g., "deploy_to_production")
+        details: Context for the human reviewer (e.g., {"commit": "abc123", "changes": "..."})
+    """
+    # Store approval request in session state
+    approval_id = f"approval_{tool_context.session_id}_{hash(action)}"
+    tool_context.state["pending_approval"] = {
+        "approval_id": approval_id,
+        "action": action,
+        "details": details,
+        "status": "pending",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+    # Signal the workflow to pause
+    tool_context.actions.pause = True
+
+    return {
+        "status": "pending_approval",
+        "approval_id": approval_id,
+        "message": f"Approval requested for: {action}. Waiting for human review.",
+    }
+
+
+# Wire the approval tool to agents that perform high-stakes operations
+deploy_agent = LlmAgent(
+    name="deployer",
+    instruction="""Before deploying, ALWAYS call request_human_approval()
+    with action='deploy_to_production' and the deployment details.
+    Wait for approval before proceeding.""",
+    tools=[request_human_approval, deploy_to_cloud_run],
+)
+```
+
+### Checkpoint Pattern for Resumable HITL
+
+```python
+"""checkpoint_utils.py — Save/restore state for HITL workflows."""
+from google.adk.sessions import SessionService
+
+
+async def save_approval_checkpoint(
+    session_service: SessionService,
+    session_id: str,
+    approval_id: str,
+) -> dict:
+    """Save session checkpoint while awaiting human approval.
+
+    The session persists in SessionService. This is a marker that
+    identifies the session as awaiting external input.
+    """
+    session = await session_service.get_session(session_id)
+    checkpoint = {
+        "session_id": session_id,
+        "approval_id": approval_id,
+        "state_snapshot": dict(session.state),
+        "status": "awaiting_approval",
+        "checkpointed_at": datetime.utcnow().isoformat(),
+    }
+    # Store in a dedicated collection for approval queue
+    await session_service.update_session_state(session_id, {
+        "approval_checkpoint": checkpoint,
+        "workflow_paused": True,
+    })
+    return checkpoint
+
+
+async def resume_after_approval(
+    session_service: SessionService,
+    session_id: str,
+    approved: bool,
+    reviewer_notes: str = "",
+) -> dict:
+    """Resume a paused workflow after human decision.
+
+    Called by the approval UI/API after the human decides.
+    """
+    session = await session_service.get_session(session_id)
+    if not session.state.get("workflow_paused"):
+        return {"status": "error", "message": "Workflow is not in pending state"}
+
+    session.state["pending_approval"]["status"] = "approved" if approved else "rejected"
+    session.state["pending_approval"]["reviewer_notes"] = reviewer_notes
+    session.state["workflow_paused"] = False
+
+    await session_service.update_session(session)
+
+    # Re-run the workflow from the checkpoint
+    runner = InProcessRunner(agent=graph_agent)
+    result = await runner.run(
+        user_id=session.user_id,
+        session_id=session_id,
+    )
+    return {"status": "ok", "result": result}
+```
+
+### User Confirmation Flow
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│ Agent makes  │────▶│ request_     │────▶│ Workflow     │
+│ high-stakes  │     │ human_       │     │ pauses,      │
+│ decision     │     │ approval()   │     │ checkpoint   │
+└──────────────┘     └──────────────┘     └──────┬───────┘
+                                                  │
+                                          ┌──────▼───────┐
+                                          │ Human reviews │
+                                          │ in UI/API     │
+                                          └──────┬───────┘
+                                                  │
+                          ┌───────────────────────┼───────────────┐
+                          │                       │               │
+                    ┌─────▼─────┐          ┌──────▼──────┐  ┌─────▼─────┐
+                    │ Approved  │          │ Rejected    │  │ Modified  │
+                    │ → Resume  │          │ → Stop +    │  │ → Resume  │
+                    │ workflow  │          │   notify    │  │ with edits│
+                    └───────────┘          └─────────────┘  └───────────┘
+```

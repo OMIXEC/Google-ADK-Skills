@@ -180,12 +180,12 @@ def generate_python_agent(name: str, cfg: dict) -> str:
     tools = cfg.get("tools", [])
     tool_refs = ", ".join(tools) if tools else ""
 
-    return f"""agent_{name} = Agent(
+    return f'''agent_{name} = Agent(
     name="{name}",
     model="{model}",
     instruction="""{instruction}""",
     tools=[{tool_refs}],
-)"""
+)'''
 
 
 def generate_python_tool(name: str, cfg: dict) -> str:
@@ -539,6 +539,92 @@ main().catch(console.error);
     return "\n".join(lines)
 
 
+COST_TRACKING_MODULE = '''"""Cost tracking and per-session budget enforcement.
+
+Usage:
+    from cost_tracking import track_cost, session_cost, MAX_COST_PER_SESSION
+
+    # Wrap agents with before/after model callbacks
+    agent = Agent(
+        ...,
+        before_model_callback=before_model_callback_timer,
+        after_model_callback=after_model_callback_cost,
+    )
+"""
+
+import time
+import structlog
+
+logger = structlog.get_logger(__name__)
+
+# Per-1M-token pricing (USD) — update with your model tier
+COST_PER_1M_INPUT = 0.15   # Gemini 2.5 Flash input
+COST_PER_1M_OUTPUT = 0.60  # Gemini 2.5 Flash output
+
+MAX_COST_PER_SESSION_USD = 5.00  # Hard cap per session
+
+# In-memory session tracking. Production: use Redis or Firestore.
+session_costs: dict[str, float] = {}
+model_call_latencies: dict[str, list[float]] = {}
+
+
+def _calculate_cost(usage_metadata) -> float:
+    """Calculate USD cost from model usage_metadata."""
+    input_tokens = getattr(usage_metadata, "prompt_token_count", 0) or 0
+    output_tokens = getattr(usage_metadata, "candidates_token_count", 0) or 0
+    return (
+        (input_tokens / 1_000_000) * COST_PER_1M_INPUT
+        + (output_tokens / 1_000_000) * COST_PER_1M_OUTPUT
+    )
+
+
+async def before_model_callback_timer(callback_context):
+    """Record model call start time for latency tracking."""
+    callback_context.state["_model_call_start"] = time.monotonic()
+
+
+async def after_model_callback_cost(callback_context):
+    """Track cost and latency after each model call.
+
+    Stores accumulated cost in session state. Blocks if budget exceeded.
+    """
+    session_id = callback_context.session_id
+    start_time = callback_context.state.get("_model_call_start")
+
+    # Latency tracking
+    if start_time:
+        latency_ms = (time.monotonic() - start_time) * 1000
+        model_call_latencies.setdefault(session_id, []).append(latency_ms)
+        logger.info("model_call_latency", latency_ms=round(latency_ms, 2), session=session_id)
+
+    # Cost tracking
+    response = callback_context.response
+    if response and hasattr(response, "usage_metadata"):
+        cost = _calculate_cost(response.usage_metadata)
+        session_costs.setdefault(session_id, 0)
+        session_costs[session_id] += cost
+
+        logger.info(
+            "model_call_cost",
+            cost_usd=round(cost, 6),
+            session_total=round(session_costs[session_id], 4),
+            session=session_id,
+        )
+
+        # Budget guard
+        if session_costs[session_id] > MAX_COST_PER_SESSION_USD:
+            logger.warning("budget_exceeded", session=session_id,
+                           total=round(session_costs[session_id], 2))
+            # Signal to stop further model calls
+            callback_context.state["budget_exceeded"] = True
+            callback_context.state["session_cost"] = session_costs[session_id]
+'''
+
+
+def generate_cost_tracking_module() -> str:
+    return COST_TRACKING_MODULE
+
+
 def generate_mcp_agent_config(cfg: dict) -> str:
     """Generate MCP agent configuration from YAML/JSON config."""
     name = cfg["name"]
@@ -619,6 +705,8 @@ def main():
     parser.add_argument("--output", required=True, help="Output file path")
     parser.add_argument("--lang", default="python", choices=["python", "go", "ts", "mcp"],
                         help="Target language or output type (default: python)")
+    parser.add_argument("--with-cost-tracking", action="store_true",
+                        help="Inject cost/latency tracking callbacks into generated workflow")
 
     args = parser.parse_args()
 
@@ -645,6 +733,14 @@ def main():
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(code)
+
+    # Inject cost tracking module alongside generated workflow
+    if args.with_cost_tracking and args.lang == "python":
+        cost_tracking_path = output_path.parent / "cost_tracking.py"
+        cost_tracking_path.write_text(COST_TRACKING_MODULE)
+        print(f"  Cost tracking module: {cost_tracking_path}")
+    elif args.with_cost_tracking:
+        print(f"  [WARN] --with-cost-tracking only supported for Python. Skipping for {args.lang}.")
 
     print(f"Workflow composed: {output_path}")
     print(f"  Language: {args.lang}")
