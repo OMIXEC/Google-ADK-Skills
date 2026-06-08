@@ -8,6 +8,9 @@
 #   bash install.sh --target claude-code       # specific IDE
 #   bash install.sh --target all               # all detected IDEs
 #   bash install.sh --target gemini-cli --copy # copy instead of symlink
+#
+# Public, no-auth: clones over HTTPS, falls back to a tarball download when
+# git is unavailable. Downloads skills, evals (tests/) and scripts.
 
 set -e
 
@@ -53,13 +56,12 @@ get_cli_cmd() {
 }
 
 # ── Parse arguments ─────────────────────────────────
-AUTH_METHOD="interactive"
-GITHUB_TOKEN=""
 TARGET_IDE="auto"
 LINK_METHOD="symlink"
 VERBOSE=false
 SKIP_DEPS=false
 FORCE=false
+GIT_REF="main"
 
 print_banner() {
     echo -e "${BLUE}"
@@ -78,9 +80,8 @@ log_step()  { echo -e "${BLUE}[STEP]${NC} $1"; }
 show_help() {
     echo "Usage: install.sh [OPTIONS]"
     echo ""
-    echo "Authentication:"
-    echo "  --token TOKEN      GitHub Personal Access Token"
-    echo "  --ssh              Use SSH key authentication"
+    echo "Public, no-auth installer. Clones over HTTPS; falls back to a tarball"
+    echo "download when git is missing or the clone fails."
     echo ""
     echo "IDE Target:"
     echo "  --target IDE       Install for specific IDE"
@@ -90,6 +91,7 @@ show_help() {
     echo ""
     echo "Other:"
     echo "  --install-dir DIR  Custom install directory (default: ~/.claude-adk-skills)"
+    echo "  --ref REF          Git branch/tag to install (default: main)"
     echo "  --skip-deps        Skip Python dependency installation"
     echo "  --force            Force reinstall"
     echo "  --verbose          Verbose output"
@@ -99,20 +101,22 @@ show_help() {
     echo "  bash install.sh                              # Auto-detect IDE"
     echo "  bash install.sh --target claude-code          # Claude Code only"
     echo "  bash install.sh --target all --copy           # All IDEs, copy mode"
-    echo "  bash install.sh --target gemini-cli --ssh     # Gemini CLI via SSH"
+    echo "  curl -fsSL https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/install.sh | bash"
+    echo ""
+    echo "Alternative — install as a Claude Code plugin (no clone needed):"
+    echo "  /plugin marketplace add ${REPO_OWNER}/${REPO_NAME}"
+    echo "  /plugin install claude-adk-skills"
 }
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --token)
-            GITHUB_TOKEN="$2"; AUTH_METHOD="pat"; shift 2 ;;
-        --ssh)
-            AUTH_METHOD="ssh"; shift ;;
         --target)
             TARGET_IDE="$2"; shift 2 ;;
         --copy)
             LINK_METHOD="copy"; shift ;;
+        --ref)
+            GIT_REF="$2"; shift 2 ;;
         --install-dir)
             INSTALL_DIR="$2"; VENV_DIR="${INSTALL_DIR}/venv"; shift 2 ;;
         --skip-deps)
@@ -145,10 +149,13 @@ check_dependencies() {
     log_step "Checking dependencies..."
     local missing_deps=()
 
-    if ! command -v git &> /dev/null; then
-        missing_deps+=("git")
-    else
+    # Need a way to fetch the repo: git (preferred) OR curl/wget for the tarball.
+    if command -v git &> /dev/null; then
         log_info "Found git: $(git --version)"
+    elif command -v curl &> /dev/null || command -v wget &> /dev/null; then
+        log_info "No git — will download tarball via curl/wget"
+    else
+        missing_deps+=("git or curl/wget")
     fi
 
     local python_cmd=""
@@ -189,57 +196,61 @@ check_dependencies() {
     log_info "All dependencies satisfied"
 }
 
-# ── Authentication ──────────────────────────────────
-setup_auth() {
-    log_step "Setting up authentication..."
-    if [[ "$AUTH_METHOD" == "interactive" ]]; then
-        echo ""
-        echo "Choose authentication method:"
-        echo "  1) GitHub Personal Access Token (PAT)"
-        echo "  2) SSH Key"
-        echo ""
-        read -p "Enter choice [1/2]: " auth_choice
-        case $auth_choice in
-            1) AUTH_METHOD="pat"
-               read -sp "Enter GitHub PAT: " GITHUB_TOKEN
-               echo "" ;;
-            2) AUTH_METHOD="ssh" ;;
-            *) log_error "Invalid choice"; exit 1 ;;
-        esac
+# ── Fetch repo (public, no-auth) ────────────────────
+# Tries a public HTTPS git clone first; falls back to a tarball download so the
+# installer works on machines without git (e.g. `curl | bash`). No PAT/SSH.
+REPO_HTTPS="https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
+REPO_TARBALL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${GIT_REF}.tar.gz"
+
+fetch_via_tarball() {
+    log_info "Downloading tarball (${GIT_REF})..."
+    local downloader=""
+    if command -v curl &> /dev/null; then
+        downloader="curl -fsSL"
+    elif command -v wget &> /dev/null; then
+        downloader="wget -qO-"
+    else
+        log_error "Need git, curl, or wget to download the repo"; exit 1
     fi
 
-    if [[ "$AUTH_METHOD" == "pat" ]]; then
-        [[ -z "$GITHUB_TOKEN" ]] && { log_error "GitHub token required"; exit 1; }
-        REPO_URL="https://${GITHUB_TOKEN}@github.com/${REPO_OWNER}/${REPO_NAME}.git"
-        log_info "Using PAT authentication"
-    else
-        REPO_URL="git@github.com:${REPO_OWNER}/${REPO_NAME}.git"
-        log_info "Using SSH authentication"
-    fi
+    mkdir -p "$INSTALL_DIR"
+    # GitHub tarballs nest everything under <repo>-<ref>/ — strip that level.
+    $downloader "$REPO_TARBALL" | tar -xz -C "$INSTALL_DIR" --strip-components=1 || {
+        log_error "Tarball download failed"; exit 1
+    }
+    log_info "Downloaded to $INSTALL_DIR"
 }
 
-# ── Clone/update repo ───────────────────────────────
-clone_repo() {
-    log_step "Setting up repository..."
+fetch_repo() {
+    log_step "Fetching repository (public, no auth)..."
+
     if [[ -d "$INSTALL_DIR" ]]; then
         if [[ "$FORCE" == true ]]; then
             log_warn "Removing existing installation..."
             rm -rf "$INSTALL_DIR"
-        else
+        elif [[ -d "$INSTALL_DIR/.git" ]] && command -v git &> /dev/null; then
             log_info "Updating existing installation..."
             cd "$INSTALL_DIR"
-            git remote set-url origin "$REPO_URL" 2>/dev/null || true
-            git pull origin main && log_info "Updated successfully" && return 0
-            log_error "Update failed"; exit 1
+            git pull --ff-only origin "$GIT_REF" && log_info "Updated successfully" && return 0
+            log_warn "git pull failed — re-fetching fresh"
+            cd - > /dev/null; rm -rf "$INSTALL_DIR"
+        else
+            log_info "Refreshing existing (non-git) installation..."
+            rm -rf "$INSTALL_DIR"
         fi
     fi
 
-    log_info "Cloning to $INSTALL_DIR..."
-    git clone "$REPO_URL" "$INSTALL_DIR" || {
-        log_error "Clone failed — check authentication"
-        exit 1
-    }
-    log_info "Repository cloned"
+    if command -v git &> /dev/null; then
+        log_info "Cloning $REPO_HTTPS (ref: $GIT_REF)..."
+        if git clone --depth 1 --branch "$GIT_REF" "$REPO_HTTPS" "$INSTALL_DIR" 2>/dev/null; then
+            log_info "Repository cloned"
+            return 0
+        fi
+        log_warn "git clone failed — falling back to tarball"
+    else
+        log_warn "git not found — using tarball download"
+    fi
+    fetch_via_tarball
 }
 
 # ── Python dependencies ─────────────────────────────
@@ -457,8 +468,7 @@ main() {
     print_banner
     detect_os
     check_dependencies
-    setup_auth
-    clone_repo
+    fetch_repo
     install_python_deps
     resolve_targets
 

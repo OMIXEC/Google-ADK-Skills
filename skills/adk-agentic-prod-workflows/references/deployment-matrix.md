@@ -691,6 +691,181 @@ adk api_server --app-dir app/ --port 8080
 
 ---
 
+## FastAPI Production Bootstrap
+
+Production-ready FastAPI server with ADK workflow integration, security middleware, and health checks. Generated via `scripts/compose_workflow.py` when `--server fastapi` is specified.
+
+### Application Factory
+
+```python
+"""app/main.py — Production FastAPI bootstrap for ADK workflows."""
+import os
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Request
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+from app.workflow import graph_agent
+from google.adk.runners import InProcessRunner
+from middleware.security_headers import SecurityHeadersMiddleware
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Warm up runner on startup."""
+    app.state.runner = InProcessRunner(agent=graph_agent)
+    app.state.ready = True
+    yield
+    app.state.ready = False
+
+
+def get_fast_api_app() -> FastAPI:
+    """Factory: returns production-configured FastAPI app."""
+    allowed_hosts = os.getenv("ALLOWED_HOSTS", "api.example.com").split(",")
+    cors_origins = os.getenv("CORS_ORIGINS", "https://app.example.com").split(",")
+
+    app = FastAPI(
+        title="ADK Workflow API",
+        version="1.0.0",
+        lifespan=lifespan,
+    )
+
+    # ── Security middleware ──
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
+    app.add_middleware(SecurityHeadersMiddleware)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=cors_origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST"],
+        allow_headers=["Authorization", "Content-Type", "X-Correlation-ID"],
+    )
+
+    return app
+
+
+app = get_fast_api_app()
+
+
+class RunRequest(BaseModel):
+    query: str = Field(min_length=1, max_length=4000)
+    user_id: str = Field(pattern=r"^[a-zA-Z0-9_-]+$")
+    session_id: str | None = None
+
+
+class RunResponse(BaseModel):
+    status: str
+    result: dict | None = None
+    error: str | None = None
+
+
+@app.get("/health")
+async def health():
+    """Basic liveness — always returns 200 if process alive."""
+    return {"status": "healthy"}
+
+
+@app.get("/ready")
+async def ready():
+    """Readiness — returns 200 when runner is warmed up."""
+    if app.state.ready:
+        return {"status": "ready"}
+    return {"status": "not_ready"}, 503
+
+
+@app.post("/run", response_model=RunResponse)
+async def run_workflow(req: RunRequest, request: Request):
+    """Execute the ADK workflow."""
+    try:
+        result = await app.state.runner.run(
+            query=req.query,
+            user_id=req.user_id,
+            session_id=req.session_id,
+        )
+        return RunResponse(status="ok", result=result)
+    except Exception as e:
+        logger.exception("Workflow run failed")
+        return RunResponse(status="error", error=str(e))
+```
+
+### Security-Hardened Dockerfile (Gunicorn + Uvicorn)
+
+```dockerfile
+# Dockerfile — multi-stage, non-root, gunicorn + uvicorn workers
+FROM python:3.11-slim AS builder
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+FROM python:3.11-slim
+WORKDIR /app
+
+# Install gunicorn for production serving
+RUN pip install --no-cache-dir gunicorn uvicorn[standard]
+
+COPY --from=builder /root/.local /root/.local
+COPY app/ ./app/
+COPY evals/ ./evals/
+
+ENV PATH=/root/.local/bin:$PATH
+ENV PORT=8080
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Non-root user
+RUN groupadd --system app && useradd --system --no-create-home --gid app app \
+    && chown -R app:app /app
+USER app
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" || exit 1
+
+# Gunicorn with uvicorn workers — production-grade ASGI
+# --worker-connections: 1000 per worker (tune to container memory)
+# --keep-alive: 5s connection keepalive
+# --timeout: 300s to allow long-running workflow steps
+CMD ["gunicorn", "app.main:app", \
+     "--workers", "4", \
+     "--worker-class", "uvicorn.workers.UvicornWorker", \
+     "--bind", "0.0.0.0:8080", \
+     "--keep-alive", "5", \
+     "--timeout", "300", \
+     "--access-logfile", "-", \
+     "--error-logfile", "-"]
+```
+
+### Cloud Run Config Table
+
+| Setting | Value | Reason |
+|---------|-------|--------|
+| `--memory` | 512Mi | ADK runner + agent state fits in 512Mi for most workflows |
+| `--cpu` | 1 (1000m) | One vCPU per instance; gunicorn workers share |
+| `--max-instances` | 10 | Production cap; increase based on load testing |
+| `--concurrency` | 80 | gunicorn 4 workers × 20 connections each ≈ 80 |
+| `--timeout` | 300s | Matches gunicorn timeout; long enough for multi-step workflows |
+| `--cpu-boost` | Enabled | Faster cold starts for agent workloads |
+| `--cpu-throttling` | Disabled | Agents need consistent CPU for LLM call processing |
+| `--min-instances` | 1 | Avoid cold start latency for production |
+| `--vpc-connector` | Required | If agents call VPC-only services (DBs, internal APIs) |
+| `--service-account` | Dedicated SA | Never use default compute SA in production |
+| `--ingress` | internal-and-cloud-load-balancing | Restrict direct internet access if behind API Gateway |
+
+Deploy command:
+```bash
+gcloud run deploy ${SERVICE_NAME} \
+  --image ${REGION}-docker.pkg.dev/${PROJECT_ID}/${SERVICE_NAME}/${SERVICE_NAME}:${VERSION} \
+  --region=${REGION} \
+  --memory=512Mi --cpu=1 --max-instances=10 --concurrency=80 --timeout=300 \
+  --cpu-boost --no-cpu-throttling --min-instances=1 \
+  --service-account=${SERVICE_NAME}-sa@${PROJECT_ID}.iam.gserviceaccount.com \
+  --set-env-vars="GOOGLE_CLOUD_PROJECT=${PROJECT_ID},LOG_LEVEL=INFO"
+```
+
+---
+
 ## Infrastructure-as-Code — Multi-Cloud
 
 ### GCP with Terraform

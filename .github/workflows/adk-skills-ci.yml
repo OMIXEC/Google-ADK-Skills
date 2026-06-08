@@ -30,13 +30,13 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Validate agent YAML files
+      - name: Validate ADK runtime agent YAML files
         run: |
           pip install pyyaml
           python -c "
           import yaml, sys, pathlib
           errors = 0
-          for f in pathlib.Path('agents').glob('*.yaml'):
+          for f in pathlib.Path('adk-runtime/agents').glob('*.agent.yaml'):
               try:
                   agent = yaml.safe_load(f.read_text())
                   for key in ('name', 'model', 'instruction'):
@@ -46,6 +46,42 @@ jobs:
               except Exception as e:
                   print(f'ERROR: {f.name}: {e}')
                   errors += 1
+          sys.exit(1 if errors else 0)
+          "
+
+      - name: Validate Claude Code subagent markdown files
+        run: |
+          python -c "
+          import sys, pathlib, re
+          errors = 0
+          for f in pathlib.Path('agents').glob('*.md'):
+              text = f.read_text()
+              m = re.match(r'^---\n(.*?)\n---', text, re.S)
+              if not m:
+                  print(f'ERROR: {f.name} missing YAML frontmatter'); errors += 1; continue
+              fm = m.group(1)
+              for key in ('name:', 'description:'):
+                  if key not in fm:
+                      print(f'ERROR: {f.name} frontmatter missing {key!r}'); errors += 1
+          sys.exit(1 if errors else 0)
+          "
+
+  # ── Validate plugin + marketplace manifests ──
+  validate-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate plugin/marketplace/package JSON
+        run: |
+          python -c "
+          import json, sys
+          errors = 0
+          for f in ('.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', 'package.json'):
+              try:
+                  json.load(open(f))
+                  print(f'{f}: OK')
+              except Exception as e:
+                  print(f'ERROR: {f}: {e}'); errors += 1
           sys.exit(1 if errors else 0)
           "
 

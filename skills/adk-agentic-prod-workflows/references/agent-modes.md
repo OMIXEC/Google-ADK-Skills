@@ -449,6 +449,166 @@ class MyCustomAgent(BaseAgent):
 | Execute generated code safely | `LlmAgent` with `code_executor` |
 | Enforce structured output | `LlmAgent` with `output_schema` |
 
+## Reasoning Architecture Taxonomy
+
+Agent reasoning architecture determines HOW an agent thinks, not just WHAT ADK class it uses. Choose the reasoning pattern first, then map to the ADK agent type that supports it.
+
+### Router
+
+Simple classification → delegation. No iterative reasoning.
+
+```
+User Input → [Classify Intent] → Route to Handler → Response
+```
+
+```python
+# Router: classify and delegate in one shot
+router = LlmAgent(
+    name="router",
+    model="gemini-2.5-flash",
+    instruction="""Classify the user's request into one category:
+    - 'billing': Payment, invoices, refunds → transfer to billing_agent
+    - 'support': Technical issues, bugs → transfer to support_agent
+    - 'sales': Product questions, pricing → transfer to sales_agent
+    Respond ONLY with the category name.""",
+    sub_agents=[billing_agent, support_agent, sales_agent],
+)
+```
+
+| Characteristic | Router |
+|---------------|--------|
+| Reasoning depth | Shallow (1 step) |
+| Tool calls | None or 1 (classification) |
+| Latency | Lowest |
+| Cost | Lowest (flash-lite sufficient) |
+| Best for | Customer service triage, simple FAQ bots |
+| ADK mapping | `LlmAgent` with sub_agents for transfer |
+
+### ReAct (Thought → Action → Observation)
+
+Iterative reasoning with tool calls. The dominant production pattern.
+
+```
+User Input → Thought → Action (tool call) → Observation → Thought → Action → ... → Final Answer
+```
+
+```python
+# ReAct: think, act, observe, repeat
+react_agent = LlmAgent(
+    name="react_researcher",
+    model="gemini-2.5-flash",
+    instruction="""You are a research agent using the ReAct pattern.
+
+    Follow this cycle:
+    1. THOUGHT: Analyze what you know and what you need
+    2. ACTION: Call a tool to gather information
+    3. OBSERVATION: Analyze the tool result
+    4. Repeat 1-3 until you have sufficient information
+    5. FINAL ANSWER: Synthesize findings with citations
+
+    Always show your reasoning before taking action.""",
+    tools=[web_search, db_query, calculate],
+)
+```
+
+| Characteristic | ReAct |
+|---------------|-------|
+| Reasoning depth | Deep (3-10 iterations typical) |
+| Tool calls | Multiple, interleaved with reasoning |
+| Latency | Medium (multiple LLM calls) |
+| Cost | Medium |
+| Best for | Research, complex analysis, multi-step problem solving |
+| ADK mapping | `LlmAgent` with tools (ReAct is default LLM behavior) |
+
+### Plan-and-Execute
+
+Create a plan first, then execute each step. Plan acts as a contract.
+
+```
+User Input → [Create Plan] → Step 1 → Step 2 → Step 3 → [Validate Plan] → Final Answer
+```
+
+```python
+# Plan-and-Execute: plan first, then follow through
+planner = LlmAgent(
+    name="planner",
+    model="gemini-2.5-pro",  # Stronger model for planning
+    instruction="""Create a step-by-step plan to answer the user's question.
+    Output as a numbered list. Each step must be actionable and verifiable.""",
+    output_key="plan",
+)
+
+executor = LlmAgent(
+    name="executor",
+    model="gemini-2.5-flash",
+    instruction="""Execute the plan in session.state['plan'].
+    Complete each step before moving to the next.
+    Mark steps as [DONE] when complete.
+    If a step fails, note it and continue to the next.""",
+    tools=[web_search, db_query, calculate, validate_step],
+)
+
+validate = LlmAgent(
+    name="validator",
+    model="gemini-2.5-flash",
+    instruction="""Verify the execution plan was completed:
+    1. Are all steps marked [DONE]?
+    2. Do findings support the conclusion?
+    3. Are there gaps or inconsistencies?
+    If issues found, flag them. Otherwise, output final answer.""",
+)
+
+plan_execute_workflow = SequentialAgent(
+    name="plan_execute",
+    sub_agents=[planner, executor, validate],
+)
+```
+
+| Characteristic | Plan-and-Execute |
+|---------------|-----------------|
+| Reasoning depth | Deep (explicit plan structure) |
+| Tool calls | Many, structured by plan |
+| Latency | Highest (planning + execution + validation) |
+| Cost | Highest (pro for planning, flash for execution) |
+| Best for | Complex multi-step tasks, regulated domains requiring auditable plans |
+| ADK mapping | `SequentialAgent` with planner → executor → validator |
+
+### Architecture Decision Matrix
+
+| Factor | Router | ReAct | Plan-and-Execute |
+|--------|--------|-------|-----------------|
+| Task complexity | Low | Medium-High | High |
+| Latency tolerance | <1s | 2-10s | 10-30s |
+| Cost sensitivity | Very high | Medium | Low |
+| Auditability | Low | Medium | High (plan is auditable) |
+| Error recovery | None (reclassify) | Iterative self-correction | Step-level retry |
+| Model rec | flash-lite | flash | pro (planner) + flash (executor) |
+| ADK class | `LlmAgent` | `LlmAgent` + tools | `SequentialAgent` |
+
+### Choosing: Decision Flow
+
+```
+Can it be answered in one shot?
+  └─ YES → Router (LlmAgent, flash-lite)
+  └─ NO  → Does it need step-by-step execution tracking?
+            └─ YES → Plan-and-Execute (SequentialAgent)
+            └─ NO  → ReAct (LlmAgent + tools)
+```
+
+### Hybrid: ReAct + Plan-and-Execute
+
+```python
+# Hybrid: Plan first, then ReAct within each step
+hybrid = SequentialAgent(
+    name="hybrid_reasoner",
+    sub_agents=[
+        planner,       # Plan-and-Execute phase 1: create plan
+        react_executor,  # ReAct within each step (ReAct agent with tools)
+        validator,     # Plan-and-Execute phase 3: validate completion
+    ],
+)
+```
+
 ## Composition Patterns
 
 ```python

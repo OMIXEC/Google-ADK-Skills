@@ -1,0 +1,14 @@
+{
+  "name": "claude-adk-skills",
+  "owner": {
+    "name": "OMIXEC"
+  },
+  "plugins": [
+    {
+      "name": "claude-adk-skills",
+      "source": "./",
+      "description": "Skills and subagents for building production Google ADK agents.",
+      "version": "0.1.0"
+    }
+  ]
+}

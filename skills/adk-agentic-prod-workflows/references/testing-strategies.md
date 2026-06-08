@@ -753,6 +753,207 @@ jobs:
 
 ---
 
+## ADK Native Eval Framework
+
+ADK provides a built-in evaluation framework (`AgentEvaluator`) with ROUGE scoring, trajectory matching, and pytest integration. Use this instead of custom eval harnesses when evaluating ADK agents.
+
+### 4-Step Eval with AgentEvaluator
+
+```python
+"""evals/test_eval.py — ADK native eval with AgentEvaluator."""
+import pytest
+from google.adk.evaluation import AgentEvaluator
+
+
+@pytest.fixture
+def evaluator():
+    return AgentEvaluator(
+        agent_or_workflow=graph_agent,
+        eval_dataset_file="evals/my_agent.test.json",
+        num_runs=1,
+    )
+
+
+def test_agent_success_paths(evaluator: AgentEvaluator):
+    """Run eval dataset and assert results."""
+    result = evaluator.evaluate()
+    assert result is not None
+    assert result.passed, f"Eval failures: {result.failures}"
+```
+
+### ROUGE Scoring for Final Response
+
+```python
+"""Evaluate response quality using ROUGE-L metric."""
+from google.adk.evaluation.agent_evaluator import AgentEvaluator
+from google.adk.evaluation.metrics import RougeMetric
+
+
+evaluator = AgentEvaluator(
+    agent_or_workflow=graph_agent,
+    eval_dataset_file="evals/my_agent.test.json",
+    response_metrics=[RougeMetric()],  # ROUGE-1, ROUGE-2, ROUGE-L
+    num_runs=1,
+)
+
+# In CI, assert on ROUGE score
+result = evaluator.evaluate()
+assert result.summary["rougeL_fmeasure"] >= 0.4, \
+    f"ROUGE-L {result.summary['rougeL_fmeasure']:.2f} below threshold 0.4"
+```
+
+### 6 Trajectory Evaluation Methods
+
+ADK provides six methods for evaluating agent tool-call trajectories:
+
+| Method | Description | Use When |
+|--------|-------------|----------|
+| `match_exact` | Tool calls must match expected exactly (name, args, order) | Deterministic tool sequences |
+| `match_in_order` | Expected tool calls appear in order, extras allowed | Pipeline-style agents |
+| `match_any_order` | All expected tool calls appear, order doesn't matter | Parallel tool usage |
+| `match_precision` | Precision@k: what fraction of actual calls were expected | Measuring tool call relevance |
+| `match_recall` | Recall@k: what fraction of expected calls occurred | Measuring tool call completeness |
+| `match_single_tool` | Check if a specific tool was called at least once | Simple tool invocation checks |
+
+```python
+from google.adk.evaluation.trajectory_evaluators import (
+    trajectory_match_exact,
+    trajectory_match_in_order,
+    trajectory_match_any_order,
+    trajectory_match_precision,
+    trajectory_match_recall,
+)
+
+evaluator = AgentEvaluator(
+    agent_or_workflow=graph_agent,
+    eval_dataset_file="evals/my_agent.test.json",
+    trajectory_evaluators=[
+        trajectory_match_in_order,   # Tool calls must appear in order
+        trajectory_match_recall,     # Must cover all expected tools
+    ],
+    num_runs=1,
+)
+```
+
+### `*.test.json` Eval Dataset Format
+
+```json
+[
+  {
+    "test_id": "happy_path_001",
+    "description": "Basic order processing flow",
+    "conversation": [
+      {
+        "user_input": "I want to order 3 widgets shipped to New York",
+        "expected_tool_calls": [
+          {"name": "check_inventory", "args": {"item": "widget", "quantity": 3}},
+          {"name": "calculate_shipping", "args": {"destination": "New York"}},
+          {"name": "create_order", "args": {"item": "widget", "quantity": 3}}
+        ],
+        "expected_final_response": "Your order for 3 widgets has been placed.*",
+        "expected_intermediate_responses": []
+      }
+    ]
+  },
+  {
+    "test_id": "out_of_stock",
+    "description": "Handle out of stock gracefully",
+    "conversation": [
+      {
+        "user_input": "Order 1000 rare widgets",
+        "expected_tool_calls": [
+          {"name": "check_inventory", "args": {"item": "rare_widget", "quantity": 1000}}
+        ],
+        "expected_final_response": ".*insufficient.*stock.*"
+      }
+    ]
+  },
+  {
+    "test_id": "multi_turn_001",
+    "description": "Multi-turn conversation with clarification",
+    "conversation": [
+      {
+        "user_input": "I need to ship something",
+        "expected_tool_calls": [],
+        "expected_intermediate_responses": ["What would you like to ship.*"]
+      },
+      {
+        "user_input": "A laptop to California",
+        "expected_tool_calls": [
+          {"name": "calculate_shipping", "args": {"destination": "California", "item": "laptop"}}
+        ],
+        "expected_final_response": ".*shipping cost.*"
+      }
+    ]
+  }
+]
+```
+
+### Pytest Integration
+
+```python
+"""conftest.py — ADK eval fixtures for pytest."""
+import pytest
+from google.adk.evaluation import AgentEvaluator
+
+
+def pytest_addoption(parser):
+    parser.addoption("--eval-dataset", default="evals/my_agent.test.json",
+                     help="Path to eval dataset JSON file")
+    parser.addoption("--num-runs", type=int, default=1,
+                     help="Number of eval runs per test case")
+
+
+@pytest.fixture(scope="session")
+def eval_result(request):
+    """Run full eval suite once per test session."""
+    evaluator = AgentEvaluator(
+        agent_or_workflow=graph_agent,
+        eval_dataset_file=request.config.getoption("--eval-dataset"),
+        num_runs=request.config.getoption("--num-runs"),
+    )
+    return evaluator.evaluate()
+
+
+def test_eval_pass_rate(eval_result):
+    """Gate: eval pass rate must be 100%."""
+    assert eval_result.passed, f"Eval failures:\n{eval_result.failure_summary()}"
+
+
+def test_eval_rouge_threshold(eval_result):
+    """Gate: average ROUGE-L must meet threshold."""
+    assert eval_result.summary.get("rougeL_fmeasure", 1.0) >= 0.4
+
+
+def test_eval_trajectory_coverage(eval_result):
+    """Gate: expected tool calls must be covered."""
+    recall = eval_result.summary.get("trajectory_recall", 1.0)
+    assert recall >= 0.8, f"Trajectory recall {recall:.2f} below 0.8 threshold"
+```
+
+### CI Integration
+
+```yaml
+# .github/workflows/eval.yml
+- name: ADK Eval Gate
+  run: |
+    pytest tests/evals/ -v --eval-dataset evals/production.test.json --num-runs 3 \
+      --junitxml=eval-results.xml
+    # Block deploy if eval fails
+```
+
+### Web UI Eval Tab
+
+ADK web interface includes an evaluation tab at `/eval` for visual inspection:
+- Run evals interactively and view per-case results
+- Compare trajectories side-by-side (expected vs actual tool calls)
+- Inspect ROUGE scores and response diffs
+- Export eval results as JSON or JUnit XML
+
+```bash
+adk web --app-dir app/  # Navigate to http://localhost:8081/eval
+```
+
 ## Testing Checklist
 
 - [ ] Agent unit tests: each agent tested in isolation with mocked tools

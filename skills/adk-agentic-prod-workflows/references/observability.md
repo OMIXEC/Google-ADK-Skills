@@ -241,12 +241,145 @@ async function runNode(name: string, fn: () => Promise<void>) {
 }
 ```
 
-## Cost Estimation & Token Tracking
+## Cost Tracking & Per-Session Budget Enforcement
 
-Track token usage to estimate costs across workflow runs:
+Track token usage and cost in real-time. Enforce per-session budgets with hard caps.
+
+### Cost Constants
 
 ```python
-# Token tracking metrics
+# Pricing per 1M tokens (USD). Update monthly from ai.google.dev/pricing.
+COST_PER_1M_INPUT = {
+    "gemini-2.5-flash-lite": 0.075,
+    "gemini-2.5-flash":      0.15,
+    "gemini-2.5-pro":        1.25,
+}
+
+COST_PER_1M_OUTPUT = {
+    "gemini-2.5-flash-lite": 0.30,
+    "gemini-2.5-flash":      0.60,
+    "gemini-2.5-pro":        10.00,
+}
+
+# Never exceed this per session (hard cap). Tune per use case.
+MAX_COST_PER_SESSION_USD = 1.00
+
+
+def estimate_cost(model: str, input_tokens: int, output_tokens: int) -> float:
+    """Estimate cost for a single model call."""
+    input_cost = (input_tokens / 1_000_000) * COST_PER_1M_INPUT.get(model, 0)
+    output_cost = (output_tokens / 1_000_000) * COST_PER_1M_OUTPUT.get(model, 0)
+    return input_cost + output_cost
+```
+
+### Cost Tracking Callback Pair
+
+```python
+"""cost_tracker.py — before_model + after_model callback pair for cost tracking."""
+import time
+from contextvars import ContextVar
+
+session_cost_var: ContextVar[float] = ContextVar("session_cost", default=0.0)
+call_start_var: ContextVar[float] = ContextVar("call_start", default=0.0)
+
+
+async def before_model_callback_timer(callback_context):
+    """Capture model call start time and check budget."""
+    if session_cost_var.get() >= MAX_COST_PER_SESSION_USD:
+        # Hard budget guard — return a canned response, skip model call
+        callback_context.state["budget_exceeded"] = True
+        return types.LlmResponse(
+            content=types.Content(
+                role="model",
+                parts=[types.Part(text="Session budget exceeded. Please try again later.")],
+            )
+        )
+    call_start_var.set(time.monotonic())
+    return None  # Proceed with model call
+
+
+async def after_model_callback_cost(callback_context):
+    """Record token usage and cost after model response."""
+    if callback_context.state.get("budget_exceeded"):
+        return
+
+    elapsed_ms = (time.monotonic() - call_start_var.get()) * 1000
+    usage = callback_context.usage_metadata
+
+    if usage:
+        cost = estimate_cost(
+            model=callback_context.agent.model,
+            input_tokens=usage.prompt_token_count or 0,
+            output_tokens=usage.candidates_token_count or 0,
+        )
+        current_total = session_cost_var.get() + cost
+        session_cost_var.set(current_total)
+
+        WORKFLOW_COST.labels(callback_context.state.get("workflow_name", "unknown")).inc(cost * 100)
+        TOKEN_USAGE.labels(
+            callback_context.state.get("workflow_name", "unknown"),
+            callback_context.agent.name,
+            callback_context.agent.model,
+            "input",
+        ).inc(usage.prompt_token_count or 0)
+        TOKEN_USAGE.labels(
+            callback_context.state.get("workflow_name", "unknown"),
+            callback_context.agent.name,
+            callback_context.agent.model,
+            "output",
+        ).inc(usage.candidates_token_count or 0)
+
+        logger.info("Model call cost", extra={
+            "model": callback_context.agent.model,
+            "agent": callback_context.agent.name,
+            "input_tokens": usage.prompt_token_count,
+            "output_tokens": usage.candidates_token_count,
+            "cost_usd": cost,
+            "session_cost_total": current_total,
+            "latency_ms": elapsed_ms,
+        })
+
+# Wire into agent
+agent = LlmAgent(
+    name="cost_tracked_agent",
+    model="gemini-2.5-flash",
+    before_model_callback=before_model_callback_timer,
+    after_model_callback=after_model_callback_cost,
+)
+```
+
+### Latency Histogram
+
+```python
+# Per-node latency with p50/p95/p99 tracking
+NODE_LATENCY = Histogram(
+    "node_latency_ms", "Per-node end-to-end latency",
+    ["workflow_name", "node_name"],
+    buckets=[50, 100, 250, 500, 1000, 2500, 5000, 10000, 30000],
+)
+
+MODEL_LATENCY = Histogram(
+    "model_latency_ms", "Model call latency",
+    ["workflow_name", "agent_name", "model"],
+    buckets=[100, 250, 500, 1000, 2500, 5000, 10000],
+)
+
+TOOL_LATENCY = Histogram(
+    "tool_latency_ms", "Tool call latency",
+    ["workflow_name", "tool_name"],
+    buckets=[10, 50, 100, 250, 500, 1000, 5000],
+)
+```
+
+**Cost alerts:**
+- Session cost > $0.50 approaching cap → WARNING
+- Session cost hits $MAX_COST_PER_SESSION_USD → block further calls (hard guard)
+- Per-node token usage spike (>2x baseline) → possible prompt regression
+- Track cost per workflow run for billing/chargeback
+
+### Token Tracking Metrics
+
+```python
 TOKEN_USAGE = Counter(
     "token_usage_total", "LLM token usage by model",
     ["workflow_name", "node_name", "model", "token_type"]  # token_type: input|output
@@ -255,31 +388,102 @@ WORKFLOW_COST = Counter(
     "workflow_cost_cents_total", "Estimated cost in cents",
     ["workflow_name"]
 )
-
-# Approximate pricing per 1M tokens (update with current pricing)
-MODEL_PRICING = {
-    "gemini-2.5-flash":        {"input": 0.15, "output": 0.60},
-    "gemini-2.5-pro":          {"input": 1.25, "output": 10.00},
-    "gemini-2.5-flash-lite":   {"input": 0.075, "output": 0.30},
-}
-
-def record_token_usage(workflow: str, node: str, model: str,
-                       input_tokens: int, output_tokens: int):
-    TOKEN_USAGE.labels(workflow, node, model, "input").inc(input_tokens)
-    TOKEN_USAGE.labels(workflow, node, model, "output").inc(output_tokens)
-    
-    pricing = MODEL_PRICING.get(model, {"input": 0, "output": 0})
-    cost_cents = (
-        (input_tokens / 1_000_000) * pricing["input"] +
-        (output_tokens / 1_000_000) * pricing["output"]
-    ) * 100
-    WORKFLOW_COST.labels(workflow).inc(cost_cents)
 ```
 
-**Cost alerts:**
-- `workflow_cost_cents_total` rate > $1/hour → investigate
-- Per-node token usage spike (>2x baseline) → possible prompt regression
-- Track cost per workflow run for billing/chargeback
+## Structured JSON Logging with Trace Correlation
+
+Embed OpenTelemetry trace context into every JSON log entry for unified log-trace correlation.
+
+### Python: google.cloud.logging + OTel
+
+```python
+"""structured_logging.py — JSON logs with trace/span correlation."""
+import logging
+import json
+from contextvars import ContextVar
+from opentelemetry import trace
+
+trace_id_var: ContextVar[str] = ContextVar("trace_id", default="")
+span_id_var: ContextVar[str] = ContextVar("span_id", default="")
+correlation_id_var: ContextVar[str] = ContextVar("correlation_id", default="")
+
+
+class TraceLogFilter(logging.Filter):
+    """Inject OTel trace context into every log record."""
+    def filter(self, record):
+        record.trace_id = trace_id_var.get() or ""
+        record.span_id = span_id_var.get() or ""
+        record.correlation_id = correlation_id_var.get() or ""
+        return True
+
+
+def log_agent_event(
+    event_type: str,
+    message: str,
+    level: str = "INFO",
+    **json_fields,
+):
+    """Emit a structured JSON log entry with trace correlation.
+
+    Every log entry automatically includes trace_id, span_id, and correlation_id.
+    Additional fields passed as kwargs are serialized into the JSON payload.
+    """
+    span = trace.get_current_span()
+    trace_id = format(span.get_span_context().trace_id, "032x") if span else ""
+    span_id = format(span.get_span_context().span_id, "016x") if span else ""
+
+    log_entry = {
+        "severity": level,
+        "event_type": event_type,
+        "message": message,
+        "trace_id": trace_id,
+        "span_id": span_id,
+        "correlation_id": correlation_id_var.get(),
+        "logging.googleapis.com/trace": f"projects/{PROJECT_ID}/traces/{trace_id}",
+        "logging.googleapis.com/spanId": span_id,
+        **json_fields,
+    }
+    # Remove None values
+    log_entry = {k: v for k, v in log_entry.items() if v is not None}
+
+    if level == "ERROR":
+        cloud_logger.log_struct(log_entry, severity="ERROR")
+    elif level == "WARNING":
+        cloud_logger.log_struct(log_entry, severity="WARNING")
+    else:
+        cloud_logger.log_struct(log_entry, severity="INFO")
+
+
+# Usage in callbacks
+async def after_tool_log(callback_context):
+    log_agent_event(
+        event_type="tool_call_complete",
+        message=f"Tool {callback_context.tool_name} completed",
+        tool_name=callback_context.tool_name,
+        tool_call_id=callback_context.tool_call_id,
+        latency_ms=callback_context.latency_ms,
+        status="ok" if not callback_context.error else "error",
+        error=str(callback_context.error) if callback_context.error else None,
+    )
+```
+
+### Cloud Trace Filter Recipes
+
+In Cloud Logging explorer, use these filters to correlate logs with traces:
+
+```
+# Find all logs for a specific trace
+trace="projects/my-project/traces/ABC123..."
+
+# Find all ERROR logs for a trace
+trace="projects/my-project/traces/ABC123..." severity>=ERROR
+
+# Find slow tool calls in a trace
+trace="projects/my-project/traces/ABC123..." jsonPayload.event_type="tool_call_complete" jsonPayload.latency_ms>500
+
+# Find all events for a workflow run
+jsonPayload.correlation_id="wf_abc123"
+```
 
 ## Observability Checklist
 

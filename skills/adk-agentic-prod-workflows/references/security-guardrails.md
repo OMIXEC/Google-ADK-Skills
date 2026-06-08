@@ -301,6 +301,157 @@ agent = Agent(
 5. Put safety rules before task instructions (primacy effect)
 6. Test with adversarial inputs: "ignore previous instructions", "system:", "DAN mode"
 
+## Plugin System: Global Security Enforcement via SecurityPlugin
+
+Per-agent callbacks work for individual agents but don't scale to multi-agent workflows. ADK's `BasePlugin` system provides cascading guardrails that apply to all sub-agents automatically.
+
+### SecurityPlugin(BasePlugin)
+
+```python
+"""security_plugin.py — Global guardrails via ADK Plugin system."""
+from google.adk.plugins import BasePlugin
+from typing import Callable, Awaitable
+
+
+class SecurityPlugin(BasePlugin):
+    """Cascading security guardrails for all sub-agents in a workflow.
+
+    Plugins defined on a parent agent cascade to ALL sub-agents in the tree.
+    This means one SecurityPlugin on the root agent enforces:
+    - input_guardrail on every agent that receives user input
+    - tool_guardrail on every tool call across all agents
+    - output_guardrail on every agent response
+    """
+
+    def __init__(
+        self,
+        input_guardrail: Callable | None = None,
+        tool_guardrail: Callable | None = None,
+        output_guardrail: Callable | None = None,
+    ):
+        self._input_guardrail = input_guardrail
+        self._tool_guardrail = tool_guardrail
+        self._output_guardrail = output_guardrail
+
+    async def on_input(self, ctx, text: str) -> str | None:
+        """Validate/sanitize input before it reaches any agent.
+
+        Return None to block. Return sanitized string to proceed.
+        """
+        if self._input_guardrail:
+            return await self._input_guardrail(ctx, text)
+        return text
+
+    async def on_tool_call(self, ctx, tool_name: str, args: dict) -> dict | None:
+        """Validate tool call parameters before execution.
+
+        Return None to block. Return sanitized args to proceed.
+        """
+        if self._tool_guardrail:
+            return await self._tool_guardrail(ctx, tool_name, args)
+        return args
+
+    async def on_output(self, ctx, text: str) -> str | None:
+        """Validate/sanitize output before returning to user.
+
+        Return None to block. Return sanitized string to proceed.
+        """
+        if self._output_guardrail:
+            return await self._output_guardrail(ctx, text)
+        return text
+
+
+# ── Production guardrail implementations ──────────────────────
+
+from model_armor_client import ModelArmorClient
+
+armor = ModelArmorClient()
+
+
+async def input_safety_guardrail(ctx, text: str) -> str | None:
+    """Block prompt injection, hate speech, harassment."""
+    result = await armor.sanitize_input(text, ctx.user_id)
+    if not result["allowed"]:
+        ctx.state["blocked"] = True
+        ctx.state["blocked_reason"] = result["blocked_reason"]
+        return None  # Block
+    return result["sanitized_text"]
+
+
+async def tool_permission_guardrail(ctx, tool_name: str, args: dict) -> dict | None:
+    """Validate tool has required permissions for current user."""
+    required = TOOL_PERMISSIONS.get(tool_name, [])
+    user_roles = ctx.state.get("user_roles", [])
+    if required and not any(r in user_roles for r in required):
+        ctx.state["blocked_reason"] = f"Tool {tool_name} requires {required}"
+        return None  # Block
+    return args
+
+
+async def output_safety_guardrail(ctx, text: str) -> str | None:
+    """Block PII leakage, dangerous content in model output."""
+    result = await armor.sanitize_output(text, ctx.user_id)
+    if not result["allowed"]:
+        return "I cannot provide that response due to safety policies."
+    return result["sanitized_text"]
+
+
+# ── Wire into root agent — cascades to ALL sub-agents ─────────
+
+security_plugin = SecurityPlugin(
+    input_guardrail=input_safety_guardrail,
+    tool_guardrail=tool_permission_guardrail,
+    output_guardrail=output_safety_guardrail,
+)
+
+root_agent = LlmAgent(
+    name="secure_workflow_root",
+    model="gemini-2.5-flash",
+    plugins=[security_plugin],  # ← cascades to ALL sub-agents
+    sub_agents=[child_a, child_b, child_c],
+)
+# child_a, child_b, child_c ALL inherit input/tool/output guardrails
+```
+
+**Cascade behavior:**
+- Plugin defined on parent → applies to parent + all descendants
+- Multiple plugins → execute in order (first registered = first executed)
+- Per-agent callback + Plugin on same agent → Plugin runs first, then per-agent callback
+- Plugin can be overridden per sub-agent by registering a different plugin on that agent
+
+### Plugin vs Per-Agent Callbacks
+
+| Factor | SecurityPlugin | Per-Agent Callback |
+|--------|---------------|-------------------|
+| **Scope** | All agents in tree | Single agent |
+| **Consistency** | One place to enforce | Risk of gaps |
+| **Override** | Per sub-agent override possible | Always applies to that agent |
+| **Maintenance** | Change once, affects all | Change per agent |
+| **Discovery** | One plugin visible | Callbacks scattered across agents |
+
+**When to use Plugin:**
+- Production deployments with 3+ agents
+- Compliance requirements (SOC2, HIPAA, PCI) — auditable single enforcement point
+- Teams where guardrails MUST apply to all agents by default
+- Model Armor double-shield across entire workflow
+
+**When to use per-agent callbacks:**
+- Single-agent workflows
+- Agents with fundamentally different safety needs (e.g., internal admin vs customer-facing)
+- Development/prototyping phases
+
+### Model Armor Integration via Plugin
+
+For a complete Model Armor setup, use `SecurityPlugin` as the enforcement layer and `references/model-armor.md` for template configuration and quota planning. The plugin ensures every agent gets double-shield protection; Model Armor handles the content classification.
+
+```python
+# Recommended: SecurityPlugin + Model Armor for production
+security_plugin = SecurityPlugin(
+    input_guardrail=model_armor_input_shield,   # See model-armor.md
+    output_guardrail=model_armor_output_shield,  # See model-armor.md
+)
+```
+
 ## MCP Tool Security
 
 MCP tools run in separate processes. Apply these security controls:

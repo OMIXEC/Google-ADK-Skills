@@ -240,7 +240,7 @@ def generate_github_actions(name: str, region: str = "us-central1") -> dict:
                 "steps": [
                     {"uses": "actions/checkout@v4"},
                     # Pin to commit SHA in production: "google-github-actions/auth@<COMMIT_SHA>"
-                    {"id": "auth", "uses": "google-github-actions/auth@5a50e581162a13f4baa8916d01180d2acbc04363"  # v2.1.0,
+                    {"id": "auth", "uses": "google-github-actions/auth@5a50e581162a13f4baa8916d01180d2acbc04363",  # v2.1.0
                      "with": {"credentials_json": "${{ secrets.GCP_SA_KEY }}"}},
                     {"name": "Build and push", "run": (
                         f"docker build -t {region}-docker.pkg.dev/${{{{ secrets.GCP_PROJECT_ID }}}}/{name}/{name}:${{{{ github.sha }}}} . && "

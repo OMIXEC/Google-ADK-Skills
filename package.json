@@ -1,0 +1,21 @@
+{
+  "name": "claude-adk-skills",
+  "version": "0.1.0",
+  "description": "Installer for the Claude-ADK-Skills collection — skills and subagents for building production Google ADK agents.",
+  "bin": {
+    "claude-adk-skills": "bin/cli.js"
+  },
+  "files": [
+    "bin/cli.js",
+    "install.sh"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OMIXEC/Claude-ADK-Skills.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["adk", "google-adk", "claude-code", "skills", "agents"]
+}

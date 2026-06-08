@@ -216,13 +216,16 @@ Reference: `references/model-routing.md`
 3. Run `scripts/compose_workflow.py` with agent/tool definitions to generate workflow code
 4. Copy relevant template from `assets/workflow-templates/<lang>/<type>/`
 5. Read `references/tool-design.md` to validate tool boundaries
-6. Read `references/security-guardrails.md` to add guardrails
-7. Read `references/identity-db-integration.md` + `references/auth-providers.md` if auth provider specified
-8. Read `references/database-integration.md` if database specified (PG, MySQL, Spanner, Oracle, etc.)
-9. Read `references/observability.md` to wire logging/metrics
-10. Read `references/deployment-matrix.md` to select cloud provider + target
-11. Read `references/cicd-patterns.md` to generate CI/CD files
-12. Read `references/testing-strategies.md` to generate tests (unit, API, web, evals)
+6. Read `references/security-guardrails.md` to add guardrails (per-agent callbacks + SecurityPlugin for global enforcement)
+7. Read `references/model-armor.md` to integrate Model Armor double-shield (input + output content safety)
+8. Read `references/identity-db-integration.md` + `references/auth-providers.md` if auth provider specified
+9. Read `references/database-integration.md` if database specified (PG, MySQL, Spanner, Oracle, etc.)
+10. Read `references/memory-management.md` to configure SessionService, continuous learning, and memory backends
+11. Read `references/observability.md` to wire logging/metrics, cost tracking callbacks, structured JSON logging with trace correlation
+12. Read `references/deployment-matrix.md` to select cloud provider + target, generate FastAPI bootstrap + hardened Dockerfile
+13. Read `references/cicd-patterns.md` to generate CI/CD files
+14. Read `references/testing-strategies.md` to generate tests (unit, API, web, evals, ADK native AgentEvaluator)
+15. Run `references/production-checklist.md` as post-scaffold quality gate — block deploy on any unchecked Security item
 
 **Output**: Full project skeleton with all files populated.
 
@@ -273,16 +276,18 @@ Load these as needed per mode:
 | `references/a2a-deep-dive.md` | WORKFLOW_CREATE — AgentCard, RemoteA2AAgent, streaming, cross-language, auth |
 | `references/memory-management.md` | WORKFLOW_CREATE — SessionService, session.state, token budgeting, memory hierarchy |
 | `references/observability.md` | WORKFLOW_CREATE — logging/metrics wiring |
-| `references/security-guardrails.md` | WORKFLOW_CREATE — guardrail injection |
+| `references/security-guardrails.md` | WORKFLOW_CREATE — guardrail injection, SecurityPlugin for global enforcement |
+| `references/model-armor.md` | WORKFLOW_CREATE — Model Armor double-shield (input + output), 4 production templates, quota formula, 6-phase checklist |
 | `references/error-resilience.md` | WORKFLOW_CREATE — circuit breaker, DLQ, retry, graceful degradation |
 | `references/output-validation.md` | WORKFLOW_CREATE — output_schema, quality gates, hallucination detection |
 | `references/cicd-patterns.md` | WORKFLOW_CREATE — pipeline generation |
 | `references/identity-db-integration.md` | WORKFLOW_CREATE — identity, auth middleware, DB integration |
 | `references/auth-providers.md` | WORKFLOW_CREATE — 13 auth providers, SAML bridge, Go/TS middleware |
 | `references/database-integration.md` | WORKFLOW_CREATE — 10+ DBs (PG, MySQL, Spanner, Oracle, Mongo, Redis...) |
-| `references/deployment-matrix.md` | WORKFLOW_CREATE — all cloud providers (GCP/AWS/Azure) × all targets |
+| `references/deployment-matrix.md` | WORKFLOW_CREATE — all cloud providers (GCP/AWS/Azure) × all targets, FastAPI bootstrap, hardened Dockerfile |
 | `references/model-routing.md` | ALL MODES — model selection by complexity, deprecated model anti-pattern, all model types (LLM, Live, TTS, Image Gen, Video Gen, Embedding, Music, Tool/Agent), auto-fetch integration |
-| `references/testing-strategies.md` | WORKFLOW_CREATE — adk web, adk api_server, Playwright, CI integration |
+| `references/testing-strategies.md` | WORKFLOW_CREATE — adk web, adk api_server, Playwright, CI integration, ADK native AgentEvaluator, ROUGE, trajectory matching |
+| `references/production-checklist.md` | WORKFLOW_CREATE (post-scaffold) — 48-item 6-section quality gate, pre-deploy gate script |
 
 ## Identity & Data Integration Mode
 

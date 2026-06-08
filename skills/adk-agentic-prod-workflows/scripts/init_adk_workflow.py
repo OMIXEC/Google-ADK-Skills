@@ -1365,7 +1365,8 @@ def scaffold_ts(name: str, wf_type: str, target_dir: Path) -> None:
 
 
 def scaffold_project(name: str, wf_type: str, lang: str, output_dir: str | None = None,
-                     with_mcp: bool = False, with_memory: bool = False) -> Path:
+                     with_mcp: bool = False, with_memory: bool = False,
+                     with_model_armor: bool = False) -> Path:
     base = Path(output_dir) if output_dir else Path.cwd()
     project_dir = base / name
 
@@ -1380,6 +1381,8 @@ def scaffold_project(name: str, wf_type: str, lang: str, output_dir: str | None 
         print(f"  MCP: enabled (MCP server scaffolding)")
     if with_memory:
         print(f"  Memory: enabled (SessionService configuration)")
+    if with_model_armor:
+        print(f"  Model Armor: enabled (double-shield content safety)")
 
     # Create directory structure
     dirs = [
@@ -1446,6 +1449,170 @@ SESSION_SERVICE = InMemorySessionService()
 # L4: Episodic archive (full conversation history, analytics)
 ''')
         print(f"  Created: {memory_file}")
+
+    # Model Armor scaffolding
+    if with_model_armor:
+        security_dir = project_dir / "app" / "security"
+        security_dir.mkdir(parents=True, exist_ok=True)
+        (security_dir / "__init__.py").write_text("# Security module: Model Armor + Content Safety\n")
+
+        model_armor_file = security_dir / "model_armor.py"
+        model_armor_file.write_text('''"""Model Armor client — Google content safety with double-shield pattern.
+
+Provides input sanitization (before agent) and output sanitization (after agent).
+Quota formula: (peak_users * avg_turns_per_session) * 2 + 25%
+"""
+
+import os
+import time
+import httpx
+from dataclasses import dataclass, field
+from typing import Any
+
+
+@dataclass
+class SafetyResult:
+    passed: bool
+    flagged: bool = False
+    reason: str | None = None
+    sanitized_text: str | None = None
+    latency_ms: float = 0.0
+
+
+class ModelArmorClient:
+    """REST API wrapper for Google Model Armor content safety."""
+
+    def __init__(
+        self,
+        project_id: str | None = None,
+        location: str = "us-central1",
+        template_name: str = "strict",
+    ):
+        self.project_id = project_id or os.getenv("GOOGLE_CLOUD_PROJECT")
+        self.location = location
+        self.template_name = template_name
+        self._client = httpx.AsyncClient(timeout=30.0)
+
+    async def sanitize_input(self, text: str, user_id: str = "") -> SafetyResult:
+        """Pre-model safety check on user input."""
+        start = time.monotonic()
+        try:
+            resp = await self._client.post(
+                f"https://modelarmor.{self.location}.googleapis.com/v1/"
+                f"projects/{self.project_id}/locations/{self.location}/"
+                f"templates/{self.template_name}:sanitize",
+                json={"text": text, "user_id": user_id},
+            )
+            data = resp.json()
+            return SafetyResult(
+                passed=not data.get("blocked", False),
+                flagged=data.get("blocked", False),
+                reason=data.get("blockReason"),
+                sanitized_text=data.get("sanitizedText", text),
+                latency_ms=(time.monotonic() - start) * 1000,
+            )
+        except Exception as e:
+            # Fail closed: block on error
+            return SafetyResult(
+                passed=False, flagged=True, reason=f"Model Armor error: {e}",
+                latency_ms=(time.monotonic() - start) * 1000,
+            )
+
+    async def sanitize_output(self, text: str) -> SafetyResult:
+        """Post-model safety check on agent output."""
+        start = time.monotonic()
+        try:
+            resp = await self._client.post(
+                f"https://modelarmor.{self.location}.googleapis.com/v1/"
+                f"projects/{self.project_id}/locations/{self.location}/"
+                f"templates/{self.template_name}:sanitize",
+                json={"text": text},
+            )
+            data = resp.json()
+            return SafetyResult(
+                passed=not data.get("blocked", False),
+                flagged=data.get("blocked", False),
+                sanitized_text=data.get("sanitizedText", text),
+                latency_ms=(time.monotonic() - start) * 1000,
+            )
+        except Exception as e:
+            return SafetyResult(
+                passed=False, flagged=True, reason=f"Model Armor error: {e}",
+                latency_ms=(time.monotonic() - start) * 1000,
+            )
+
+
+# Double-shield callbacks for agent wiring
+async def input_safety_guardrail(callback_context):
+    """Before-agent callback: sanitize user input via Model Armor."""
+    client = ModelArmorClient()
+    user_input = callback_context.state.get("user_input", "")
+    result = await client.sanitize_input(user_input)
+    if result.flagged:
+        callback_context.state["safety_blocked"] = True
+        callback_context.state["safety_reason"] = result.reason
+    else:
+        callback_context.state["safety_blocked"] = False
+        callback_context.state["sanitized_input"] = result.sanitized_text
+
+
+async def output_safety_guardrail(callback_context):
+    """After-agent callback: sanitize model output via Model Armor."""
+    client = ModelArmorClient()
+    model_output = callback_context.state.get("model_output", "")
+    result = await client.sanitize_output(model_output)
+    if result.flagged:
+        callback_context.state["output_blocked"] = True
+        callback_context.state["output_reason"] = result.reason
+    else:
+        callback_context.state["output_blocked"] = False
+        callback_context.state["safe_output"] = result.sanitized_text
+''')
+        print(f"  Created: {model_armor_file}")
+
+        # Template JSON configs (Minimal, Standard, Strict)
+        configs_dir = security_dir / "model_armor_configs"
+        configs_dir.mkdir(parents=True, exist_ok=True)
+
+        (configs_dir / "minimal.json").write_text("""{
+  "name": "minimal",
+  "description": "Minimal Model Armor config — blocks only the most severe violations.",
+  "settings": {
+    "harassment": "BLOCK_ONLY_HIGH",
+    "hate_speech": "BLOCK_ONLY_HIGH",
+    "sexually_explicit": "BLOCK_ONLY_HIGH",
+    "dangerous": "BLOCK_ONLY_HIGH",
+    "floor_setting": "BLOCK_ONLY_HIGH"
+  }
+}
+""")
+        (configs_dir / "standard.json").write_text("""{
+  "name": "standard",
+  "description": "Standard Model Armor config — balances safety and throughput.",
+  "settings": {
+    "harassment": "BLOCK_MEDIUM_AND_ABOVE",
+    "hate_speech": "BLOCK_MEDIUM_AND_ABOVE",
+    "sexually_explicit": "BLOCK_MEDIUM_AND_ABOVE",
+    "dangerous": "BLOCK_MEDIUM_AND_ABOVE",
+    "floor_setting": "BLOCK_MEDIUM_AND_ABOVE"
+  }
+}
+""")
+        (configs_dir / "strict.json").write_text("""{
+  "name": "strict",
+  "description": "Strict Model Armor config — maximum safety for regulated domains.",
+  "settings": {
+    "harassment": "BLOCK_LOW_AND_ABOVE",
+    "hate_speech": "BLOCK_LOW_AND_ABOVE",
+    "sexually_explicit": "BLOCK_LOW_AND_ABOVE",
+    "dangerous": "BLOCK_LOW_AND_ABOVE",
+    "floor_setting": "BLOCK_LOW_AND_ABOVE"
+  }
+}
+""")
+        print(f"  Created: {configs_dir}/minimal.json")
+        print(f"  Created: {configs_dir}/standard.json")
+        print(f"  Created: {configs_dir}/strict.json")
 
     print(f"\nDone! Project scaffolded at {project_dir}")
     if lang == "python":
@@ -1548,6 +1715,10 @@ def main():
         "--with-memory", action="store_true",
         help="Add SessionService configuration and memory hierarchy setup"
     )
+    parser.add_argument(
+        "--with-model-armor", action="store_true",
+        help="Add Model Armor content safety: double-shield runner, template configs, security plugin"
+    )
 
     args = parser.parse_args()
 
@@ -1563,7 +1734,8 @@ def main():
         sys.exit(1)
 
     scaffold_project(args.name, args.type, args.lang, args.output_dir,
-                     with_mcp=args.with_mcp, with_memory=args.with_memory)
+                     with_mcp=args.with_mcp, with_memory=args.with_memory,
+                     with_model_armor=args.with_model_armor)
 
 
 if __name__ == "__main__":
