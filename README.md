@@ -1,45 +1,109 @@
 # Google-ADK-Skills
 
-**25 Production-Grade Google ADK Skills for Claude Code**
+**25 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, and Windsurf**
 
 Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-agent orchestration, LangGraph state machines, LiteLLM multi-provider routing, real-time bidirectional streaming, RAG pipelines, MCP tool integration, autonomous agents, and production deployment.
 
 ## Installation
 
-### Option 1 — Script (canonical, no auth required)
+### Option 1 — Skills CLI (canonical)
 
 ```bash
-# Auto-detect your IDE
-curl -fsSL https://raw.githubusercontent.com/OMIXEC/Claude-ADK-Skills/main/install.sh | bash
-
-# Or clone first, then install
-git clone https://github.com/OMIXEC/Claude-ADK-Skills.git
-cd Claude-ADK-Skills
-bash install.sh --target claude-code
+npx skills add OMIXEC/Google-ADK-Skills
 ```
 
-Flags: `--target <claude-code|gemini-cli|opencode|cursor|all>`, `--copy` (copy files instead of symlink), `--install-dir <path>`, `--with-evals` (include tests/ and scripts/).
+The skills.sh CLI is the primary install path for agent skills. It installs the GitHub skill collection and makes the repo visible on skills.sh after the repository has been seen by the CLI.
 
-### Option 2 — npx
+### Option 2 — Repo installer (custom targets and advanced options)
 
 ```bash
-npx claude-adk-skills
-npx claude-adk-skills --target cursor --copy
+# Auto-detect installed tools/config dirs and install all skills
+curl -fsSL https://raw.githubusercontent.com/OMIXEC/Google-ADK-Skills/main/install.sh | bash
+
+# Guided install with target/method/runtime/skill prompts
+git clone https://github.com/OMIXEC/Google-ADK-Skills.git
+cd Google-ADK-Skills
+bash install.sh --interactive
 ```
 
-### Option 3 — Claude Plugin Marketplace
+By default the installer only installs skill folders. It does not require Python, pip, Google credentials, GitHub auth, or shell rc changes.
+
+Main target paths:
+
+| Target | Skills directory |
+|--------|------------------|
+| `codex` | `~/.codex/skills` |
+| `opencode` | `~/.opencode/skills` |
+| `claude` | `~/.claude/skills` |
+| `cline` | `~/.cline/skills` |
+| `cursor` | `~/.cursor/skills` |
+| `gemini-cli` | `~/.gemini/skills` |
+| `windsurf` | `~/.windsurf/skills` |
+
+Flags:
+
+```bash
+--target <codex|opencode|claude|cline|cursor|gemini-cli|windsurf|all|auto>
+--copy                 Copy skill folders instead of symlinking them
+--install-dir <path>   Checkout/cache location, default: ~/.google-adk-skills
+--skills-dir <path>    Install into a custom tool skills directory
+--scope <user|global>  User home install or global /usr/local/share install
+--ref <branch-or-tag>  Git ref to install, default: main
+--skills <list|all>    Comma-separated skills to install, default: all
+--interactive          Prompt for target, method, runtime, evals, and skills
+--with-evals           Keep tests/ in the install checkout
+--with-runtime         Create a Python venv and install runtime dependencies
+--shell-integration    Add the adk alias/PATH entry to your shell rc file
+--force                Replace existing non-symlink skill directories
+```
+
+Examples:
+
+```bash
+# Install for Codex and replace any existing copied skills
+bash install.sh --target codex --copy --force
+
+# Install into the main skills paths for every supported tool
+bash install.sh --target all
+
+# Install globally for every supported tool (requires writable /usr/local/share)
+sudo bash install.sh --target all --scope global
+
+# Install only selected skills
+bash install.sh --target opencode --skills adk-agents,adk-tools,adk-memory
+
+# Install into any compatible custom skills directory
+bash install.sh --skills-dir ~/.my-agent-tool/skills --copy
+
+# Install skills plus the Python runtime helpers
+bash install.sh --target claude --with-runtime --shell-integration
+```
+
+### Option 3 — package shim
+
+```bash
+npx google-adk-skills
+npx google-adk-skills --interactive
+npx google-adk-skills --target cline --copy
+```
+
+The npx package is a thin wrapper around `install.sh` and passes all flags through to the same installer. The legacy `npx claude-adk-skills` binary remains as a compatibility alias.
+
+### Option 4 — Claude Plugin Marketplace (experimental)
 
 ```
-/plugin marketplace add OMIXEC/Claude-ADK-Skills
-/plugin install claude-adk-skills
+/plugin marketplace add OMIXEC/Google-ADK-Skills
+/plugin install google-adk-skills
 ```
+
+Use `npx skills add OMIXEC/Google-ADK-Skills` as the reliable public path today. The repo installer remains available for custom target paths, selective installs, runtime helpers, and global installs.
 
 ### Prerequisites
 
-- Python 3.11+
-- Git (optional — installer falls back to tarball download when git is unavailable)
-- `GOOGLE_API_KEY` (Gemini)
-- Optional: `PINECONE_API_KEY` (RAG), `LITELLM_*` keys (multi-provider)
+- Skills-only install: `bash` plus either `git`, `curl`, or `wget`.
+- Runtime helpers: Python 3.11+ and pip, enabled with `--with-runtime`.
+- ADK usage after install: `GOOGLE_API_KEY` or the credentials required by the models/tools you choose.
+- Optional: `PINECONE_API_KEY` for RAG and `LITELLM_*` keys for multi-provider routing.
 
 ---
 
@@ -130,7 +194,7 @@ Triggers: `adk-langgraph`
 ## Project Structure
 
 ```
-Claude-ADK-Skills/
+Google-ADK-Skills/
 ├── .claude-plugin/
 │   ├── plugin.json          ← Claude plugin manifest
 │   └── marketplace.json     ← marketplace listing
@@ -162,6 +226,7 @@ Claude-ADK-Skills/
 ├── docs/                    ← local ADK reference docs
 ├── mcp_servers/
 │   └── CATALOG.md
+├── skills.sh.json           ← skills.sh repo page grouping metadata
 ├── install.sh               ← canonical installer (no auth, HTTPS clone + tarball fallback)
 ├── package.json             ← npx entry point
 ├── CLAUDE.md                ← dispatcher routing rules
