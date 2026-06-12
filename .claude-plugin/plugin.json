@@ -1,12 +1,12 @@
 {
-  "name": "claude-adk-skills",
+  "name": "google-adk-skills",
   "version": "0.1.0",
   "description": "Skills and subagents for building production Google ADK (Agent Development Kit) agents — multi-agent workflows, LiteLLM/LangGraph, RAG, deployment, and CI/CD.",
   "author": {
     "name": "OMIXEC"
   },
-  "homepage": "https://github.com/OMIXEC/Claude-ADK-Skills",
-  "repository": "https://github.com/OMIXEC/Claude-ADK-Skills",
+  "homepage": "https://github.com/OMIXEC/Google-ADK-Skills",
+  "repository": "https://github.com/OMIXEC/Google-ADK-Skills",
   "license": "Apache-2.0",
   "keywords": ["adk", "google-adk", "agents", "litellm", "langgraph", "rag", "multi-agent"]
 }

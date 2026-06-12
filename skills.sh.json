@@ -1,0 +1,55 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Agent Runtime",
+      "description": "Core ADK agent building, runtime, architecture, memory, and configuration skills.",
+      "skills": [
+        "adk-agent-builder",
+        "adk-agents",
+        "adk-runtime",
+        "adk-architecture",
+        "adk-backend",
+        "adk-configs",
+        "adk-memory",
+        "adk-setup"
+      ]
+    },
+    {
+      "title": "Workflows",
+      "description": "Production workflow, orchestration, autonomous agent, and agent-to-agent patterns.",
+      "skills": [
+        "adk-agentic-prod-workflows",
+        "adk-autonomous-agent",
+        "adk-langgraph",
+        "adk-a2a",
+        "adk-domain-expert",
+        "adk-persona"
+      ]
+    },
+    {
+      "title": "Tools and Data",
+      "description": "Tooling, MCP, RAG, prompts, LiteLLM routing, and real-time bidirectional capabilities.",
+      "skills": [
+        "adk-tools",
+        "adk-mcp",
+        "adk-rag",
+        "adk-prompts",
+        "adk-litellm",
+        "adk-bidi-live"
+      ]
+    },
+    {
+      "title": "Production",
+      "description": "Deployment, debugging, style, git, and sample authoring skills for shipping ADK systems.",
+      "skills": [
+        "adk-deployment",
+        "adk-debug",
+        "adk-style",
+        "adk-git",
+        "adk-sample-creator"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Thin shim: exec install.sh with any passed-through flags so `npx
-// claude-adk-skills [--target ...] [--copy] ...` works. Node is not a runtime
+// google-adk-skills [--target ...] [--copy] ...` works. Node is not a runtime
 // dependency of the skills — this only shells out to the bash installer.
 
 const { spawnSync } = require("node:child_process");
