@@ -130,7 +130,7 @@ For deployed applications, a service account is the standard method.
     # --- Example using a stable Gemini Flash model ---
     agent_gemini_flash = LlmAgent(
         # Use the latest stable Flash model identifier
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         name="gemini_flash_agent",
         instruction="You are a fast and helpful Gemini assistant.",
         # ... other agent parameters
@@ -142,7 +142,7 @@ For deployed applications, a service account is the standard method.
     # different availability or quota limitations.
     agent_gemini_pro = LlmAgent(
         # Use the latest generally available Pro model identifier
-        model="gemini-2.5-pro-preview-03-25",
+        model="gemini-3.1-pro-preview",
         name="gemini_pro_agent",
         instruction="You are a powerful and knowledgeable Gemini assistant.",
         # ... other agent parameters
@@ -156,7 +156,7 @@ For deployed applications, a service account is the standard method.
     LlmAgent agentGeminiFlash =
         LlmAgent.builder()
             // Use the latest stable Flash model identifier
-            .model("gemini-2.0-flash") // Set ENV variables to use this model
+            .model("gemini-3.5-flash") // Set ENV variables to use this model
             .name("gemini_flash_agent")
             .instruction("You are a fast and helpful Gemini assistant.")
             // ... other agent parameters
@@ -166,13 +166,13 @@ For deployed applications, a service account is the standard method.
     LlmAgent agentGeminiPro =
         LlmAgent.builder()
             // Use the latest generally available Pro model identifier
-            .model(new Gemini("gemini-2.5-pro-preview-03-25",
+            .model(new Gemini("gemini-3.1-pro-preview",
                 Client.builder()
                     .vertexAI(false)
                     .apiKey("API_KEY") // Set the API Key (or) project/ location
                     .build()))
             // Or, you can also directly pass the API_KEY
-            // .model(new Gemini("gemini-2.5-pro-preview-03-25", "API_KEY"))
+            // .model(new Gemini("gemini-3.1-pro-preview", "API_KEY"))
             .name("gemini_pro_agent")
             .instruction("You are a powerful and knowledgeable Gemini assistant.")
             // ... other agent parameters

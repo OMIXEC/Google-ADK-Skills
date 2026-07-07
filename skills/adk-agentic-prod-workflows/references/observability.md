@@ -248,17 +248,18 @@ Track token usage and cost in real-time. Enforce per-session budgets with hard c
 ### Cost Constants
 
 ```python
-# Pricing per 1M tokens (USD). Update monthly from ai.google.dev/pricing.
+# Pricing per 1M tokens (USD). Values are illustrative —
+# verify current prices at ai.google.dev/pricing and update monthly.
 COST_PER_1M_INPUT = {
-    "gemini-2.5-flash-lite": 0.075,
-    "gemini-2.5-flash":      0.15,
-    "gemini-2.5-pro":        1.25,
+    "gemini-3.1-flash-lite": 0.075,
+    "gemini-3.5-flash":      0.15,
+    "gemini-3.1-pro-preview": 1.25,
 }
 
 COST_PER_1M_OUTPUT = {
-    "gemini-2.5-flash-lite": 0.30,
-    "gemini-2.5-flash":      0.60,
-    "gemini-2.5-pro":        10.00,
+    "gemini-3.1-flash-lite": 0.30,
+    "gemini-3.5-flash":      0.60,
+    "gemini-3.1-pro-preview": 10.00,
 }
 
 # Never exceed this per session (hard cap). Tune per use case.
@@ -342,7 +343,7 @@ async def after_model_callback_cost(callback_context):
 # Wire into agent
 agent = LlmAgent(
     name="cost_tracked_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     before_model_callback=before_model_callback_timer,
     after_model_callback=after_model_callback_cost,
 )

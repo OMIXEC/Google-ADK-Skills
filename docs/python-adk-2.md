@@ -50,21 +50,21 @@ Current MCP examples use `MCPToolset` as an agent toolset:
 
 ```python
 from google.adk import Agent
-from google.adk.tools.mcp_tool import MCPToolset
+from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 from mcp import StdioServerParameters
 
-filesystem = MCPToolset(
-    connection_params=StdioServerParameters(
+filesystem = McpToolset(
+    connection_params=StdioConnectionParams(server_params=StdioServerParameters(
         command="npx",
         args=["-y", "@modelcontextprotocol/server-filesystem", "/tmp"],
-    ),
+    )),
     tool_filter=["read_file", "list_directory"],
     tool_name_prefix="fs_",
 )
 
 root_agent = Agent(
     name="mcp_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Use filesystem tools only when needed.",
     tools=[filesystem],
 )
@@ -76,12 +76,12 @@ For remote MCP servers, use the current connection-parameter class from ADK/MCP 
 
 - Keep Live API work on `RunConfig` plus `runner.run_live(...)` with a `LiveRequestQueue`.
 - Prefer current live-capable model IDs from the project model router. Avoid stale `gemini-2.0-flash-exp` and `gemini-2.0-flash-live-001` examples unless the target project explicitly still supports them.
-- `gemini-live-2.5-flash-native-audio` remains the preferred native-audio example for low-latency speech.
+- `gemini-3.1-flash-live-preview` is the preferred live model for low-latency speech (see the adk-model-routing skill).
 - ADK 2.3.0 release notes include Live API translation config in `RunConfig` and model-specific input transcription handling for Gemini Live 3.1 models.
 
 ## Migration Checklist From 1.x
 
-1. Replace stale model examples (`gemini-2.0-flash*`) with `gemini-2.5-flash-lite`, `gemini-2.5-flash`, or `gemini-2.5-pro` based on task complexity.
+1. Replace stale model examples (`gemini-2.0-flash*`) with `gemini-3.1-flash-lite`, `gemini-3.5-flash`, or `gemini-3.1-pro-preview` based on task complexity.
 2. Replace hand-rolled graph examples built around older `GraphAgent` imports with `Workflow` unless the project has verified a current graph compatibility API.
 3. Audit callback examples against the latest callback docs. Do not rely on old `RunnerCallbacks` names without source verification.
 4. Audit sessions for 2.x schema compatibility before rolling forward production traffic.

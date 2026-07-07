@@ -128,15 +128,15 @@ func NewGraphWorkflow(userCtx UserContext) *Workflow {
 		Name: "graph_workflow",
 		Nodes: []Node{
 			{ID: "validate", Agent: NewAgent(AgentConfig{
-				Name: "validator", Model: "gemini-2.5-flash",
+				Name: "validator", Model: "gemini-3.5-flash",
 				Instruction: "Validate and sanitize input data.",
 			})},
 			{ID: "process", Agent: NewAgent(AgentConfig{
-				Name: "processor", Model: "gemini-2.5-flash",
+				Name: "processor", Model: "gemini-3.5-flash",
 				Instruction: "Process validated data.",
 			})},
 			{ID: "fallback", Agent: NewAgent(AgentConfig{
-				Name: "fallback", Model: "gemini-2.5-flash",
+				Name: "fallback", Model: "gemini-3.5-flash",
 				Instruction: "Handle validation failures.",
 			})},
 		},

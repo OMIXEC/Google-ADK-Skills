@@ -139,7 +139,7 @@ class ReviewResult(BaseModel):
 
 reviewer = LlmAgent(
     name="reviewer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Review the code and provide structured feedback.",
     output_schema=ReviewResult,
 )

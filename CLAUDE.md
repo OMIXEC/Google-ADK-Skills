@@ -1,6 +1,25 @@
 # ADK Skills — Routing Rules
 
-This repo provides 25 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
+This repo provides 28 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
+
+## Vendored SDK — Source of Truth
+
+Two ADK SDK folders are vendored side by side:
+
+- **`adk-python-v2.3/`** — ADK 2.3.0 GA full source (`src/google/adk`, `pyproject.toml`). **Always reference `adk-python-v2.3/` for current API signatures.**
+- **`adk-python-v1/`** — legacy repo helper tooling (`tools/`, `callbacks/`) + its `requirements.txt`. **`adk-python-v1/` exists only for migration diffing — never copy patterns from it into new code.**
+
+The active runtime dependency is `google-adk>=2.3.0,<3` (installed from PyPI via root `requirements.txt`), not a path import of the vendored folder. Python **3.10+** required (`adk-python-v2.3/pyproject.toml`).
+
+### v2.3 Core Concepts (assume available)
+
+Verified against `adk-python-v2.3/src/google/adk/`:
+
+- **Graph Workflow Runtime** — `node()` decorator (`workflow/_node.py`) defines function/LLM nodes; edges are `Edge` instances (`workflow/_graph.py`), **not** an `@edge` decorator. Fan-out runs nodes concurrently; fan-in via `JoinNode` (`workflow/_join_node.py`) which waits for all named predecessors.
+- **Agent modes** — `LlmAgent.mode: Literal['chat', 'task', 'single_turn']` (`agents/llm_agent.py`). `task` delegates a scoped sub-task; `single_turn` completes without further user interaction; `chat` is the standard sub-agent.
+- **Human-in-the-loop (HITL)** — `request_input` tool (`tools/_request_input_tool.py`) pauses a run for input; the workflow checkpoints and resumes via **`ctx.resume_inputs`** (`agents/context.py`) — **not** `ctx.resume_data`.
+- **Task-mode coordination** — MAS coordination uses `mode='task'` plus `TaskRequest`/`TaskResult` and `FinishTaskTool` (`agents/llm/task/`). There is **no** standalone `Task` class.
+- **Sessions/memory are v2.3-native** — `google.adk.sessions.*` and `google.adk.memory.*`. v1-persisted session/state is **not** schema-compatible with v2.3; do not reuse old persisted state.
 
 ## Skill Routing
 
@@ -24,10 +43,13 @@ When a user request matches a trigger below, invoke the corresponding skill.
 | `adk-mcp` | "MCP integration", "MCP toolset", "StdioServerParameters", "SseServerParams" |
 | `adk-a2a` | "A2A", "agent-to-agent", "cross-language agent", "AgentCard", "RemoteA2AAgent" |
 | `adk-memory` | "memory", "SessionService", "session state", "persistence" |
+| `adk-embeddings` | "embedding", "gemini-embedding-2", "vector store", "pgvector", "Cloud SQL", "Postgres session", "Firestore memory", "DatabaseSessionService", "vector search", "store embeddings in db" |
+| `adk-migration` | "migrate 1.x to 2.3", "upgrade ADK", "breaking changes", "deprecated API", "GraphAgent removed", "MCPToolset error", "ctx.resume_data", "port to 2.3" |
 | `adk-deployment` | "deploy", "Cloud Run", "Agent Engine", "GKE", "Terraform", "deployment manifest" |
 | `adk-backend` | "backend", "server", "API for agent" |
 | `adk-bidi-live` | "bidi", "live", "streaming audio", "voice agent", "real-time" |
 | `adk-litellm` | "litellm", "OpenAI/Anthropic/Bedrock/OpenRouter model", "non-Google model", "model fallback", "cost optimization across providers" |
+| `adk-model-routing` | "which model", "model routing", "select model", "thinking level", "effort", "thinking_budget", "reasoning depth", "model catalog", "fallback chain", "deprecated model" |
 | `adk-langgraph` | "langgraph", "state machine workflow", "stateful graph", "conditional orchestration", "ADK↔LangGraph" |
 | `adk-rag` | "RAG", "knowledge base", "vector search", "embeddings", "Pinecone", "Vertex AI RAG", "document ingestion" |
 | `adk-persona` | "persona", "pre-built template", "character agent", "ready-made role" |
@@ -42,7 +64,7 @@ Framework skills (`adk-litellm`, `adk-langgraph`) load their docs **context7-fir
 
 ## ADK Runtime Agents
 
-`adk-runtime/agents/` holds the ADK Python runtime configs — `.agent.yaml` files (plus `root_agent.yaml`) loaded by the ADK runtime. Python tools and callbacks supporting these are in `adk-python/`. These are **not** Claude Code subagents.
+`adk-runtime/agents/` holds the ADK Python runtime configs — `.agent.yaml` files (plus `root_agent.yaml`) loaded by the ADK runtime. Python tools and callbacks supporting these are in `adk-python-v1/` (legacy helper location, kept as reference). These are **not** Claude Code subagents.
 
 ## Installation
 

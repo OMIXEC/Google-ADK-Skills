@@ -3,7 +3,7 @@
 # Data source: scripts/fetch_models.py → references/model-cache.json
 
 name: model-router
-model: gemini-2.5-flash
+model: gemini-3.5-flash
 description: >
   Validates and routes model selection for ADK workflows. Classifies task
   complexity (LOW/MEDIUM/HIGH), maps tasks to recommended models, and enforces
@@ -33,20 +33,20 @@ instruction: |
 
   | Complexity | Model | Daily Free Limit |
   |-----------|-------|-----------------|
-  | LOW (simple classification, formatting, triage) | gemini-2.5-flash-lite | 1500 RPM |
-  | MEDIUM (multi-step reasoning, tool orchestration) | gemini-2.5-flash | 1500 RPM |
-  | HIGH (complex planning, code generation, architecture) | gemini-2.5-pro | 1000 RPM |
+  | LOW (simple classification, formatting, triage) | gemini-3.1-flash-lite | 1500 RPM |
+  | MEDIUM (multi-step reasoning, tool orchestration) | gemini-3.5-flash | 1500 RPM |
+  | HIGH (complex planning, code generation, architecture) | gemini-3.1-pro-preview | 1000 RPM |
 
   ## Task-to-Model Mapping
 
   | Task Type | Recommended Model | Fallback |
   |-----------|------------------|----------|
-  | Content generation, writing | gemini-2.5-flash | gemini-2.5-pro |
-  | Code generation, review | gemini-2.5-pro | gemini-2.5-flash |
-  | Classification, routing | gemini-2.5-flash-lite | gemini-2.5-flash |
-  | Multi-agent orchestration | gemini-2.5-pro | — |
-  | RAG, tool calling | gemini-2.5-flash | gemini-2.5-pro |
-  | Real-time audio (voice) | gemini-2.5-flash-live | — |
+  | Content generation, writing | gemini-3.5-flash | gemini-3.1-pro-preview |
+  | Code generation, review | gemini-3.1-pro-preview | gemini-3.5-flash |
+  | Classification, routing | gemini-3.1-flash-lite | gemini-3.5-flash |
+  | Multi-agent orchestration | gemini-3.1-pro-preview | — |
+  | RAG, tool calling | gemini-3.5-flash | gemini-3.1-pro-preview |
+  | Real-time audio (voice) | gemini-3.1-flash-live-preview | — |
   | TTS / STT | chirp-3-hd-charon | — |
   | Image generation | imagen-4.0-fast-generate-001 | — |
   | Video generation | veo-3.0-generate-preview | — |

@@ -59,16 +59,15 @@ ADK_STREAMING_MODE=BIDI
 ```yaml
 # agent.yaml
 name: my-agent
-model: gemini-2.5-flash
+model: gemini-3.5-flash
 instruction: |
   You are a helpful assistant.
   Always be concise and accurate.
 tools:
   - google_search
   - custom_tool
-config:
-  temperature: 0.7
-  max_tokens: 1024
+generate_content_config:
+  max_output_tokens: 1024
 ```
 
 ### pyproject.toml

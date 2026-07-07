@@ -205,7 +205,7 @@ Location: `src/google/adk/utils/_debug_output.py`
 from google.adk import Agent, Runner
 from google.adk.sessions import InMemorySessionService
 
-agent = Agent(name="test", model="gemini-2.5-flash", instruction="...")
+agent = Agent(name="test", model="gemini-3.5-flash", instruction="...")
 runner = Runner(app_name="test", agent=agent, session_service=InMemorySessionService())
 
 session = runner.session_service.create_session_sync(app_name="test", user_id="u")

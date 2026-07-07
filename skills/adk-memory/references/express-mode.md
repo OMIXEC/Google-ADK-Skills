@@ -88,7 +88,7 @@ instead initialize the memory object without any project or location.
 # Plus environment variable setup:
 # GOOGLE_GENAI_USE_VERTEXAI=TRUE
 # GOOGLE_API_KEY=PASTE_YOUR_ACTUAL_EXPRESS_MODE_API_KEY_HERE
-from google.adk.sessions import VertexAiMemoryBankService
+from google.adk.memory import VertexAiMemoryBankService
 
 # The app_name used with this service should be the Reasoning Engine ID or name
 APP_ID = "your-reasoning-engine-id"

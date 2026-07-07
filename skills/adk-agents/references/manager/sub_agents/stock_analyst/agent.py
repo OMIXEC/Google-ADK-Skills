@@ -39,7 +39,7 @@ def get_stock_price(ticker: str) -> dict:
 # Create the root agent
 stock_analyst = Agent(
     name="stock_analyst",
-    model="gemini-2.0-flash",
+    model="gemini-3.5-flash",
     description="An agent that can look up stock prices and track them over time.",
     instruction="""
     You are a helpful stock market assistant that helps users track their stocks of interest.

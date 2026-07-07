@@ -10,7 +10,7 @@
 
 name: enterprise_adk_orchestrator
 mode: multimodal  # text, voice, multimodal, autonomous
-model: gemini-live-2.5-flash-native-audio
+model: gemini-3.1-flash-live-preview
 
 # Specialist agents for delegation
 agents:
@@ -22,7 +22,7 @@ agents:
       - Provide citations when possible
       - Summarize findings clearly
     description: Research and information gathering
-    model: gemini-2.5-flash
+    model: gemini-3.5-flash
     tools:
       - brave_search
 
@@ -34,7 +34,7 @@ agents:
       - Highlight key findings
       - Create visualizations when helpful
     description: Data analysis and insights
-    model: gemini-2.5-pro
+    model: gemini-3.1-pro-preview
     tools:
       - sqlite
 
@@ -46,7 +46,7 @@ agents:
       - Explain technical concepts
       - Follow best practices
     description: Code and development assistance
-    model: gemini-2.5-flash
+    model: gemini-3.5-flash
     tools:
       - github
 

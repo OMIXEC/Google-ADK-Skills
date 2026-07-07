@@ -57,7 +57,7 @@ def get_weather(city: str, units: str = "celsius") -> dict:
 
 root_agent = Agent(
     name="weather_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Use get_weather when the user asks for weather.",
     tools=[get_weather],
 )
@@ -67,11 +67,22 @@ root_agent = Agent(
 
 ```python
 from google.adk import Agent
-from google.adk.tools import google_search, code_execution
+from google.adk.tools import google_search
 
-agent = Agent(
-    name="tool_agent",
-    model="gemini-2.5-flash",
-    tools=[google_search, code_execution, custom_tool]
+# google_search is a tool bound via `tools`.
+search_agent = Agent(
+    name="search_agent",
+    model="gemini-3.5-flash",
+    tools=[google_search],
+)
+
+# Built-in code execution is a code executor, not a tool. Set it via
+# `code_executor` (it cannot be listed in `tools`).
+from google.adk.code_executors import BuiltInCodeExecutor
+
+code_agent = Agent(
+    name="code_agent",
+    model="gemini-3.5-flash",
+    code_executor=BuiltInCodeExecutor(),
 )
 ```

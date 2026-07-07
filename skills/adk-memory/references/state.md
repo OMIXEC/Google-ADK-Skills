@@ -86,7 +86,7 @@ from google.adk.agents import LlmAgent
 
 story_generator = LlmAgent(
     name="StoryGenerator",
-    model="gemini-2.0-flash",
+    model="gemini-3.5-flash",
     instruction="""Write a short story about a cat, focusing on the theme: {topic}."""
 )
 
@@ -122,7 +122,7 @@ The `InstructionProvider` function receives a `ReadonlyContext` object, which yo
         return "This is an instruction with {{literal_braces}} that will not be replaced."
 
     agent = LlmAgent(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         name="template_helper_agent",
         instruction=my_instruction_provider
     )
@@ -143,7 +143,7 @@ If you want to both use an `InstructionProvider` *and* inject state into your in
         return await instructions_utils.inject_session_state(template, context)
 
     agent = LlmAgent(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         name="dynamic_template_helper_agent",
         instruction=my_dynamic_instruction_provider
     )
@@ -183,7 +183,7 @@ This is the simplest method for saving an agent's final text response directly i
     # Define agent with output_key
     greeting_agent = LlmAgent(
         name="Greeter",
-        model="gemini-2.0-flash", # Use a valid model
+        model="gemini-3.5-flash", # Use a valid model
         instruction="Generate a short, friendly greeting.",
         output_key="last_greeting" # Save response to state['last_greeting']
     )

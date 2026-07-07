@@ -4,7 +4,8 @@ Pattern: DAG with conditional branching.
 Nodes = agents or functions, edges = execution routes.
 """
 
-from google.adk import START, Workflow
+from google.adk import Workflow
+from google.adk.workflow import START
 from pydantic import BaseModel, Field
 import structlog
 

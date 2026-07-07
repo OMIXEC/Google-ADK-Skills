@@ -18,7 +18,7 @@ Need to iterate until quality gate passes?
   └─→ LoopAgent
 
 Need complex branching/merging with conditions?
-  └─→ GraphAgent
+  └─→ Workflow (graph)
 
 Need to extend agent behavior beyond built-in types?
   └─→ CustomAgent (subclass BaseAgent)
@@ -54,7 +54,7 @@ agent = LlmAgent(
     # ── Core ──────────────────────────────────
     name="my_agent",                    # Required — unique agent name
     description="What this agent does", # Used for routing and agent cards
-    model="gemini-2.5-flash",           # Model string or BaseLlm instance
+    model="gemini-3.5-flash",           # Model string or BaseLlm instance
 
     # ── Instructions ──────────────────────────
     instruction="""You are a helpful assistant.
@@ -63,16 +63,15 @@ agent = LlmAgent(
     global_instruction="Always be concise and factual.", # Appended to every turn
 
     # ── Tools ──────────────────────────────────
-    tools=[my_tool, MCPToolset(...)],   # FunctionTool, MCPToolset, BaseToolset
+    tools=[my_tool, McpToolset(...)],   # FunctionTool, McpToolset, BaseToolset
 
     # ── Sub-agents ────────────────────────────
     sub_agents=[specialist_agent],      # Agents this agent can transfer to
 
     # ── Content generation config ─────────────
     generate_content_config=types.GenerateContentConfig(
-        temperature=0.2,
-        top_p=0.95,
-        top_k=40,
+        # Gemini 3.x: omit temperature/top_p/top_k/candidate_count (unsupported/ignored).
+        # Use thinking_level via BuiltInPlanner(ThinkingConfig(...)) to control reasoning depth.
         max_output_tokens=4096,
         stop_sequences=["END"],
         safety_settings=[
@@ -124,7 +123,7 @@ agent = LlmAgent(
 | Single-step Q&A | `LlmAgent` with tools |
 | Multi-step reasoning | `LlmAgent` with planner |
 | Structured output needed | `LlmAgent` with `output_schema` |
-| Need to call external APIs | `LlmAgent` with MCPToolset |
+| Need to call external APIs | `LlmAgent` with McpToolset |
 | Need code execution | `LlmAgent` with `code_executor` |
 
 ### Lifecycle
@@ -334,33 +333,30 @@ async def check_quality(callback_context):
 
 ---
 
-## GraphAgent
+## Workflow (graph)
 
-DAG-based workflow: nodes are agents or deterministic steps, edges define routing with conditions.
+DAG-based workflow: nodes are agents or deterministic `@node` functions, edges define
+routing. A node emits a route value; edges tagged with that value are followed. Nodes are
+inferred from the edges — do not list them separately.
 
 ### Python
 
 ```python
-from google.adk.agents import GraphAgent, Node, Edge, Condition, LlmAgent
+from google.adk import Workflow
+from google.adk.agents import LlmAgent
+from google.adk.workflow import START, Edge
 
-classifier = LlmAgent(name="classifier", instruction="Classify input as 'code' or 'text'.")
+classifier = LlmAgent(name="classifier", instruction="Classify input; emit route 'code' or 'text'.")
 code_handler = LlmAgent(name="code_handler", instruction="Handle code requests.")
 text_handler = LlmAgent(name="text_handler", instruction="Handle text requests.")
 
-def route_by_type(state) -> str:
-    """Condition function: return target node name."""
-    return "code_handler" if state.get("type") == "code" else "text_handler"
-
-graph = GraphAgent(
+graph = Workflow(
     name="router_workflow",
     description="Classify input then route to specialized handler",
-    nodes=[
-        Node(name="classifier", agent=classifier),
-        Node(name="code_handler", agent=code_handler),
-        Node(name="text_handler", agent=text_handler),
-    ],
     edges=[
-        Edge(source="classifier", target=Condition(fn=route_by_type)),
+        Edge(from_node=START, to_node=classifier),
+        # A routing map is sugar for one routed edge per key:
+        (classifier, {"code": code_handler, "text": text_handler}),
     ],
 )
 ```
@@ -442,7 +438,7 @@ class MyCustomAgent(BaseAgent):
 | Run multiple independent tasks concurrently | `ParallelAgent` |
 | Run tasks in a fixed order (pipeline) | `SequentialAgent` |
 | Iterate until quality is good enough | `LoopAgent` |
-| Route to different handlers based on input | `GraphAgent` |
+| Route to different handlers based on input | `Workflow` (graph) |
 | Compose multiple agent types in custom way | `CustomAgent` |
 | Call an agent in another service/language | `RemoteA2AAgent` |
 | Search + generate with grounding | `LlmAgent` with `include_grounding=True` |
@@ -465,7 +461,7 @@ User Input → [Classify Intent] → Route to Handler → Response
 # Router: classify and delegate in one shot
 router = LlmAgent(
     name="router",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""Classify the user's request into one category:
     - 'billing': Payment, invoices, refunds → transfer to billing_agent
     - 'support': Technical issues, bugs → transfer to support_agent
@@ -496,7 +492,7 @@ User Input → Thought → Action (tool call) → Observation → Thought → Ac
 # ReAct: think, act, observe, repeat
 react_agent = LlmAgent(
     name="react_researcher",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are a research agent using the ReAct pattern.
 
     Follow this cycle:
@@ -532,7 +528,7 @@ User Input → [Create Plan] → Step 1 → Step 2 → Step 3 → [Validate Plan
 # Plan-and-Execute: plan first, then follow through
 planner = LlmAgent(
     name="planner",
-    model="gemini-2.5-pro",  # Stronger model for planning
+    model="gemini-3.1-pro-preview",  # Stronger model for planning
     instruction="""Create a step-by-step plan to answer the user's question.
     Output as a numbered list. Each step must be actionable and verifiable.""",
     output_key="plan",
@@ -540,7 +536,7 @@ planner = LlmAgent(
 
 executor = LlmAgent(
     name="executor",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""Execute the plan in session.state['plan'].
     Complete each step before moving to the next.
     Mark steps as [DONE] when complete.
@@ -550,7 +546,7 @@ executor = LlmAgent(
 
 validate = LlmAgent(
     name="validator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""Verify the execution plan was completed:
     1. Are all steps marked [DONE]?
     2. Do findings support the conclusion?
@@ -612,6 +608,9 @@ hybrid = SequentialAgent(
 ## Composition Patterns
 
 ```python
+from google.adk import Workflow
+from google.adk.workflow import START, Edge
+
 # Pattern: Parallel → Aggregate (most common production pattern)
 fetch_a = LlmAgent(name="fetch_a", output_key="a_data")
 fetch_b = LlmAgent(name="fetch_b", output_key="b_data")
@@ -627,15 +626,15 @@ gen = LlmAgent(name="gen", tools=[exit_loop], output_key="output")
 critic = LlmAgent(name="critic", tools=[exit_loop])
 refine = LoopAgent(name="refine", sub_agents=[gen, critic], max_iterations=5)
 
-# Pattern: Graph with conditional routing
-classifier = LlmAgent(name="classify")
+# Pattern: Graph with route-based branching (nodes inferred from edges)
+classifier = LlmAgent(name="classify")  # emits route "a" or "b"
 handler_a = LlmAgent(name="handler_a")
 handler_b = LlmAgent(name="handler_b")
-router = GraphAgent(
+router = Workflow(
     name="router",
-    nodes=[Node(name="classify", agent=classifier),
-           Node(name="handler_a", agent=handler_a),
-           Node(name="handler_b", agent=handler_b)],
-    edges=[Edge(source="classify", target=Condition(fn=route_fn))],
+    edges=[
+        Edge(from_node=START, to_node=classifier),
+        (classifier, {"a": handler_a, "b": handler_b}),
+    ],
 )
 ```

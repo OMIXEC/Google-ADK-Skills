@@ -2,7 +2,7 @@
 # Source: adk-google-skills/skills/adk-debug/SKILL.md
 
 name: debugger
-model: gemini-2.5-flash
+model: gemini-3.5-flash
 description: >
   Debug ADK agents: inspect sessions, test agent behavior, troubleshoot tool
   calls, diagnose event flow and LLM/model issues. Supports both `adk web`

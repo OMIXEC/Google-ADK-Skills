@@ -2,7 +2,7 @@
 # Source: adk-google-skills/skills/adk-sample-creator/SKILL.md
 
 name: sample-creator
-model: gemini-2.5-flash
+model: gemini-3.5-flash
 description: >
   Create new samples for the ADK Python repository. Demonstrates features
   and agent patterns: dynamic nodes, standalone agents, fan-out/fan-in,
@@ -44,10 +44,10 @@ instruction: |
   | Dynamic Nodes | Runtime agent composition, programmatic graph building |
   | Fan-out/Fan-in | ParallelAgent → aggregate results |
   | Tool Streaming | Tool call results streamed back in real-time |
-  | MCP Integration | MCPToolset with StdioServerParameters |
-  | A2A Communication | AgentCard + RemoteA2AAgent |
+  | MCP Integration | McpToolset with StdioConnectionParams |
+  | A2A Communication | AgentCard + RemoteA2aAgent |
   | LoopAgent | Iterative refinement with exit_loop quality gate |
-  | GraphAgent | DAG with conditional routing, nodes and edges |
+  | Workflow (graph) | DAG via node() + Edge + JoinNode |
   | CustomAgent | BaseAgent subclass with custom _run_impl |
   | HITL (Human-in-the-Loop) | Checkpoint, resume, approve/reject flow |
 

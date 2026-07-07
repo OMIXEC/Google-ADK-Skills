@@ -66,27 +66,21 @@ Use for: iterative refinement, code review cycles, quality-gated pipelines.
 Directed acyclic graphs (DAGs) where nodes are agents or deterministic functions, edges represent data/control flow.
 
 ```python
-from google.adk.agents import GraphAgent
-from google.adk.agents.graph import Node, Edge
+from google.adk import Workflow
+from google.adk.workflow import START, Edge
 
-workflow = GraphAgent(name="order_processing")
-
-# Define nodes
-validate = Node(name="validate", agent=validator_agent)
-enrich = Node(name="enrich", agent=enrichment_agent)
-approve = Node(name="approve", agent=approval_agent)
-notify = Node(name="notify", agent=notification_agent)
-
-workflow.add_node(validate)
-workflow.add_node(enrich)
-workflow.add_node(approve)
-workflow.add_node(notify)
-
-# Define edges
-workflow.add_edge(Edge(source=validate, target=enrich))
-workflow.add_edge(Edge(source=enrich, target=approve,
-                       condition=lambda ctx: ctx["amount"] > 1000))
-workflow.add_edge(Edge(source=approve, target=notify))
+# Nodes are agents (or @node functions); edges connect from_node → to_node,
+# optionally gated by a route value the upstream node emits.
+workflow = Workflow(
+    name="order_processing",
+    edges=[
+        Edge(from_node=START, to_node=validator_agent),
+        Edge(from_node=validator_agent, to_node=enrichment_agent),
+        # Route-gated branch: taken when the upstream node emits "high_value".
+        Edge(from_node=enrichment_agent, to_node=approval_agent, route="high_value"),
+        Edge(from_node=approval_agent, to_node=notification_agent),
+    ],
+)
 ```
 
 Use for: order processing, multi-stage ETL, complex business logic with branching.
@@ -131,7 +125,7 @@ Single coordinator agent manages sub-agents with shared memory/session.
 ```python
 coordinator = Agent(
     name="coordinator",
-    model="gemini-2.5-pro",
+    model="gemini-3.1-pro-preview",
     sub_agents=[researcher, analyst, writer],
     instruction="""You are a research coordinator.
     Delegate tasks to specialists based on:
@@ -181,7 +175,7 @@ Choose which ADK agent type to use at each workflow node. See `references/agent-
 | `ParallelAgent` | Fan-out to heterogeneous sub-agents, aggregate results | Contains 2+ `LlmAgent` |
 | `SequentialAgent` | Fixed-order pipeline, output→input passing | Contains 2+ `LlmAgent` |
 | `LoopAgent` | Iterative refinement with quality gate, max_iterations | Contains 1+ `LlmAgent` |
-| `GraphAgent` | DAG with conditions, branching, merging | Contains `LlmAgent` per node |
+| `Workflow` (graph) | DAG with routing, branching, merging | Wraps `LlmAgent`/`@node` per node |
 | `CustomAgent` | Subclass `BaseAgent` for custom orchestration logic | Programmatic |
 
 Quick decision tree:
@@ -189,7 +183,7 @@ Quick decision tree:
 Need fixed pipeline? → SequentialAgent
 Need parallel fan-out? → ParallelAgent
 Need iterative refinement? → LoopAgent
-Need branching + merging? → GraphAgent
+Need branching + merging? → Workflow (graph)
 Need programmatic control? → CustomAgent (subclass BaseAgent)
 Need single model + tools? → LlmAgent
 ```
@@ -216,7 +210,7 @@ class MyCustomAgent(BaseAgent):
 - Implementing state-machine driven workflows
 
 **Don't use `CustomAgent` when:**
-- Standard `SequentialAgent`/`ParallelAgent`/`GraphAgent` fits
+- Standard `SequentialAgent`/`ParallelAgent`/`Workflow` (graph) fits
 - You just need a single model call → use `LlmAgent`
 
 ## Heterogeneous ParallelAgent
@@ -271,24 +265,22 @@ Insert human review/approval steps into automated workflows:
 ```python
 approval_request = Agent(
     name="approval_requester",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""Generate an approval request for the human reviewer.
     Output format: {"action": "request_approval", "summary": "...", "details": {...}}""",
 )
 
-human_approval_node = Node(
-    id="human_approval",
-    # This node returns control to the caller with a pending status.
-    # The caller handles presenting the approval UI and resubmitting.
-    agent=approval_request,
-)
+from google.adk.workflow import node, Edge
 
-# In GraphAgent, route to human node when approval needed:
-Edge(
-    source="processor",
-    target="human_approval",
-    condition=Condition(lambda state: state.get("requires_approval", False)),
-)
+@node(name="human_approval")
+async def human_approval_node(ctx):
+    # This node returns control to the caller (interrupt) with a pending status.
+    # The caller presents the approval UI and resumes via ctx.resume_inputs.
+    ...
+
+# Route to the human node when the upstream "processor" emits the
+# "requires_approval" route value:
+Edge(from_node="processor", to_node=human_approval_node, route="requires_approval")
 ```
 
 **HITL patterns:**

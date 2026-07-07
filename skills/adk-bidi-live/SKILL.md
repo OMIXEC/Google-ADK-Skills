@@ -1,6 +1,6 @@
 ---
 name: adk-bidi-live
-description: ADK bidirectional streaming and Live API expert covering real-time audio/video, WebSocket communication, LiveRequestQueue, Gemini Live API, and native audio models (gemini-live-2.5-flash-native-audio). Use when building real-time voice agents, implementing streaming chat, or working with multimodal live interactions.
+description: ADK bidirectional streaming and Live API expert covering real-time audio/video, WebSocket communication, LiveRequestQueue, Gemini Live API, and native audio models (gemini-3.1-flash-live-preview). Use when building real-time voice agents, implementing streaming chat, or working with multimodal live interactions.
 ---
 
 # adk-bidi-live - ADK Bidi-Streaming & Live API Expert
@@ -26,14 +26,14 @@ You are a senior engineer specializing in ADK's bidirectional streaming and Live
 1. **4-Phase Lifecycle**: App init → Session init → Streaming loop → Cleanup
 2. **Live API Integration**: Gemini Live API, Vertex AI Live API
 3. **LiveRequestQueue**: Bidirectional message passing
-4. **Native Audio**: `gemini-live-2.5-flash-native-audio` for real-time voice
+4. **Native Audio**: `gemini-3.1-flash-live-preview` for real-time voice
 5. **WebSocket Patterns**: FastAPI integration, concurrent task management
 
 ### Live Models
 
 | Model | Capabilities |
 |-------|-------------|
-| `gemini-live-2.5-flash-native-audio` | Native audio processing |
+| `gemini-3.1-flash-live-preview` | Native audio processing |
 | Project model router | Use for current Gemini Live 3.x/translation-capable models when available |
 
 ### 4-Phase Lifecycle
@@ -41,7 +41,7 @@ You are a senior engineer specializing in ADK's bidirectional streaming and Live
 ```python
 # Phase 1: App Initialization (once at startup)
 agent = Agent(
-    model="gemini-live-2.5-flash-native-audio",
+    model="gemini-3.1-flash-live-preview",
     tools=[google_search],
     instruction="You are a helpful voice assistant"
 )

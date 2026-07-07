@@ -789,7 +789,6 @@ Every ADK workflow node must receive identity context. Tools must take `user_id`
 # app/workflow.py — identity-aware workflow
 
 from google.adk import Agent
-from google.adk.agents.graph import GraphAgent, Node, Edge, Condition
 from google.adk.tools import FunctionTool
 from pydantic import BaseModel, Field
 
@@ -812,7 +811,7 @@ def fetch_orders(params: FetchOrdersParams) -> FetchOrdersResult:
 # Agent instructions enforce identity-aware behavior
 order_agent = Agent(
     name="order_fetcher",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You fetch orders for authenticated users.
     The user_id is available in session.state['user_context']['user_id'].
     ALWAYS pass user_id to tools — never guess or infer identity.""",

@@ -8,7 +8,7 @@ from .tools.tools import get_current_time
 
 root_agent = Agent(
     name="manager",
-    model="gemini-2.0-flash",
+    model="gemini-3.5-flash",
     description="Manager agent",
     instruction="""
     You are a manager agent that is responsible for overseeing the work of the other agents.

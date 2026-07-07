@@ -119,7 +119,7 @@ sample. For more information on deploying ADK workflows to GKE, see
     # The agent now uses this executor for any code it generates.
     gke_agent = LlmAgent(
         name="gke_coding_agent",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         instruction="You are a helpful AI agent that writes and executes Python code.",
         code_executor=gke_executor,
     )
@@ -243,7 +243,7 @@ to use built-in tools with other tools by using multiple agents:
     
 
     search_agent = Agent(
-        model='gemini-2.0-flash',
+        model='gemini-3.5-flash',
         name='SearchAgent',
         instruction="""
         You're a specialist in Google Search
@@ -251,7 +251,7 @@ to use built-in tools with other tools by using multiple agents:
         tools=[google_search],
     )
     coding_agent = Agent(
-        model='gemini-2.0-flash',
+        model='gemini-3.5-flash',
         name='CodeAgent',
         instruction="""
         You're a specialist in Code Execution
@@ -260,7 +260,7 @@ to use built-in tools with other tools by using multiple agents:
     )
     root_agent = Agent(
         name="RootAgent",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         description="Root Agent",
         tools=[AgentTool(agent=search_agent), AgentTool(agent=coding_agent)],
     )
@@ -278,7 +278,7 @@ to use built-in tools with other tools by using multiple agents:
     
     public class NestedAgentApp {
     
-      private static final String MODEL_ID = "gemini-2.0-flash";
+      private static final String MODEL_ID = "gemini-3.5-flash";
     
       public static void main(String[] args) {
 
@@ -340,7 +340,7 @@ to use built-in tools with other tools by using multiple agents:
     ```py
     root_agent = Agent(
         name="RootAgent",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         description="Root Agent",
         tools=[custom_function], 
         code_executor=BuiltInCodeExecutor() # <-- not supported when used with tools
@@ -370,7 +370,7 @@ is **not** currently supported:
 
     ```py
     search_agent = Agent(
-        model='gemini-2.0-flash',
+        model='gemini-3.5-flash',
         name='SearchAgent',
         instruction="""
         You're a specialist in Google Search
@@ -378,7 +378,7 @@ is **not** currently supported:
         tools=[google_search],
     )
     coding_agent = Agent(
-        model='gemini-2.0-flash',
+        model='gemini-3.5-flash',
         name='CodeAgent',
         instruction="""
         You're a specialist in Code Execution
@@ -387,7 +387,7 @@ is **not** currently supported:
     )
     root_agent = Agent(
         name="RootAgent",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         description="Root Agent",
         sub_agents=[
             search_agent,
@@ -401,7 +401,7 @@ is **not** currently supported:
     ```java
     LlmAgent searchAgent =
         LlmAgent.builder()
-            .model("gemini-2.0-flash")
+            .model("gemini-3.5-flash")
             .name("SearchAgent")
             .instruction("You're a specialist in Google Search")
             .tools(new GoogleSearchTool())
@@ -409,7 +409,7 @@ is **not** currently supported:
 
     LlmAgent codingAgent =
         LlmAgent.builder()
-            .model("gemini-2.0-flash")
+            .model("gemini-3.5-flash")
             .name("CodeAgent")
             .instruction("You're a specialist in Code Execution")
             .tools(new BuiltInCodeExecutionTool())
@@ -419,7 +419,7 @@ is **not** currently supported:
     LlmAgent rootAgent =
         LlmAgent.builder()
             .name("RootAgent")
-            .model("gemini-2.0-flash")
+            .model("gemini-3.5-flash")
             .description("Root Agent")
             .subAgents(searchAgent, codingAgent) // Not supported, as the sub agents use built in tools.
             .build();

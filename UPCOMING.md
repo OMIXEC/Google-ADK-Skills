@@ -1,5 +1,17 @@
 # Upcoming Enhancements — ADK Skills Curriculum Alignment
 
+> **SDK migration: complete.** Bundle targets ADK 2.3.0 GA. `adk-python-v2.3/` is the API source-of-truth; `adk-python-v1/` is reference-only. See [`MIGRATION.md`](MIGRATION.md). The enhancements below are curriculum/coverage gaps, independent of the v1→v2.3 migration.
+
+## Backend: thinking/effort + model-routing adoption (future plan)
+
+The new `adk-model-routing` skill defines the target policy. Backend model routers should adopt it:
+
+- **Model catalog:** standardize on `gemini-3.5-flash` (balanced), `gemini-3.1-flash-lite` (high-volume), `gemini-3.1-pro-preview` (complex), `gemini-3.1-flash-live-preview` (live), `gemini-embedding-2` (embeddings). Reject blocked IDs on config load.
+- **Thinking/effort:** map operating mode + complexity → `thinking_level` (`minimal`/`low`/`medium`/`high`); default `medium`. Ambient→`minimal`, assist→`low`–`medium`, complex/safety→`high` (safety never below `medium`). Wire via `BuiltInPlanner(thinking_config=types.ThinkingConfig(...))` or `generate_content_config`.
+- **Deprecate:** remove `thinking_budget`, `temperature`/`top_p`/`top_k`, and `candidate_count` from Gemini 3.x calls. Never set `thinking_level` + `thinking_budget` together (400).
+- **Fallback:** per-capability primary→fallback chains with circuit breaker + backoff; cross-provider via LiteLLM; emit `ok|degraded|error`. See `skills/adk-model-routing/references/fallback.md`.
+- **SDK:** `google-genai` v2.0.0+ for the Interactions API.
+
 Cross-reference audit of `adk-agentic-prod-workflows` against `docs/adk-course/` curriculum standards. Prioritized by production impact.
 
 ## CRITICAL (blocks production use)

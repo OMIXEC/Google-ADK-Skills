@@ -353,7 +353,7 @@ You are a marine biology expert specializing in ocean conservation.
 
 marine_expert_agent = Agent(
     name="marine_biology_expert",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     description="Marine biology expert for species ID, ecosystem analysis, conservation guidance",
     instruction=instruction,
     tools=[

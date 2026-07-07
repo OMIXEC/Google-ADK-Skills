@@ -166,17 +166,18 @@ fetch_tool = FunctionTool(async_fetch_data)
 
 ## MCP Tool Integration
 
-Use `MCPToolset` to connect agents to tools in other processes/languages. See `references/mcp-integration.md` for full reference.
+Use `McpToolset` to connect agents to tools in other processes/languages. See `references/mcp-integration.md` for full reference.
 
 ```python
-from google.adk.tools import MCPToolset, FunctionTool
+from google.adk.tools import FunctionTool
+from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 from google.adk.tools.mcp import StdioServerParameters, SseServerParams
 
 # MCP for side effects, external APIs, multi-language tools
-db_tools = MCPToolset(connection_params=StdioServerParameters(
+db_tools = McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(
     command="python3", args=["mcp_servers/db_server.py"]
-))
-api_tools = MCPToolset(connection_params=SseServerParams(
+)))
+api_tools = McpToolset(connection_params=SseServerParams(
     url="https://tools.example.com/sse",
     headers={"Authorization": "Bearer ${TOOLS_API_KEY}"},
 ))
@@ -186,14 +187,14 @@ internal_tools = FunctionTool(transform_data)
 
 agent = Agent(
     name="hybrid_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     tools=[internal_tools, db_tools, api_tools],
 )
 ```
 
 **Decision matrix:**
 
-| Factor | FunctionTool | MCPToolset |
+| Factor | FunctionTool | McpToolset |
 |--------|-------------|------------|
 | Process boundary | Same process | Separate process/server |
 | Language | Must match agent | Any language |

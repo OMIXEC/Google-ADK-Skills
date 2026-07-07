@@ -34,13 +34,13 @@ The foundation for structuring multi-agent systems is the parent-child relations
     from google.adk.agents import LlmAgent, BaseAgent
     
     # Define individual agents
-    greeter = LlmAgent(name="Greeter", model="gemini-2.0-flash")
+    greeter = LlmAgent(name="Greeter", model="gemini-3.5-flash")
     task_doer = BaseAgent(name="TaskExecutor") # Custom non-LLM agent
     
     # Create parent agent and assign children via sub_agents
     coordinator = LlmAgent(
         name="Coordinator",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         description="I coordinate greetings and tasks.",
         sub_agents=[ # Assign sub_agents here
             greeter,
@@ -61,13 +61,13 @@ The foundation for structuring multi-agent systems is the parent-child relations
     import com.google.adk.agents.LlmAgent;
     
     // Define individual agents
-    LlmAgent greeter = LlmAgent.builder().name("Greeter").model("gemini-2.0-flash").build();
+    LlmAgent greeter = LlmAgent.builder().name("Greeter").model("gemini-3.5-flash").build();
     SequentialAgent taskDoer = SequentialAgent.builder().name("TaskExecutor").subAgents(...).build(); // Sequential Agent
     
     // Create parent agent and assign sub_agents
     LlmAgent coordinator = LlmAgent.builder()
         .name("Coordinator")
-        .model("gemini-2.0-flash")
+        .model("gemini-3.5-flash")
         .description("I coordinate greetings and tasks")
         .subAgents(greeter, taskDoer) // Assign sub_agents here
         .build();
@@ -297,7 +297,7 @@ Leverages an [`LlmAgent`](llm-agents.md)'s understanding to dynamically route ta
     
     coordinator = LlmAgent(
         name="Coordinator",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         instruction="You are an assistant. Delegate booking tasks to Booker and info requests to Info.",
         description="Main coordinator.",
         # AutoFlow is typically used implicitly here
@@ -327,7 +327,7 @@ Leverages an [`LlmAgent`](llm-agents.md)'s understanding to dynamically route ta
     // Define the coordinator agent
     LlmAgent coordinator = LlmAgent.builder()
         .name("Coordinator")
-        .model("gemini-2.0-flash") // Or your desired model
+        .model("gemini-3.5-flash") // Or your desired model
         .instruction("You are an assistant. Delegate booking tasks to Booker and info requests to Info.")
         .description("Main coordinator.")
         // AutoFlow will be used by default (implicitly) because subAgents are present
@@ -374,7 +374,7 @@ Allows an [`LlmAgent`](llm-agents.md) to treat another `BaseAgent` instance as a
     # Parent agent uses the AgentTool
     artist_agent = LlmAgent(
         name="Artist",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         instruction="Create a prompt and use the ImageGen tool to generate the image.",
         tools=[image_tool] # Include the AgentTool
     )
@@ -427,7 +427,7 @@ Allows an [`LlmAgent`](llm-agents.md) to treat another `BaseAgent` instance as a
     // Parent agent uses the AgentTool
     LlmAgent artistAgent = LlmAgent.builder()
             .name("Artist")
-            .model("gemini-2.0-flash")
+            .model("gemini-3.5-flash")
             .instruction(
                     "You are an artist. Create a detailed prompt for an image and then " +
                             "use the 'ImageGen' tool to generate the image. " +
@@ -470,7 +470,7 @@ By combining ADK's composition primitives, you can implement various established
     
     coordinator = LlmAgent(
         name="HelpDeskCoordinator",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         instruction="Route user requests: Use Billing agent for payment issues, Support agent for technical problems.",
         description="Main help desk router.",
         # allow_transfer=True is often implicit with sub_agents in AutoFlow
@@ -498,7 +498,7 @@ By combining ADK's composition primitives, you can implement various established
 
     LlmAgent coordinator = LlmAgent.builder()
         .name("HelpDeskCoordinator")
-        .model("gemini-2.0-flash")
+        .model("gemini-3.5-flash")
         .instruction("Route user requests: Use Billing agent for payment issues, Support agent for technical problems.")
         .description("Main help desk router.")
         .subAgents(billingAgent, supportAgent)
@@ -668,7 +668,7 @@ By combining ADK's composition primitives, you can implement various established
     # Mid-level agent combining tools
     research_assistant = LlmAgent(
         name="ResearchAssistant",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         description="Finds and summarizes information on a topic.",
         tools=[agent_tool.AgentTool(agent=web_searcher), agent_tool.AgentTool(agent=summarizer)]
     )
@@ -676,7 +676,7 @@ By combining ADK's composition primitives, you can implement various established
     # High-level agent delegating research
     report_writer = LlmAgent(
         name="ReportWriter",
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         instruction="Write a report on topic X. Use the ResearchAssistant to gather information.",
         tools=[agent_tool.AgentTool(agent=research_assistant)]
         # Alternatively, could use LLM Transfer if research_assistant is a sub_agent
@@ -708,7 +708,7 @@ By combining ADK's composition primitives, you can implement various established
     // Mid-level agent combining tools
     LlmAgent researchAssistant = LlmAgent.builder()
         .name("ResearchAssistant")
-        .model("gemini-2.0-flash")
+        .model("gemini-3.5-flash")
         .description("Finds and summarizes information on a topic.")
         .tools(AgentTool.create(webSearcher), AgentTool.create(summarizer))
         .build();
@@ -716,7 +716,7 @@ By combining ADK's composition primitives, you can implement various established
     // High-level agent delegating research
     LlmAgent reportWriter = LlmAgent.builder()
         .name("ReportWriter")
-        .model("gemini-2.0-flash")
+        .model("gemini-3.5-flash")
         .instruction("Write a report on topic X. Use the ResearchAssistant to gather information.")
         .tools(AgentTool.create(researchAssistant))
         // Alternatively, could use LLM Transfer if research_assistant is a subAgent

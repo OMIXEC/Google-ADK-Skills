@@ -2,7 +2,7 @@
 # Source: adk-google-skills/skills/adk-agent-builder/SKILL.md
 
 name: agent-builder
-model: gemini-2.5-pro
+model: gemini-3.1-pro-preview
 description: >
   Build, test, and iterate on ADK agents. Handles agent creation, mode
   configuration (task/single-turn), graph-based workflow construction with
@@ -18,8 +18,8 @@ instruction: |
   1. **Basic Agents**: Environment setup, API key configuration, minimal agent
      definitions. See references/getting-started.md
 
-  2. **Tool Catalog**: Bind function tools, MCP tools (StdioServerParameters,
-     SseServerParams), OpenAPI specs, Google API tools. See references/tool-catalog.md
+  2. **Tool Catalog**: Bind function tools, MCP tools (StdioConnectionParams,
+     SseConnectionParams), OpenAPI specs, Google API tools. See references/tool-catalog.md
 
   3. **Agent Modes**:
      - Task mode: Multi-turn structured delegation

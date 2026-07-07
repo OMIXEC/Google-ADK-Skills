@@ -46,7 +46,7 @@ class AnalysisOutput(BaseModel):
 
 analysis_agent = LlmAgent(
     name="analyzer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Analyze the input text and return structured output.",
     output_schema=AnalysisOutput,  # ADK enforces this schema
     output_key="analysis",
@@ -210,7 +210,7 @@ for i in range(max_iterations):
 """Use a dedicated LLM call to evaluate output quality."""
 
 class LLMQualityEvaluator:
-    def __init__(self, model="gemini-2.5-flash"):
+    def __init__(self, model="gemini-3.5-flash"):
         self.model = model
 
     async def evaluate(self, output: str, expected_behavior: str) -> dict:
@@ -309,7 +309,7 @@ class HallucinationDetector:
         self,
         output: str,
         source_documents: list[str],
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
     ) -> dict:
         """Check if claims in output are supported by source documents."""
         prompt = f"""You are a factuality checker. For each claim in the agent output, verify if it is supported by the source documents.

@@ -3,7 +3,7 @@
 import os
 from google.adk.agents import LlmAgent
 
-MODEL = os.getenv("ADK_MODEL", "gemini-2.5-flash")
+MODEL = os.getenv("ADK_MODEL", "gemini-3.5-flash")
 
 
 def build_generator(exit_tool) -> LlmAgent:

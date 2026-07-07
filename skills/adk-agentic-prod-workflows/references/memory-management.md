@@ -444,7 +444,7 @@ async def after_agent_auto_save(callback_context):
 ```python
 entry_agent = LlmAgent(
     name="learning_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are a personal assistant that learns about the user over time.
     When you learn a new fact about the user, mark it with [REMEMBER: <fact>].
     Use preload_memory() at the start of each session to recall past facts.""",
@@ -557,13 +557,14 @@ async def save_user_memory(user_id: str, content: str) -> dict:
     return {"status": "ok", "key": key}
 
 
-# Client side — MCPToolset
+# Client side — McpToolset
+# from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 agent = LlmAgent(
     name="mcp_redis_agent",
-    tools=[MCPToolset(
-        connection_params=StdioServerParameters(
+    tools=[McpToolset(
+        connection_params=StdioConnectionParams(server_params=StdioServerParameters(
             command="python3", args=["mcp_servers/redis_memory_server.py"],
-        ),
+        )),
         tool_filter=["search_user_memory", "save_user_memory"],
     )],
 )

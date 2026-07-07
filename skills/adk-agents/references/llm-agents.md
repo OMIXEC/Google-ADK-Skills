@@ -33,7 +33,7 @@ First, you need to establish what the agent *is* and what it's *for*.
   inquiries about current billing statements," not just "Billing agent").
 
 * **`model` (Required):** Specify the underlying LLM that will power this
-  agent's reasoning. This is a string identifier like `"gemini-2.0-flash"`. The
+  agent's reasoning. This is a string identifier like `"gemini-3.5-flash"`. The
   choice of model impacts the agent's capabilities, cost, and performance. See
   the [Models](models.md) page for available options and considerations.
 
@@ -42,7 +42,7 @@ First, you need to establish what the agent *is* and what it's *for*.
     ```python
     # Example: Defining the basic identity
     capital_agent = LlmAgent(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         name="capital_agent",
         description="Answers user questions about the capital city of a given country."
         # instruction and tools will be added next
@@ -55,7 +55,7 @@ First, you need to establish what the agent *is* and what it's *for*.
     // Example: Defining the basic identity
     LlmAgent capitalAgent =
         LlmAgent.builder()
-            .model("gemini-2.0-flash")
+            .model("gemini-3.5-flash")
             .name("capital_agent")
             .description("Answers user questions about the capital city of a given country.")
             // instruction and tools will be added next
@@ -94,7 +94,7 @@ tells the agent:
     ```python
     # Example: Adding instructions
     capital_agent = LlmAgent(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         name="capital_agent",
         description="Answers user questions about the capital city of a given country.",
         instruction="""You are an agent that provides the capital city of a country.
@@ -115,7 +115,7 @@ tells the agent:
     // Example: Adding instructions
     LlmAgent capitalAgent =
         LlmAgent.builder()
-            .model("gemini-2.0-flash")
+            .model("gemini-3.5-flash")
             .name("capital_agent")
             .description("Answers user questions about the capital city of a given country.")
             .instruction(
@@ -163,7 +163,7 @@ on the conversation and its instructions.
     
     # Add the tool to the agent
     capital_agent = LlmAgent(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         name="capital_agent",
         description="Answers user questions about the capital city of a given country.",
         instruction="""You are an agent that provides the capital city of a country... (previous instruction text)""",
@@ -196,7 +196,7 @@ on the conversation and its instructions.
     FunctionTool capitalTool = FunctionTool.create(experiment.getClass(), "getCapitalCity");
     LlmAgent capitalAgent =
         LlmAgent.builder()
-            .model("gemini-2.0-flash")
+            .model("gemini-3.5-flash")
             .name("capital_agent")
             .description("Answers user questions about the capital city of a given country.")
             .instruction("You are an agent that provides the capital city of a country... (previous instruction text)")
@@ -348,7 +348,7 @@ Control whether the agent receives the prior conversation history.
 
 * **`BuiltInPlanner`:** Leverages the model's built-in planning capabilities (e.g., Gemini's thinking feature). See [Gemini Thinking](https://ai.google.dev/gemini-api/docs/thinking) for details and examples.
 
-    Here, the `thinking_budget` parameter guides the model on the number of thinking tokens to use when generating a response. The `include_thoughts` parameter controls whether the model should include its raw thoughts and internal reasoning process in the response.
+    On Gemini 3.x, prefer the `thinking_level` parameter (`minimal` / `low` / `medium` (default) / `high`) to guide reasoning effort; the older token-based `thinking_budget` is superseded. The `include_thoughts` parameter controls whether the model should include its raw thoughts and internal reasoning process in the response.
 
     ```python
     from google.adk import Agent
@@ -356,11 +356,11 @@ Control whether the agent receives the prior conversation history.
     from google.genai import types
 
     my_agent = Agent(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         planner=BuiltInPlanner(
             thinking_config=types.ThinkingConfig(
                 include_thoughts=True,
-                thinking_budget=1024,
+                thinking_level="high",
             )
         ),
         # ... your tools here
@@ -374,7 +374,7 @@ Control whether the agent receives the prior conversation history.
     from google.adk.planners import PlanReActPlanner
 
     my_agent = Agent(
-        model="gemini-2.0-flash",
+        model="gemini-3.5-flash",
         planner=PlanReActPlanner(),
         # ... your tools here
     )
@@ -486,8 +486,8 @@ def get_current_time(city: str) -> dict:
 
 # Step 1: Create a ThinkingConfig
 thinking_config = ThinkingConfig(
-    include_thoughts=True,   # Ask the model to include its thoughts in the response
-    thinking_budget=256      # Limit the 'thinking' to 256 tokens (adjust as needed)
+    include_thoughts=True,     # Ask the model to include its thoughts in the response
+    thinking_level="low"       # Gemini 3.x: use thinking_level (minimal/low/medium/high) instead of thinking_budget
 )
 print("ThinkingConfig:", thinking_config)
 
@@ -499,7 +499,7 @@ print("BuiltInPlanner created.")
 
 # Step 3: Wrap the planner in an LlmAgent
 agent = LlmAgent(
-    model="gemini-2.5-pro-preview-03-25",  # Set your model name
+    model="gemini-3.1-pro-preview",  # Set your model name
     name="weather_and_time_agent",
     instruction="You are an agent that returns time and weather",
     planner=planner,

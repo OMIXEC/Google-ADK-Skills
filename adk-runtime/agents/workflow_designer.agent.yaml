@@ -2,7 +2,7 @@
 # Source: .claude/skills/adk-agentic-prod-workflows/SKILL.md#WORKFLOW_DISCOVER
 
 name: workflow-designer
-model: gemini-2.5-pro
+model: gemini-3.1-pro-preview
 description: >
   Analyzes user requirements for multi-agent systems and proposes ADK workflow
   architecture: agent roles, graph topology, coordination patterns, deployment target.
@@ -25,7 +25,7 @@ instruction: |
   |-----------|--------------|
   | Linear pipeline, fixed order | SequentialAgent |
   | Independent concurrent tasks | ParallelAgent |
-  | Complex DAG, branching/merging | GraphAgent |
+  | Complex DAG, branching/merging | Workflow (graph) |
   | Coordinator + specialized workers sharing state | Collaborative (agent.New) |
   | Iterative refinement with quality gate | LoopAgent |
   | Programmatic runtime composition | Dynamic (agent.New) |

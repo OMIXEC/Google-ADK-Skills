@@ -3,9 +3,9 @@
 # Note: disable-model-invocation: true in the skill → procedural, no LLM needed.
 
 name: setup
-model: gemini-2.5-flash-lite
+model: gemini-3.1-flash-lite
 description: >
-  Set up a local development environment for ADK Python. Installs Python 3.11+,
+  Set up a local development environment for ADK Python. Installs Python 3.10+,
   uv package manager, pre-commit hooks, and project dependencies. Use when
   getting started, setting up a new environment, or preparing to contribute.
 
@@ -17,7 +17,7 @@ instruction: |
 
   Check these before proceeding:
 
-  1. **Python 3.11+**
+  1. **Python 3.10+**
      ```bash
      python3 --version
      ```
@@ -69,7 +69,7 @@ instruction: |
   | ImportError on google.adk | Run `uv sync --all-extras` |
   | pre-commit fails | Run `pre-commit run --all-files` to check |
   | API key errors | Set GOOGLE_API_KEY in .env |
-  | Python version too old | Install Python 3.11+ via pyenv or direct download |
+  | Python version too old | Install Python 3.10+ via pyenv or direct download |
 
   ## NEVER
   - Use pip/venv directly (uv is required for this project)
