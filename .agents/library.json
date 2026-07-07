@@ -1,0 +1,18 @@
+{
+  "$schema": "https://agents.md/schemas/library.schema.json",
+  "name": "google-adk-skills",
+  "displayName": "Google ADK Skills",
+  "description": "Production Google ADK skills, subagents, commands, and runtime assets for building AI agents.",
+  "repository": "https://github.com/OMIXEC/Google-ADK-Skills",
+  "components": {
+    "skills": "./skills",
+    "agents": "./agents",
+    "commands": "./commands",
+    "runtimeAgents": "./adk-runtime/agents",
+    "mcpServers": "./mcp_servers/CATALOG.md"
+  },
+  "install": {
+    "skillsSh": "npx skills add OMIXEC/Google-ADK-Skills",
+    "script": "bash install.sh --interactive"
+  }
+}

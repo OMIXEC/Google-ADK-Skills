@@ -7,6 +7,8 @@ description: Central hub for building, testing, and iterating on ADK agents. Tri
 
 This file serves as a directory of specialized reference guides for developing agents with ADK. To avoid context pollution, read only the relevant reference file based on your current task.
 
+Before choosing import paths, package versions, graph APIs, or examples, read `../../docs/python-adk-2.md`.
+
 ## Core Concepts Directory
 
 Refer to these files for foundational knowledge:

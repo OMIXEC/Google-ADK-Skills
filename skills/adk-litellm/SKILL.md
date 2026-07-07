@@ -16,7 +16,8 @@ available, call `resolve-library-id "litellm"` then `get-library-docs` for the
 latest provider/model docs. Otherwise use the bundled references below. context7
 is optional enrichment; the bundled references are always sufficient.
 
-1. Read LiteLLM documentation at `references/` folder:
+1. Read `../../docs/python-adk-2.md` for current ADK 2.x model/tool constraints.
+2. Read LiteLLM documentation at `references/` folder:
    - `references/README.md` - LiteLLM crash course tutorial
    - `references/models.md` - multi-provider model guide
    - `references/dad_joke_agent/` - Example agent using LiteLLM
@@ -38,7 +39,7 @@ is optional enrichment; the bundled references are always sufficient.
 | Anthropic | `anthropic/claude-3-5-sonnet` |
 | AWS Bedrock | `bedrock/anthropic.claude-v2` |
 | OpenRouter | `openrouter/anthropic/claude-3-5-sonnet` |
-| Google | `gemini/gemini-2.0-flash` |
+| Google | `gemini/gemini-2.5-flash` |
 | Meta | `together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo` |
 | Mistral | `mistral/mistral-large-latest` |
 
@@ -46,7 +47,7 @@ is optional enrichment; the bundled references are always sufficient.
 
 ```python
 from google.adk.models import LiteLlm
-from google.adk.agents import Agent
+from google.adk import Agent
 import os
 
 # Using OpenRouter with Claude
@@ -86,7 +87,8 @@ smart_agent = Agent(
 )
 
 orchestrator = Agent(
-    model="gemini-2.0-flash",  # Google model can use built-in tools
+    name="orchestrator",
+    model="gemini-2.5-flash",  # Google model can use built-in tools
     sub_agents=[cheap_agent, smart_agent],
     tools=[google_search]
 )

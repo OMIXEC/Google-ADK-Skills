@@ -46,9 +46,10 @@ Framework skills (`adk-litellm`, `adk-langgraph`) load their docs **context7-fir
 
 ## Installation
 
-Three ways — see README for details:
-- **Script (canonical, no auth):** `bash install.sh --target claude-code` or `curl -fsSL .../install.sh | bash`
-- **npx:** `npx claude-adk-skills --target claude-code`
-- **Claude plugin:** `/plugin marketplace add OMIXEC/Claude-ADK-Skills` then `/plugin install claude-adk-skills`
+Primary path — see README for details:
+- **skills.sh:** `npx skills add OMIXEC/Google-ADK-Skills`
+- **Advanced installer:** `bash install.sh --interactive`
+- **Package shim:** `npx google-adk-skills --interactive`
+- **Claude plugin:** `/plugin marketplace add OMIXEC/Google-ADK-Skills` then `/plugin install google-adk-skills`
 
-`install.sh` targets: `--target claude-code` (default), `gemini-cli`, `opencode`, `cursor`, `all`.
+`install.sh` targets: `codex`, `opencode`, `claude`, `cline`, `cursor`, `gemini-cli`, `windsurf`, `agents-lib`, `all`, `auto`, plus custom `--skills-dir`.

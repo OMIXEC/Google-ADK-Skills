@@ -4,13 +4,15 @@ description: Set up a local development environment for the ADK Python project. 
 disable-model-invocation: true
 ---
 
-Set up the local development environment for ADK Python.
+Set up the local development environment for ADK Python 2.x.
+
+Before selecting versions or commands, read `../../docs/python-adk-2.md`.
 
 ## Prerequisites
 
 Check the following before proceeding:
 
-1. **Python 3.11+**
+1. **Python 3.10+**
 
    ```bash
    python3 --version
@@ -32,7 +34,7 @@ Run these commands from the project root:
 3. **Create and activate a virtual environment:**
 
    ```bash
-   uv venv --python "python3.11" ".venv"
+   uv venv --python "python3.12" ".venv"
    source .venv/bin/activate
    ```
 
@@ -40,6 +42,12 @@ Run these commands from the project root:
 
    ```bash
    uv sync --all-extras
+   ```
+
+   For a new ADK app without a checked-in `pyproject.toml`, start from the current ADK 2.x package:
+
+   ```bash
+   uv add "google-adk>=2.3.0,<3"
    ```
 
 5. **Install development tools:**

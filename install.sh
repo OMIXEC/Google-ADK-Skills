@@ -2,7 +2,7 @@
 #
 # Google-ADK-Skills Installation Script
 # IDE-agnostic: supports Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI,
-# Windsurf, and any custom skills directory.
+# Windsurf, .agents libraries, and any custom skills directory.
 #
 # Usage:
 #   bash install.sh                           # auto-detect IDE
@@ -34,10 +34,12 @@ SOURCE_DIR=""
 
 # IDE skills directories (bash 3.2 compatible — use functions, not associative arrays)
 
-ALL_IDES="${GOOGLE_ADK_TARGETS:-codex opencode claude cline cursor gemini-cli windsurf}"
+ALL_IDES="${GOOGLE_ADK_TARGETS:-codex opencode claude cline cursor gemini-cli windsurf agents-lib}"
 SKILLS_FILTER="all"
 CUSTOM_SKILLS_DIR=""
 INSTALL_SCOPE="user"
+WITH_AGENTS=true
+WITH_COMMANDS=true
 
 get_skills_dir() {
     local target
@@ -57,6 +59,7 @@ get_skills_dir() {
             cursor) echo "/usr/local/share/cursor/skills" ;;
             gemini-cli) echo "/usr/local/share/gemini/skills" ;;
             windsurf) echo "/usr/local/share/windsurf/skills" ;;
+            agents-lib) echo "/usr/local/share/agents/skills" ;;
             *) echo "" ;;
         esac
         return 0
@@ -70,6 +73,47 @@ get_skills_dir() {
         windsurf) echo "${HOME}/.windsurf/skills" ;;
         codex) echo "${HOME}/.codex/skills" ;;
         cline) echo "${HOME}/.cline/skills" ;;
+        agents-lib) echo "${HOME}/.agents/skills" ;;
+        *) echo "" ;;
+    esac
+}
+
+get_agents_dir() {
+    local target
+    target=$(normalize_target "$1")
+
+    if [[ "$INSTALL_SCOPE" == "global" ]]; then
+        case "$target" in
+            claude) echo "/usr/local/share/claude/agents" ;;
+            agents-lib) echo "/usr/local/share/agents/agents" ;;
+            *) echo "" ;;
+        esac
+        return 0
+    fi
+
+    case "$target" in
+        claude) echo "${HOME}/.claude/agents" ;;
+        agents-lib) echo "${HOME}/.agents/agents" ;;
+        *) echo "" ;;
+    esac
+}
+
+get_commands_dir() {
+    local target
+    target=$(normalize_target "$1")
+
+    if [[ "$INSTALL_SCOPE" == "global" ]]; then
+        case "$target" in
+            claude) echo "/usr/local/share/claude/commands" ;;
+            agents-lib) echo "/usr/local/share/agents/commands" ;;
+            *) echo "" ;;
+        esac
+        return 0
+    fi
+
+    case "$target" in
+        claude) echo "${HOME}/.claude/commands" ;;
+        agents-lib) echo "${HOME}/.agents/commands" ;;
         *) echo "" ;;
     esac
 }
@@ -82,6 +126,7 @@ get_cli_cmd() {
         cursor) echo "cursor" ;;
         codex) echo "codex" ;;
         cline) echo "cline" ;;
+        agents-lib) echo "" ;;
         *) echo "" ;;
     esac
 }
@@ -165,7 +210,7 @@ run_interactive_setup() {
 
     echo ""
     echo "Interactive install"
-    echo "Targets: codex, opencode, claude, cline, cursor, gemini-cli, windsurf, all, auto, custom"
+    echo "Targets: codex, opencode, claude, cline, cursor, gemini-cli, windsurf, agents-lib, all, auto, custom"
     printf "Target [%s]: " "$TARGET_IDE"
     read answer
     [[ -n "$answer" ]] && TARGET_IDE="$answer"
@@ -185,6 +230,18 @@ run_interactive_setup() {
     read answer
     case "$answer" in
         y|Y|yes|YES) LINK_METHOD="copy" ;;
+    esac
+
+    printf "Install bundled subagents where supported? [Y/n]: "
+    read answer
+    case "$answer" in
+        n|N|no|NO) WITH_AGENTS=false ;;
+    esac
+
+    printf "Install bundled slash commands where supported? [Y/n]: "
+    read answer
+    case "$answer" in
+        n|N|no|NO) WITH_COMMANDS=false ;;
     esac
 
     printf "Replace existing copied skill directories? [y/N]: "
@@ -234,7 +291,7 @@ show_help() {
     echo "IDE Target:"
     echo "  --target IDE       Install for specific target"
     echo "                     Values: codex, opencode, claude, cline, cursor,"
-    echo "                             gemini-cli, windsurf, all, auto (default)"
+    echo "                             gemini-cli, windsurf, agents-lib, all, auto (default)"
     echo "  --copy             Copy files instead of symlinking (default: symlink)"
     echo ""
     echo "Other:"
@@ -244,6 +301,8 @@ show_help() {
     echo "  --ref REF          Git branch/tag to install (default: main)"
     echo "  --skills LIST      Comma-separated skills to install, or all (default: all)"
     echo "  --interactive      Prompt for target, method, runtime, evals, and skills"
+    echo "  --no-agents        Do not install bundled subagent definitions"
+    echo "  --no-commands      Do not install bundled slash commands"
     echo "  --with-evals       Keep eval/test assets in the install checkout"
     echo "  --with-runtime     Create a Python venv and install runtime dependencies"
     echo "  --shell-integration Add adk alias/PATH entry to your shell rc file"
@@ -257,7 +316,8 @@ show_help() {
     echo "  bash install.sh                              # Auto-detect IDE"
     echo "  bash install.sh --interactive                 # Guided install"
     echo "  bash install.sh --target claude               # Claude only"
-    echo "  bash install.sh --target all --copy           # All IDEs, copy mode"
+    echo "  bash install.sh --target all --copy           # All targets, copy mode"
+    echo "  bash install.sh --target agents-lib           # ~/.agents library"
     echo "  curl -fsSL https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/install.sh | bash"
     echo ""
     echo "Alternative — install as a Claude Code plugin (no clone needed):"
@@ -284,6 +344,10 @@ while [[ $# -gt 0 ]]; do
             SKILLS_FILTER="$2"; shift 2 ;;
         --interactive|-i)
             INTERACTIVE=true; shift ;;
+        --no-agents)
+            WITH_AGENTS=false; shift ;;
+        --no-commands)
+            WITH_COMMANDS=false; shift ;;
         --skip-deps)
             SKIP_DEPS=true; shift ;;
         --with-evals)
@@ -305,7 +369,7 @@ done
 
 if ! is_known_target "$TARGET_IDE"; then
     log_error "Unknown target: $TARGET_IDE"
-    echo "Valid targets: codex, opencode, claude, cline, cursor, gemini-cli, windsurf, all, auto"
+    echo "Valid targets: codex, opencode, claude, cline, cursor, gemini-cli, windsurf, agents-lib, all, auto"
     exit 1
 fi
 
@@ -328,7 +392,7 @@ fi
 validate_config() {
     if ! is_known_target "$TARGET_IDE"; then
         log_error "Unknown target: $TARGET_IDE"
-        echo "Valid targets: codex, opencode, claude, cline, cursor, gemini-cli, windsurf, all, auto, custom"
+        echo "Valid targets: codex, opencode, claude, cline, cursor, gemini-cli, windsurf, agents-lib, all, auto, custom"
         exit 1
     fi
 
@@ -388,14 +452,15 @@ check_scope_permissions() {
 
     for target in $targets_to_check; do
         [[ "$target" == "custom" && -z "$CUSTOM_SKILLS_DIR" ]] && continue
-        dir=$(get_skills_dir "$target")
-        [[ -z "$dir" ]] && continue
-        target_parent=$(nearest_existing_parent "$dir")
-        if [[ ! -w "$target_parent" ]]; then
-            log_error "Global skills directory parent is not writable: $target_parent"
-            echo "Re-run with sudo/admin permissions, or use --scope user."
-            exit 1
-        fi
+        for dir in "$(get_skills_dir "$target")" "$(get_agents_dir "$target")" "$(get_commands_dir "$target")"; do
+            [[ -z "$dir" ]] && continue
+            target_parent=$(nearest_existing_parent "$dir")
+            if [[ ! -w "$target_parent" ]]; then
+                log_error "Global component directory parent is not writable: $target_parent"
+                echo "Re-run with sudo/admin permissions, or use --scope user."
+                exit 1
+            fi
+        done
     done
 }
 
@@ -691,6 +756,72 @@ install_skills_for_ide() {
     log_info "Linked $skill_count skills for $ide"
 }
 
+install_file_components() {
+    local ide=$1
+    local component=$2
+    local source_dir=$3
+    local target_dir=$4
+
+    [[ -z "$target_dir" ]] && return 0
+    [[ ! -d "$source_dir" ]] && return 0
+
+    log_step "Installing $component for $ide → $target_dir"
+    mkdir -p "$target_dir"
+
+    local count=0
+    for source_file in "$source_dir/"*.md; do
+        [[ ! -f "$source_file" ]] && continue
+        local file_name
+        file_name=$(basename "$source_file")
+        local target_path="$target_dir/$file_name"
+
+        if [[ "$LINK_METHOD" == "symlink" ]]; then
+            if [[ -e "$target_path" || -L "$target_path" ]]; then
+                if [[ -L "$target_path" ]]; then
+                    rm "$target_path"
+                elif [[ "$FORCE" == true ]]; then
+                    rm -f "$target_path"
+                else
+                    log_warn "Skipping existing $component file: $target_path (use --force to replace)"
+                    continue
+                fi
+            fi
+            ln -s "$source_file" "$target_path" 2>/dev/null || {
+                log_warn "Symlink failed for $file_name — trying copy"
+                rm -f "$target_path"
+                cp "$source_file" "$target_path"
+            }
+        else
+            if [[ -e "$target_path" || -L "$target_path" ]]; then
+                if [[ "$FORCE" == true ]]; then
+                    rm -f "$target_path"
+                else
+                    log_warn "Skipping existing $component file: $target_path (use --force to replace)"
+                    continue
+                fi
+            fi
+            cp "$source_file" "$target_path"
+        fi
+
+        ((count+=1))
+        [[ "$VERBOSE" == true ]] && log_info "  $file_name"
+    done
+
+    log_info "Installed $count $component files for $ide"
+}
+
+install_optional_components_for_ide() {
+    local ide=$1
+
+    if [[ "$WITH_AGENTS" == true ]]; then
+        install_file_components "$ide" "agents" "$INSTALL_DIR/agents" "$(get_agents_dir "$ide")"
+    fi
+
+    if [[ "$WITH_COMMANDS" == true ]]; then
+        install_file_components "$ide" "commands" "$INSTALL_DIR/commands" "$(get_commands_dir "$ide")"
+    fi
+}
+
 # ── Configure environment ───────────────────────────
 configure_env() {
     log_step "Configuring environment..."
@@ -759,6 +890,18 @@ verify_installation() {
         dir=$(get_skills_dir "$ide")
         local linked=$(find "$dir" -name "SKILL.md" -maxdepth 2 2>/dev/null | wc -l | tr -d ' ')
         log_info "  $ide: $linked skills linked"
+
+        local agents_dir commands_dir agent_count command_count
+        agents_dir=$(get_agents_dir "$ide")
+        commands_dir=$(get_commands_dir "$ide")
+        if [[ -n "$agents_dir" ]]; then
+            agent_count=$(find "$agents_dir" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+            log_info "  $ide: $agent_count agents linked"
+        fi
+        if [[ -n "$commands_dir" ]]; then
+            command_count=$(find "$commands_dir" -maxdepth 1 -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+            log_info "  $ide: $command_count commands linked"
+        fi
     done
 
     [[ $errors -gt 0 ]] && { log_error "Verification failed: $errors errors"; return 1; }
@@ -805,6 +948,7 @@ main() {
 
     for ide in "${TARGETS[@]}"; do
         install_skills_for_ide "$ide"
+        install_optional_components_for_ide "$ide"
     done
 
     configure_env

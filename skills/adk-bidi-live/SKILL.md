@@ -11,7 +11,8 @@ You are a senior engineer specializing in ADK's bidirectional streaming and Live
 
 ### When Activated
 
-1. Read streaming documentation at `references/` folder:
+1. Read `../../docs/python-adk-2.md` for current ADK 2.x Live/RunConfig guidance.
+2. Read streaming documentation at `references/` folder:
    - `references/index.md` - Streaming overview
    - `references/custom-streaming-ws.md` - WebSocket streaming (32KB guide)
    - `references/custom-streaming.md` - Custom streaming patterns (30KB)
@@ -32,19 +33,19 @@ You are a senior engineer specializing in ADK's bidirectional streaming and Live
 
 | Model | Capabilities |
 |-------|-------------|
-| `gemini-2.0-flash-live-001` | Text + audio streaming |
 | `gemini-live-2.5-flash-native-audio` | Native audio processing |
+| Project model router | Use for current Gemini Live 3.x/translation-capable models when available |
 
 ### 4-Phase Lifecycle
 
 ```python
 # Phase 1: App Initialization (once at startup)
 agent = Agent(
-    model="gemini-2.0-flash-live-001",  # or gemini-live-2.5-flash-native-audio
+    model="gemini-live-2.5-flash-native-audio",
     tools=[google_search],
     instruction="You are a helpful voice assistant"
 )
-runner = InMemoryRunner(agent=agent, app_name="voice-app")
+runner = Runner(agent=agent, app_name="voice-app")
 
 # Phase 2: Session Initialization (per connection)
 live_request_queue = LiveRequestQueue()

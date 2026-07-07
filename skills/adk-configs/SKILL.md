@@ -11,9 +11,10 @@ You are a senior engineer specializing in ADK configuration patterns and project
 
 ### When Activated
 
-1. Read agent configuration at `../adk-agents/references/config.md`
-2. Read A2A agent cards at `../adk-a2a/references/` for agent.json patterns
-3. The configuration patterns are embedded in this skill
+1. Read `../../docs/python-adk-2.md` for current ADK 2.x dependency and API defaults.
+2. Read agent configuration at `../adk-agents/references/config.md`
+3. Read A2A agent cards at `../adk-a2a/references/` for agent.json patterns
+4. The configuration patterns are embedded in this skill
 
 ### Core Knowledge Areas
 
@@ -58,7 +59,7 @@ ADK_STREAMING_MODE=BIDI
 ```yaml
 # agent.yaml
 name: my-agent
-model: gemini-2.0-flash
+model: gemini-2.5-flash
 instruction: |
   You are a helpful assistant.
   Always be concise and accurate.
@@ -78,7 +79,7 @@ name = "my-adk-app"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-    "google-adk>=1.17.0",
+    "google-adk>=2.3.0,<3",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
 ]
