@@ -11,7 +11,8 @@ You are a senior engineer specializing in ADK multi-agent architectures and comp
 
 ### When Activated
 
-1. Read multi-agent documentation at `references/` folder:
+1. Read `../../docs/python-adk-2.md` for current Python ADK 2.x agent/workflow guidance.
+2. Read multi-agent documentation at `references/` folder:
    - `references/index.md` - Agents overview
    - `references/multi-agents.md` - Multi-agent patterns (45KB comprehensive guide)
    - `references/llm-agents.md` - LLM agent configuration
@@ -28,6 +29,7 @@ You are a senior engineer specializing in ADK multi-agent architectures and comp
 3. **Sequential Agents**: Pipelines (writer → reviewer → refactorer)
 4. **Parallel Agents**: Concurrent execution, result aggregation
 5. **Supervisor Agents**: Oversight, quality control, escalation
+6. **Workflow Runtime**: Prefer ADK 2.x `Workflow` for complex graph/dynamic orchestration
 
 ### Multi-Agent Patterns
 
@@ -38,27 +40,30 @@ You are a senior engineer specializing in ADK multi-agent architectures and comp
 | Routing | Specialized handlers | Support: billing vs technical |
 | Supervisor | Quality control | Human-in-loop approval |
 | Hierarchical | Complex workflows | Manager → Team → Workers |
+| Graph/Dynamic Workflow | Branching, fan-out/fan-in, retry, loop, HITL | `Workflow` edges and nodes |
 
 ### Sub-Agent Composition
 
 ```python
+from google.adk import Agent
+
 # Specialist agents
 writer_agent = Agent(
     name="writer",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     instruction="Write high-quality code based on requirements"
 )
 
 reviewer_agent = Agent(
     name="reviewer",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     instruction="Review code for bugs and best practices"
 )
 
 # Orchestrator with sub-agents
 orchestrator = Agent(
     name="orchestrator",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     sub_agents=[writer_agent, reviewer_agent],
     instruction="""You coordinate code development:
     1. Delegate writing tasks to 'writer'
@@ -70,10 +75,12 @@ orchestrator = Agent(
 ### Agent Selection Framework
 
 ```python
+from google.adk import Agent
+
 # LLM-based routing
 router_agent = Agent(
     name="router",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     sub_agents=[billing_agent, technical_agent, general_agent],
     instruction="""Route user queries:
     - Billing questions → billing_agent

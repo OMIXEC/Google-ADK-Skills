@@ -11,7 +11,8 @@ You are a senior engineer specializing in ADK's Agent-to-Agent (A2A) protocol fo
 
 ### When Activated
 
-1. Read A2A documentation at `references/` folder:
+1. Read `../../docs/python-adk-2.md` for current ADK 2.x Task API and A2A cautions.
+2. Read A2A documentation at `references/` folder:
    - `references/index.md` - A2A overview
    - `references/intro.md` - A2A protocol introduction (12KB)
    - `references/quickstart-consuming.md` - Consuming remote agents (10KB)
@@ -21,7 +22,7 @@ You are a senior engineer specializing in ADK's Agent-to-Agent (A2A) protocol fo
 
 1. **A2A Protocol**: HTTP-based agent communication standard
 2. **Agent Cards**: JSON metadata files (agent.json) describing agent capabilities
-3. **RemoteA2AAgent**: Proxy class for calling remote agents
+3. **Task API / Remote agents**: Structured delegation and remote-agent calls across service boundaries
 4. **Authentication**: OAuth/JWT between agents, secure cross-service communication
 5. **Workflow Patterns**: Sequential, parallel, conditional routing across services
 
@@ -47,22 +48,20 @@ You are a senior engineer specializing in ADK's Agent-to-Agent (A2A) protocol fo
 }
 ```
 
-### RemoteA2AAgent Pattern
+### Remote Agent Pattern
+
+ADK Python A2A support is documented as experimental. Verify the current `google/adk-python` API before copying a `RemoteA2AAgent` example; older signatures may be stale.
 
 ```python
-from google.adk.agents import RemoteA2AAgent
+from google.adk import Agent
 
-# Define remote agent proxy
-weather_agent = RemoteA2AAgent(
-    name="weather-agent",
-    url="http://localhost:8001/a2a/weather-agent"  # A2A endpoint
-)
-
-# Use in root agent
 root_agent = Agent(
-    model="gemini-2.0-flash",
-    sub_agents=[weather_agent],  # Delegate to remote
-    instruction="Route weather queries to weather-agent"
+    name="root_agent",
+    model="gemini-2.5-flash",
+    instruction=(
+        "Route remote-capability tasks through verified A2A adapters only. "
+        "Propagate auth, timeout, retry, and correlation metadata."
+    ),
 )
 ```
 

@@ -11,9 +11,10 @@ You are a senior AI engineer specializing in prompt engineering for Google ADK a
 
 ### When Activated
 
-1. Read agent configuration at `../adk-agents/references/config.md` for instruction patterns
-2. Read models documentation at `../adk-agents/references/models.md` for model-specific prompting
-3. For enterprise patterns, reference the knowledge embedded in this skill
+1. Read `../../docs/python-adk-2.md` for current ADK 2.x model and output-schema constraints.
+2. Read agent configuration at `../adk-agents/references/config.md` for instruction patterns
+3. Read models documentation at `../adk-agents/references/models.md` for model-specific prompting
+4. For enterprise patterns, reference the knowledge embedded in this skill
 
 ### Core Knowledge Areas
 
@@ -35,9 +36,12 @@ You are a senior AI engineer specializing in prompt engineering for Google ADK a
 ### Prompt Patterns
 
 ```python
+from google.adk import Agent
+
 # Agent with structured instructions
 agent = Agent(
-    model="gemini-2.0-flash",
+    name="travel_planner",
+    model="gemini-2.5-flash",
     instruction="""You are a helpful assistant specializing in travel planning.
 
 ## Capabilities

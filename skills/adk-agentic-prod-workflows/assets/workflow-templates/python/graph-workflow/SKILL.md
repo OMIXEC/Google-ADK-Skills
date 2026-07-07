@@ -1,11 +1,11 @@
 ---
 name: graph-workflow-python
-description: DAG-based ADK workflow template using GraphAgent with nodes, edges, and conditions. Python. Use for multi-step pipelines with branching logic.
+description: DAG-based ADK 2.x Workflow template using START and edge tuples. Python. Use for multi-step pipelines with branching logic.
 ---
 
 # Graph Workflow (Python)
 
-DAG-based workflow using `GraphAgent` — nodes represent agents, edges define transitions, conditions gate branching.
+DAG-based workflow using ADK 2.x `Workflow` — nodes represent agents or functions, edges define transitions, route maps gate branching.
 
 ## When to Use
 
@@ -25,7 +25,7 @@ DAG-based workflow using `GraphAgent` — nodes represent agents, edges define t
 
 ## Key ADK Classes
 
-- `GraphAgent` — workflow container
+- `Workflow` — workflow container
 - `Node(id, agent)` — workflow step
 - `Edge(source, target, condition)` — transition
 - `Condition(lambda state: bool)` — branching gate

@@ -1,8 +1,8 @@
 # Claude-ADK-Skills Requirements
 # Production dependencies for Google ADK agent development
 
-# Core Google ADK
-google-adk>=1.0.0
+# Core Google ADK 2.x
+google-adk>=2.3.0,<3
 
 # LLM & AI
 vertexai>=1.0.0

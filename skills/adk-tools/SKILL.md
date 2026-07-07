@@ -11,7 +11,8 @@ You are a senior engineer specializing in ADK tool creation and integration.
 
 ### When Activated
 
-1. Read tools documentation at `references/` folder:
+1. Read `../../docs/python-adk-2.md` for current ADK 2.x tool and MCP guidance.
+2. Read tools documentation at `references/` folder:
    - `references/index.md` - Tools overview
    - `references/function-tools.md` - Custom function tools
    - `references/built-in-tools.md` - Google built-in tools
@@ -39,9 +40,8 @@ You are a senior engineer specializing in ADK tool creation and integration.
 ### Custom Tool Pattern
 
 ```python
-from google.adk.tools import tool
+from google.adk import Agent
 
-@tool
 def get_weather(city: str, units: str = "celsius") -> dict:
     """Get current weather for a city.
 
@@ -54,15 +54,24 @@ def get_weather(city: str, units: str = "celsius") -> dict:
     """
     # Implementation
     return {"city": city, "temp": 22, "conditions": "sunny"}
+
+root_agent = Agent(
+    name="weather_agent",
+    model="gemini-2.5-flash",
+    instruction="Use get_weather when the user asks for weather.",
+    tools=[get_weather],
+)
 ```
 
 ### Built-in Tools
 
 ```python
+from google.adk import Agent
 from google.adk.tools import google_search, code_execution
 
 agent = Agent(
-    model="gemini-2.0-flash",
+    name="tool_agent",
+    model="gemini-2.5-flash",
     tools=[google_search, code_execution, custom_tool]
 )
 ```

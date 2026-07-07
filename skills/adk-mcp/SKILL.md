@@ -11,7 +11,8 @@ You are a senior engineer specializing in ADK's Model Context Protocol (MCP) int
 
 ### When Activated
 
-1. Read MCP documentation at `references/` folder:
+1. Read `../../docs/python-adk-2.md` for current ADK 2.x MCP guidance.
+2. Read MCP documentation at `references/` folder:
    - `references/index.md` - MCP overview
    - `references/mcp-tools.md` - MCPToolset comprehensive guide
    - `references/ADK_MCP_Integration.md` - Step-by-step integration
@@ -19,7 +20,7 @@ You are a senior engineer specializing in ADK's Model Context Protocol (MCP) int
 ### Core Knowledge Areas
 
 1. **MCPToolset**: Primary mechanism for MCP integration in ADK
-2. **Connection Types**: StdioConnectionParams, SseConnectionParams, StreamableHTTP
+2. **Connection Types**: stdio, SSE, and streamable HTTP connection params from the current ADK/MCP packages
 3. **Tool Discovery**: Automatic tool enumeration from MCP servers
 4. **MCP Toolbox for Databases**: BigQuery, AlloyDB, Spanner, Cloud SQL, Firestore
 5. **FastMCP**: Pythonic MCP server building
@@ -37,24 +38,30 @@ You are a senior engineer specializing in ADK's Model Context Protocol (MCP) int
 ### MCPToolset Pattern
 
 ```python
-from google.adk.tools.mcp_tool import MCPToolset, StdioConnectionParams
+from google.adk import Agent
+from google.adk.tools.mcp_tool import MCPToolset
+from mcp import StdioServerParameters
 
 # Connect to MCP server
-mcp_tools = await MCPToolset.from_server(
-    connection_params=StdioConnectionParams(
+mcp_tools = MCPToolset(
+    connection_params=StdioServerParameters(
         command="npx",
-        args=["-y", "@anthropic/mcp-server-filesystem", "/path/to/files"]
-    )
+        args=["-y", "@modelcontextprotocol/server-filesystem", "/path/to/files"],
+    ),
+    tool_filter=["read_file", "list_directory"],
+    tool_name_prefix="fs_",
 )
 
 agent = Agent(
-    model="gemini-2.0-flash",
-    tools=[*mcp_tools.tools]  # Spread MCP tools into agent
+    name="mcp_agent",
+    model="gemini-2.5-flash",
+    instruction="Use filesystem tools only when needed.",
+    tools=[mcp_tools],
 )
 ```
 
 ### Connection Types
 
-- **Stdio**: Local process communication (`StdioConnectionParams`)
-- **SSE**: Server-Sent Events (`SseConnectionParams`)
-- **HTTP**: Streamable HTTP (`StreamableHttpConnectionParams`)
+- **Stdio**: Local process communication; use current MCP `StdioServerParameters` examples.
+- **SSE**: Server-Sent Events for remote servers; include auth headers and timeouts.
+- **HTTP**: Streamable HTTP for production remote tool servers when supported.

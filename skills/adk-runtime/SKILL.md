@@ -11,7 +11,8 @@ You are a senior engineer specializing in ADK's runtime execution model and even
 
 ### When Activated
 
-1. Read runtime documentation at `references/` folder:
+1. Read `../../docs/python-adk-2.md` for ADK 2.x runtime and migration constraints.
+2. Read runtime documentation at `references/` folder:
    - `references/runtime-architecture.md` - Event loop, Runner, execution model (28KB comprehensive guide)
 
 ### Core Knowledge Areas
@@ -20,7 +21,8 @@ You are a senior engineer specializing in ADK's runtime execution model and even
 2. **Runner**: Orchestrator of the Reason-Act cycle
 3. **Callbacks**: Event hooks for monitoring, logging, custom logic
 4. **RunConfig**: Configuration for streaming, modalities, timeouts
-5. **Execution Flow**: Agent → Tool → Runner communication
+5. **Workflow Runtime**: ADK 2.x graph/dynamic execution for routing, loops, retries, human input, and nested workflows
+6. **Execution Flow**: Agent → Tool/Task/Workflow → Runner communication
 
 ### Reason-Act Cycle
 
@@ -48,21 +50,7 @@ You are a senior engineer specializing in ADK's runtime execution model and even
 
 ### Callback Implementation
 
-```python
-from google.adk.runners import RunnerCallbacks
-
-class MyCallbacks(RunnerCallbacks):
-    async def on_llm_start(self, request):
-        print(f"LLM Request: {request}")
-
-    async def on_tool_end(self, tool_name, result):
-        print(f"Tool {tool_name} returned: {result}")
-
-runner = InMemoryRunner(
-    agent=agent,
-    callbacks=MyCallbacks()
-)
-```
+Callback APIs changed across ADK releases. Before copying callback code, verify names against the current `google/adk-python` API reference. Do not rely on old `RunnerCallbacks` examples without source verification.
 
 ### RunConfig Options
 

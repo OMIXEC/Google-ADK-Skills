@@ -1,8 +1,16 @@
 # Google-ADK-Skills
 
-**25 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, and Windsurf**
+**25 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, Windsurf, and `.agents` libraries**
 
 Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-agent orchestration, LangGraph state machines, LiteLLM multi-provider routing, real-time bidirectional streaming, RAG pipelines, MCP tool integration, autonomous agents, and production deployment.
+
+## ADK Python 2.x Baseline
+
+- Current source target: `google/adk-python` 2.x, latest observed release `v2.3.0`.
+- Runtime dependency baseline for generated Python projects: `google-adk>=2.3.0,<3`.
+- Python requirement: 3.10+; use `uv` in repos that already standardize on `uv`.
+- New Python workflow guidance should prefer ADK 2.x `Agent` plus `Workflow` graph/dynamic orchestration for complex flows. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic template workflows, but Python 2.x docs supersede them with graph/dynamic workflows for new complex systems.
+- Read [`docs/python-adk-2.md`](docs/python-adk-2.md) before changing ADK examples, runtime helpers, model IDs, MCP/A2A integrations, or migration guidance.
 
 ## Installation
 
@@ -39,11 +47,19 @@ Main target paths:
 | `cursor` | `~/.cursor/skills` |
 | `gemini-cli` | `~/.gemini/skills` |
 | `windsurf` | `~/.windsurf/skills` |
+| `agents-lib` | `~/.agents/skills` |
+
+The installer also installs bundled subagents and slash commands where the target supports them:
+
+| Target | Agents directory | Commands directory |
+|--------|------------------|--------------------|
+| `claude` | `~/.claude/agents` | `~/.claude/commands` |
+| `agents-lib` | `~/.agents/agents` | `~/.agents/commands` |
 
 Flags:
 
 ```bash
---target <codex|opencode|claude|cline|cursor|gemini-cli|windsurf|all|auto>
+--target <codex|opencode|claude|cline|cursor|gemini-cli|windsurf|agents-lib|all|auto>
 --copy                 Copy skill folders instead of symlinking them
 --install-dir <path>   Checkout/cache location, default: ~/.google-adk-skills
 --skills-dir <path>    Install into a custom tool skills directory
@@ -51,6 +67,8 @@ Flags:
 --ref <branch-or-tag>  Git ref to install, default: main
 --skills <list|all>    Comma-separated skills to install, default: all
 --interactive          Prompt for target, method, runtime, evals, and skills
+--no-agents            Do not install bundled subagent definitions
+--no-commands          Do not install bundled slash commands
 --with-evals           Keep tests/ in the install checkout
 --with-runtime         Create a Python venv and install runtime dependencies
 --shell-integration    Add the adk alias/PATH entry to your shell rc file
@@ -74,6 +92,9 @@ bash install.sh --target opencode --skills adk-agents,adk-tools,adk-memory
 
 # Install into any compatible custom skills directory
 bash install.sh --skills-dir ~/.my-agent-tool/skills --copy
+
+# Install into the shared .agents library
+bash install.sh --target agents-lib --copy
 
 # Install skills plus the Python runtime helpers
 bash install.sh --target claude --with-runtime --shell-integration
@@ -126,7 +147,7 @@ Use `npx skills add OMIXEC/Google-ADK-Skills` as the reliable public path today.
 | `adk-git` | Git operations — commit, push, pull, rebase, branch, PR, cherry-pick with ADK commit conventions |
 | `adk-langgraph` | LangGraph orchestration — state machines, conditional edges, LLM-driven routing, ADK↔LangGraph interop |
 | `adk-litellm` | 100+ LLM providers — OpenAI, Anthropic, Bedrock, OpenRouter, Ollama, vLLM; model switching, cost optimization |
-| `adk-mcp` | MCP integration — MCPToolset, StdioServerParameters, SseServerParams, database toolboxes |
+| `adk-mcp` | MCP integration — MCPToolset, stdio/SSE/HTTP connection params, database toolboxes |
 | `adk-memory` | Memory and state — session state, long-term memory, persistence backends, cross-session recall |
 | `adk-persona` | 30+ pre-built personas — tutor, coach, analyst, support rep; ready-made templates with optimized instructions |
 | `adk-prompts` | Prompt engineering — agent instructions, few-shot examples, system prompts, token cost optimization |
@@ -195,6 +216,8 @@ Triggers: `adk-langgraph`
 
 ```
 Google-ADK-Skills/
+├── .agents/
+│   └── library.json         ← generic .agents library metadata
 ├── .claude-plugin/
 │   ├── plugin.json          ← Claude plugin manifest
 │   └── marketplace.json     ← marketplace listing
@@ -214,6 +237,10 @@ Google-ADK-Skills/
 │   ├── style-checker.md
 │   ├── workflow-builder.md
 │   └── workflow-designer.md
+├── commands/                ← Slash commands for installing, building, and validating ADK skills
+│   ├── adk-build-agent.md
+│   ├── adk-install-skills.md
+│   └── adk-validate-skills.md
 ├── adk-runtime/
 │   └── agents/              ← ADK Python runtime configs (.agent.yaml, loaded by ADK runner)
 │       ├── root_agent.yaml
@@ -269,7 +296,7 @@ GOOGLE_CLOUD_PROJECT=your_project_id
 ## Requirements
 
 ```
-google-adk>=1.0.0
+google-adk>=2.3.0,<3
 litellm>=1.0.0
 langgraph>=0.2.0
 pinecone>=5.0.0

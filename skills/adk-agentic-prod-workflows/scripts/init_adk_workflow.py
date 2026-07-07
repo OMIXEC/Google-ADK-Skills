@@ -80,8 +80,7 @@ import (
 
 
 def generate_graph_python(name: str) -> dict:
-    imports = """from google.adk import Agent
-from google.adk.agents.graph import GraphAgent, Node, Edge, Condition
+    imports = """from google.adk import Agent, START, Workflow
 from google.adk.tools import FunctionTool
 from pydantic import BaseModel, Field
 import structlog
@@ -127,26 +126,24 @@ processor_agent = Agent(
     tools=[FunctionTool(process_query)],
 )"""
 
-    workflow = f"""graph_agent = GraphAgent(
-    name="{name}_graph",
-    nodes=[
-        Node(id="validate", agent=validator_agent),
-        Node(id="process", agent=processor_agent),
-        Node(id="reject", agent=Agent(
-            name="reject_handler",
-            model="gemini-2.5-flash",
-            instruction="Tell the user their input was invalid and suggest fixes.",
-        )),
-    ],
+    workflow = f"""def route_after_validation(node_input: dict) -> str:
+    return "process" if node_input.get("is_valid", False) else "reject"
+
+
+reject_agent = Agent(
+    name="reject_handler",
+    model="gemini-2.5-flash",
+    instruction="Tell the user their input was invalid and suggest fixes.",
+)
+
+root_agent = Workflow(
+    name="{name}_workflow",
     edges=[
-        Edge(source="validate", target="process", condition=Condition(
-            lambda state: state.get("is_valid", False)
-        )),
-        Edge(source="validate", target="reject", condition=Condition(
-            lambda state: not state.get("is_valid", False)
-        )),
+        (START, validator_agent, route_after_validation, {{
+            "process": processor_agent,
+            "reject": reject_agent,
+        }}),
     ],
-    entry_point="validate",
 )"""
 
     entrypoint = """if __name__ == "__main__":
@@ -154,7 +151,7 @@ processor_agent = Agent(
     from google.adk.runners import InProcessRunner
 
     async def main():
-        runner = InProcessRunner(agent=graph_agent)
+        runner = InProcessRunner(agent=root_agent)
         result = await runner.run(query="Test query")
         print(f"Result: {result}")
 
@@ -1616,7 +1613,7 @@ async def output_safety_guardrail(callback_context):
 
     print(f"\nDone! Project scaffolded at {project_dir}")
     if lang == "python":
-        print(f"  Next: cd {name} && pip install -r requirements.txt")
+        print(f"  Next: cd {name} && uv pip install -r requirements.txt")
     elif lang == "go":
         print(f"  Next: cd {name} && go mod tidy && go run .")
     elif lang == "ts":
@@ -1626,7 +1623,7 @@ async def output_safety_guardrail(callback_context):
 
 def _write_shared_files(project_dir: Path, name: str, wf_type: str, lang: str) -> None:
     reqs = project_dir / "requirements.txt"
-    reqs.write_text("google-adk>=1.0.0\nstructlog>=24.0.0\npydantic>=2.0.0\n")
+    reqs.write_text("google-adk>=2.3.0,<3\nstructlog>=24.0.0\npydantic>=2.0.0\n")
 
     gitignore = project_dir / ".gitignore"
     gitignore.write_text("""__pycache__/
