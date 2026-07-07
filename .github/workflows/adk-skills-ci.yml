@@ -146,16 +146,16 @@ jobs:
       - name: Install dependencies
         run: |
           pip install google-adk pyyaml pydantic
-          # Install from adk-python if requirements exist
-          if [ -f adk-python/requirements.txt ]; then
-            pip install -r adk-python/requirements.txt
+          # Install runtime-helper requirements (helpers vendored in adk-python-v1)
+          if [ -f adk-python-v1/requirements.txt ]; then
+            pip install -r adk-python-v1/requirements.txt
           fi
 
       - name: Verify agent imports
         run: |
           python -c "
           import sys
-          sys.path.insert(0, 'adk-python')
+          sys.path.insert(0, 'adk-python-v1')
           from tools.model_tools import model_validate, classify_complexity
           result = model_validate('gemini-2.0-flash')
           assert result['valid'] is False, 'Blocked model should be rejected'

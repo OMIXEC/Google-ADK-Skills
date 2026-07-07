@@ -37,9 +37,12 @@ KNOWN_SKILLS = {
     "adk-bidi-live",
     "adk-configs",
     "adk-deployment",
+    "adk-embeddings",
     "adk-litellm",
     "adk-mcp",
     "adk-memory",
+    "adk-migration",
+    "adk-model-routing",
     "adk-prompts",
     "adk-runtime",
     "adk-tools",
@@ -354,6 +357,83 @@ class TestCrossSkillConsistency:
             # Most skills should reference their bundled resources
             if "references/" not in content and "scripts/" not in content:
                 print(f"  [INFO] {name}: no references/ or scripts/ links in body")
+
+
+# ── Migration guards: ADK v1 → v2.3 ───────────────────────────────────────────
+
+
+class TestV23MigrationGuards:
+    """Prevent regressions to ADK v1 paths and deprecated v2.3 API names.
+
+    `adk-python-v2.3/` is the API source-of-truth; `adk-python-v1/` is reference-only.
+    """
+
+    # Deprecated tokens that must never appear in skill content.
+    DEPRECATED_TOKENS = ("ctx.resume_data", "@edge")
+    # Skills whose purpose is to DOCUMENT deprecated names (migration guides).
+    DEPRECATION_DOC_SKILLS = {"adk-migration"}
+
+    def test_no_deprecated_v2_names_in_skills(self, skill_dirs):
+        """Skills must use v2.3 names (ctx.resume_inputs, Edge class), never v1-era guesses."""
+        offenders = []
+        for d in skill_dirs:
+            if d.name in self.DEPRECATION_DOC_SKILLS:
+                continue
+            for f in d.rglob("*"):
+                if not f.is_file() or f.suffix not in {".md", ".py", ".txt", ".yaml", ".yml"}:
+                    continue
+                text = f.read_text(errors="ignore")
+                for token in self.DEPRECATED_TOKENS:
+                    if token in text:
+                        offenders.append(f"{f.relative_to(REPO_ROOT)}: '{token}'")
+        assert not offenders, "Deprecated v2.3 names found:\n" + "\n".join(offenders)
+
+    def test_no_blocked_model_ids_in_assignments(self, skill_dirs):
+        """Skill code examples must not assign deprecated/blocked Gemini models.
+
+        Matches assignment syntax (model=, model:, .model(") so that catalog /
+        blocklist docs that merely *name* deprecated models don't false-positive.
+        """
+        import re
+        blocked = r"gemini-2\.0-[\w.-]+|gemini-1\.5-[\w.-]+|gemini-1\.0-[\w.-]+|gemini-3-pro-preview"
+        pattern = re.compile(
+            r"""(?:model\s*[:=]\s*|\.model\(\s*)['"](?:""" + blocked + r")['\"]"
+        )
+        offenders = []
+        for d in skill_dirs:
+            for f in d.rglob("*"):
+                if not f.is_file() or f.suffix not in {".md", ".py", ".txt", ".yaml", ".yml"}:
+                    continue
+                for i, line in enumerate(f.read_text(errors="ignore").splitlines(), 1):
+                    if pattern.search(line):
+                        offenders.append(f"{f.relative_to(REPO_ROOT)}:{i}: {line.strip()}")
+        assert not offenders, (
+            "Blocked model IDs assigned in skill examples (use gemini-3.x):\n"
+            + "\n".join(offenders)
+        )
+
+    def test_no_bare_adk_python_path_in_config(self):
+        """Config/docs must reference adk-python-v1/ or adk-python-v2.3/, never bare adk-python/.
+
+        The literal 'adk-python/' (slash right after 'python') only matches the deleted
+        pre-split folder; 'adk-python-v1/' / 'adk-python-v2.3/' do not match.
+        """
+        # MIGRATION.md and the migrate-check command intentionally name the bare path in prose.
+        targets = [
+            REPO_ROOT / "CLAUDE.md",
+            REPO_ROOT / "README.md",
+            REPO_ROOT / "package.json",
+            REPO_ROOT / "install.sh",
+            REPO_ROOT / ".github" / "workflows" / "adk-skills-ci.yml",
+        ]
+        offenders = []
+        for t in targets:
+            if t.exists() and "adk-python/" in t.read_text(errors="ignore"):
+                offenders.append(str(t.relative_to(REPO_ROOT)))
+        assert not offenders, (
+            "Bare 'adk-python/' path (should be adk-python-v1/ or adk-python-v2.3/) in:\n"
+            + "\n".join(offenders)
+        )
 
 
 # ── Integration: test quick_validate.py compatibility ─────────────────────────

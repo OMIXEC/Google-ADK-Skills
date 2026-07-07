@@ -121,7 +121,7 @@ def get_current_time(city: str) -> dict:
   }
 
 root_agent = Agent(
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     name="root_agent",
     description="An assistant that provides weather and time information.",
     instruction="""You are a helpful assistant.
@@ -134,7 +134,7 @@ Always be friendly and concise.""",
 
 ### Key concepts
 
-- **`model`**: The LLM to use (e.g., `"gemini-2.5-flash"`, `"gemini-2.5-pro"`)
+- **`model`**: The LLM to use (e.g., `"gemini-3.5-flash"`, `"gemini-3.1-pro-preview"`)
 - **`instruction`**: System prompt guiding the agent's behavior
 - **`tools`**: Python functions the LLM can call. The function name, docstring, and type hints are sent to the LLM as the tool schema
 - **`description`**: Used when this agent is a sub-agent (for transfer routing)
@@ -237,7 +237,7 @@ from google.adk.agents.sequential_agent import SequentialAgent
 
 code_writer_agent = LlmAgent(
     name="CodeWriterAgent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are a Python Code Generator.
 Based *only* on the user's request, write Python code that fulfills the requirement.
 Output *only* the complete Python code block.
@@ -248,7 +248,7 @@ Output *only* the complete Python code block.
 
 code_reviewer_agent = LlmAgent(
     name="CodeReviewerAgent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are an expert Python Code Reviewer.
 Review the following code:
 
@@ -265,7 +265,7 @@ If the code is excellent, state: "No major issues found."
 
 code_refactorer_agent = LlmAgent(
     name="CodeRefactorerAgent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are a Python Code Refactoring AI.
 Improve the code based on the review comments.
 
@@ -395,7 +395,7 @@ def extract_city(node_input: str) -> str:
 
 weather_agent = LlmAgent(
     name="weather_reporter",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are a friendly weather reporter.
 Use the get_weather tool to look up the weather, then give
 a natural-language weather report for the city.""",
@@ -429,4 +429,4 @@ Check that `__init__.py` contains `from . import agent` and `agent.py` defines `
 Verify `.env` is in the agent directory (not the parent) and contains a valid `GOOGLE_API_KEY`.
 
 ### Model not found
-Check the model name. Common models: `gemini-2.5-flash`, `gemini-2.5-pro`. The ADK also supports non-Google models (Anthropic, LiteLLM) with extra dependencies.
+Check the model name. Common models: `gemini-3.5-flash`, `gemini-3.1-pro-preview`. The ADK also supports non-Google models (Anthropic, LiteLLM) with extra dependencies.

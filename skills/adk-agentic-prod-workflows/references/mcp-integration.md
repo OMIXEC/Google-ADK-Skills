@@ -7,16 +7,16 @@ MCP (Model Context Protocol) is the standard tool protocol for ADK agents. It en
 ```
 ┌──────────────┐     JSON-RPC 2.0      ┌──────────────┐
 │  ADK Agent   │ ◄──────────────────► │  MCP Server   │
-│  (MCPToolset)│    tools/list          │  (tools)      │
+│  (McpToolset)│    tools/list          │  (tools)      │
 │              │    tools/call          │               │
 └──────────────┘                       └──────────────┘
 ```
 
-Client (ADK agent through `MCPToolset`) discovers tools from the server, then calls them. The server can expose tools, resources, and prompts.
+Client (ADK agent through `McpToolset`) discovers tools from the server, then calls them. The server can expose tools, resources, and prompts.
 
-## MCPToolset vs FunctionTool
+## McpToolset vs FunctionTool
 
-| | FunctionTool | MCPToolset |
+| | FunctionTool | McpToolset |
 |---|---|---|
 | **Location** | In-process function | External server process |
 | **Language** | Same as agent | Any language |
@@ -226,23 +226,24 @@ await server.connect(transport);
 
 ## MCP Client Integration in ADK Agents
 
-### Python — `MCPToolset` in `LlmAgent`
+### Python — `McpToolset` in `LlmAgent`
 
 ```python
 from google.adk.agents import LlmAgent
-from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
+from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
+from mcp import StdioServerParameters
 
 # Stdio transport (local MCP server)
 agent = LlmAgent(
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     name="db_assistant",
     instruction="Use database tools to help users query and insert data.",
     tools=[
-        MCPToolset(
-            connection_params=StdioServerParameters(
+        McpToolset(
+            connection_params=StdioConnectionParams(server_params=StdioServerParameters(
                 command="python3",
                 args=["/path/to/mcp_server.py"],
-            ),
+            )),
             tool_filter=["query_users", "insert_order"],  # Optional: allowlist
         ),
     ],
@@ -252,14 +253,14 @@ agent = LlmAgent(
 ### Python — SSE transport (remote MCP server)
 
 ```python
-from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, SseServerParams
+from google.adk.tools.mcp_tool import McpToolset, SseServerParams
 
 agent = LlmAgent(
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     name="remote_assistant",
     instruction="Use remote tools to help users.",
     tools=[
-        MCPToolset(
+        McpToolset(
             connection_params=SseServerParams(
                 url="https://mcp-server.example.com/sse",
                 headers={"Authorization": f"Bearer {os.getenv('MCP_TOKEN')}"},
@@ -272,11 +273,11 @@ agent = LlmAgent(
 ### Python — `from_server` helper (simpler)
 
 ```python
-tools, exit_stack = await MCPToolset.from_server(
-    connection_params=StdioServerParameters(
+tools, exit_stack = await McpToolset.from_server(
+    connection_params=StdioConnectionParams(server_params=StdioServerParameters(
         command="npx",
         args=["-y", "@modelcontextprotocol/server-filesystem"],
-    ),
+    )),
 )
 agent = LlmAgent(tools=tools)
 # ... use agent ...
@@ -321,16 +322,16 @@ async def read_resource(uri: str) -> str:
 
 ```python
 # Allowlist — only these tools are available to the agent
-MCPToolset(
-    connection_params=StdioServerParameters(...),
+McpToolset(
+    connection_params=StdioConnectionParams(server_params=StdioServerParameters(...)),
     tool_filter=["query_users", "insert_order"],
 )
 
 # Blocklist — all tools except these
-# (Filter on server side or wrap MCPToolset)
+# (Filter on server side or wrap McpToolset)
 
 # No filter — all server tools exposed to agent (use with caution)
-MCPToolset(connection_params=StdioServerParameters(...))
+McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(...)))
 ```
 
 ## MCP Security
@@ -347,10 +348,10 @@ MCPToolset(connection_params=StdioServerParameters(...))
 ```
 ┌─────────────────────────────────────────────────┐
 │ Need external API call, DB access, or file I/O?  │
-│          YES → Use MCPToolset (separate process) │
+│          YES → Use McpToolset (separate process) │
 │          NO  ↓                                   │
 │ Need cross-language tool sharing?                │
-│          YES → Use MCPToolset                    │
+│          YES → Use McpToolset                    │
 │          NO  ↓                                   │
 │ Pure computation, internal state?                │
 │          YES → Use FunctionTool (in-process)     │
@@ -366,7 +367,7 @@ Rule of thumb: MCP for side effects and multi-language. FunctionTool for pure fu
 When scaffolding a workflow with `--with-mcp`:
 
 1. Generate `mcp_server.py` (or `.go`, `.ts`) alongside agent code
-2. Wire `MCPToolset` into agent `tools` list
+2. Wire `McpToolset` into agent `tools` list
 3. Generate `mcp_config.yaml` with server connection params
 4. Add MCP server to `docker-compose.yml` if local deployment
 5. Add MCP health check to monitoring

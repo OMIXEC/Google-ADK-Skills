@@ -85,7 +85,7 @@ researcher = Agent(
 
 root_agent = Agent(
     name='coordinator',
-    model='gemini-2.5-flash',
+    model='gemini-3.5-flash',
     sub_agents=[researcher],
     instruction=(
         'When the user asks you to research something, delegate to'
@@ -127,7 +127,7 @@ summarizer = Agent(
 
 root_agent = Agent(
     name='coordinator',
-    model='gemini-2.5-flash',
+    model='gemini-3.5-flash',
     sub_agents=[summarizer],
     instruction='Delegate summarization to summarizer via request_task_summarizer.',
 )
@@ -232,7 +232,7 @@ hotel_finder = Agent(
 
 root_agent = Agent(
     name='travel_planner',
-    model='gemini-2.5-flash',
+    model='gemini-3.5-flash',
     sub_agents=[flight_searcher, weather_checker, hotel_finder],
     instruction=(
         'Help users plan trips:\n'

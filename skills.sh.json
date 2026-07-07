@@ -35,8 +35,10 @@
         "adk-tools",
         "adk-mcp",
         "adk-rag",
+        "adk-embeddings",
         "adk-prompts",
         "adk-litellm",
+        "adk-model-routing",
         "adk-bidi-live"
       ]
     },
@@ -45,6 +47,7 @@
       "description": "Deployment, debugging, style, git, and sample authoring skills for shipping ADK systems.",
       "skills": [
         "adk-deployment",
+        "adk-migration",
         "adk-debug",
         "adk-style",
         "adk-git",

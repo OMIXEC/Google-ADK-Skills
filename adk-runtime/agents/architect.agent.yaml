@@ -2,7 +2,7 @@
 # Source: adk-google-skills/skills/adk-architecture/SKILL.md
 
 name: adk-architect
-model: gemini-2.5-pro
+model: gemini-3.1-pro-preview
 description: >
   Deep ADK architecture knowledge: graph orchestration, resumption/checkpoint,
   execution flow, node contracts, Runner/NodeRunner/Workflow separation,

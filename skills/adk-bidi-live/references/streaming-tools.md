@@ -95,7 +95,7 @@ async def monitor_video_stream(
 
       # Call the model to generate content based on the provided image and prompt
       response = client.models.generate_content(
-          model="gemini-2.0-flash-exp",
+          model="gemini-3.1-flash-live-preview",
           contents=contents,
           config=genai_types.GenerateContentConfig(
               system_instruction=(
@@ -129,7 +129,7 @@ def stop_streaming(function_name: str):
 
 
 root_agent = Agent(
-    model="gemini-2.0-flash-exp",
+    model="gemini-3.1-flash-live-preview",
     name="video_streaming_agent",
     instruction="""
       You are a monitoring agent. You can do video monitoring and stock price monitoring

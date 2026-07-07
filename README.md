@@ -1,6 +1,6 @@
 # Google-ADK-Skills
 
-**25 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, Windsurf, and `.agents` libraries**
+**28 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, Windsurf, and `.agents` libraries**
 
 Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-agent orchestration, LangGraph state machines, LiteLLM multi-provider routing, real-time bidirectional streaming, RAG pipelines, MCP tool integration, autonomous agents, and production deployment.
 
@@ -11,6 +11,7 @@ Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-
 - Python requirement: 3.10+; use `uv` in repos that already standardize on `uv`.
 - New Python workflow guidance should prefer ADK 2.x `Agent` plus `Workflow` graph/dynamic orchestration for complex flows. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic template workflows, but Python 2.x docs supersede them with graph/dynamic workflows for new complex systems.
 - Read [`docs/python-adk-2.md`](docs/python-adk-2.md) before changing ADK examples, runtime helpers, model IDs, MCP/A2A integrations, or migration guidance.
+- **Vendored SDK:** `adk-python-v2.3/` is the API source-of-truth; `adk-python-v1/` is reference-only (legacy repo helper tooling). See [`MIGRATION.md`](MIGRATION.md).
 
 ## Installation
 
@@ -122,7 +123,7 @@ Use `npx skills add OMIXEC/Google-ADK-Skills` as the reliable public path today.
 ### Prerequisites
 
 - Skills-only install: `bash` plus either `git`, `curl`, or `wget`.
-- Runtime helpers: Python 3.11+ and pip, enabled with `--with-runtime`.
+- Runtime helpers: Python 3.10+ and pip, enabled with `--with-runtime` (ADK 2.3 requires Python 3.10+).
 - ADK usage after install: `GOOGLE_API_KEY` or the credentials required by the models/tools you choose.
 - Optional: `PINECONE_API_KEY` for RAG and `LITELLM_*` keys for multi-provider routing.
 
@@ -139,16 +140,19 @@ Use `npx skills add OMIXEC/Google-ADK-Skills` as the reliable public path today.
 | `adk-architecture` | ADK internals — graph orchestration, event flow, BaseNode, NodeRunner, resumption, checkpointing |
 | `adk-autonomous-agent` | Self-reasoning agents — OODA loop, goal-directed execution, autonomous planning without per-step prompts |
 | `adk-backend` | Backend services — runtime event loops, session management, state handling, Runner/Agent execution model |
-| `adk-bidi-live` | Real-time streaming — Live API, native audio (`gemini-live-2.5-flash-native-audio`), WebSocket, LiveRequestQueue |
+| `adk-bidi-live` | Real-time streaming — Live API, live model (`gemini-3.1-flash-live-preview`), WebSocket, LiveRequestQueue |
 | `adk-configs` | Agent configuration — YAML agent definitions, environment variables, agent cards, deployment configs |
 | `adk-debug` | Debugging — session inspection, tool call tracing, event flow diagnosis, model troubleshooting |
 | `adk-deployment` | Production deployment — Cloud Run, GKE, Vertex AI Agent Engine, Docker, CI/CD pipelines |
+| `adk-embeddings` | Memory + embeddings across DBs — `gemini-embedding-2`, Cloud SQL/Postgres/Firestore SessionService, pgvector & Firestore vector stores |
 | `adk-domain-expert` | Bespoke specialist agents for any domain not covered by standard personas (tax law, marine biology, etc.) |
 | `adk-git` | Git operations — commit, push, pull, rebase, branch, PR, cherry-pick with ADK commit conventions |
 | `adk-langgraph` | LangGraph orchestration — state machines, conditional edges, LLM-driven routing, ADK↔LangGraph interop |
 | `adk-litellm` | 100+ LLM providers — OpenAI, Anthropic, Bedrock, OpenRouter, Ollama, vLLM; model switching, cost optimization |
 | `adk-mcp` | MCP integration — MCPToolset, stdio/SSE/HTTP connection params, database toolboxes |
 | `adk-memory` | Memory and state — session state, long-term memory, persistence backends, cross-session recall |
+| `adk-migration` | ADK 1.x → 2.3 upgrade — breaking-change checklist, renamed APIs (Workflow/`McpToolset`/`ctx.resume_inputs`), deploy CLI, model/embedding/state changes |
+| `adk-model-routing` | Model selection, thinking/effort (`thinking_level`), and fallback — current Gemini 3.x catalog, routing by complexity/cost, primary→fallback chains |
 | `adk-persona` | 30+ pre-built personas — tutor, coach, analyst, support rep; ready-made templates with optimized instructions |
 | `adk-prompts` | Prompt engineering — agent instructions, few-shot examples, system prompts, token cost optimization |
 | `adk-rag` | Retrieval-augmented generation — Pinecone (self-managed) or Vertex AI RAG (managed), embeddings, ingestion |
@@ -221,7 +225,7 @@ Google-ADK-Skills/
 ├── .claude-plugin/
 │   ├── plugin.json          ← Claude plugin manifest
 │   └── marketplace.json     ← marketplace listing
-├── skills/                  ← 25 skill directories (each: SKILL.md + references/)
+├── skills/                  ← 28 skill directories (each: SKILL.md + references/)
 │   ├── adk-a2a/
 │   ├── adk-agent-builder/
 │   ├── adk-agentic-prod-workflows/

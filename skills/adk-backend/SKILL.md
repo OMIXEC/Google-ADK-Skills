@@ -43,7 +43,7 @@ from google.adk.sessions import InMemorySessionService
 session_service = InMemorySessionService()
 root_agent = Agent(
     name="root_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Coordinate the user's request safely.",
 )
 runner = Runner(

@@ -39,7 +39,7 @@ is optional enrichment; the bundled references are always sufficient.
 | Anthropic | `anthropic/claude-3-5-sonnet` |
 | AWS Bedrock | `bedrock/anthropic.claude-v2` |
 | OpenRouter | `openrouter/anthropic/claude-3-5-sonnet` |
-| Google | `gemini/gemini-2.5-flash` |
+| Google | `gemini/gemini-3.5-flash` |
 | Meta | `together_ai/meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo` |
 | Mistral | `mistral/mistral-large-latest` |
 
@@ -88,7 +88,7 @@ smart_agent = Agent(
 
 orchestrator = Agent(
     name="orchestrator",
-    model="gemini-2.5-flash",  # Google model can use built-in tools
+    model="gemini-3.5-flash",  # Google model can use built-in tools
     sub_agents=[cheap_agent, smart_agent],
     tools=[google_search]
 )

@@ -18,7 +18,7 @@ def process_order(order_id: str, action: str) -> dict:
 
 agent = Agent(
     name="order_worker",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are an order processing agent.
     For each request:
     1. Identify the required action (validate, fulfill, cancel)
@@ -47,7 +47,7 @@ retrieval_tool = VertexAiRagRetrieval(
 
 agent = Agent(
     name="knowledge_worker",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are a knowledge assistant.
     Always search the knowledge base before answering.
     Cite sources when providing information.
@@ -66,7 +66,7 @@ Routes requests to specialized sub-agents.
 ```python
 router = Agent(
     name="router",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     sub_agents=[billing_agent, tech_agent, general_agent],
     instruction="""You are a request router.
     Classify the user's request and delegate:
@@ -88,7 +88,7 @@ Plans multi-step tasks then delegates execution.
 ```python
 planner = Agent(
     name="planner",
-    model="gemini-2.5-pro",  # Stronger model for planning
+    model="gemini-3.1-pro-preview",  # Stronger model for planning
     instruction="""You are a task planner.
     1. Analyze the user's goal
     2. Break it into sequential steps
@@ -116,7 +116,7 @@ from google.adk.agents import LiveRequestQueue
 
 live_agent = Agent(
     name="voice_assistant",
-    model="gemini-2.5-flash-live",
+    model="gemini-3.1-flash-live-preview",
     instruction="""You are a voice assistant.
     Respond conversationally. Keep answers brief (under 30 seconds spoken).
     Use tools for real-time data lookup when needed.""",
@@ -197,23 +197,24 @@ class CustomOrchestrator(BaseAgent):
 
 ## MCP-Integrated Agent Template
 
-Use `MCPToolset` to connect agents to external tool servers. See `references/mcp-integration.md` for full details.
+Use `McpToolset` to connect agents to external tool servers. See `references/mcp-integration.md` for full details.
 
 ```python
 from google.adk import Agent
-from google.adk.tools import MCPToolset, FunctionTool
+from google.adk.tools import FunctionTool
+from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 from google.adk.tools.mcp import StdioServerParameters, SseServerParams
 
 # Local MCP server (stdio transport)
-local_mcp = MCPToolset(
-    connection_params=StdioServerParameters(
+local_mcp = McpToolset(
+    connection_params=StdioConnectionParams(server_params=StdioServerParameters(
         command="python3",
         args=["mcp_servers/db_tools.py"],
-    )
+    ))
 )
 
 # Remote MCP server (SSE transport)
-remote_mcp = MCPToolset(
+remote_mcp = McpToolset(
     connection_params=SseServerParams(
         url="https://tools.example.com/sse",
         headers={"Authorization": "Bearer ${TOOLS_API_KEY}"},
@@ -222,7 +223,7 @@ remote_mcp = MCPToolset(
 
 agent = Agent(
     name="mcp_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Use MCP tools for external operations. Use FunctionTool for internal logic.",
     tools=[
         FunctionTool(internal_helper),  # Pure functions, internal logic
@@ -233,7 +234,7 @@ agent = Agent(
 ```
 
 **MCP vs FunctionTool:**
-| Factor | FunctionTool | MCPToolset |
+| Factor | FunctionTool | McpToolset |
 |--------|-------------|------------|
 | Location | Same process | Separate process/server |
 | Language | Same as agent | Any language |
@@ -283,7 +284,7 @@ class AnalysisResult(BaseModel):
 
 analyzer = Agent(
     name="analyzer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Analyze the input and return structured results.",
     output_schema=AnalysisResult,  # Enforces this schema, disables tools
 )
@@ -301,9 +302,9 @@ analyzer = Agent(
 
 | Role | Recommended Model | Reason |
 |------|-------------------|--------|
-| Worker (simple tasks) | `gemini-2.5-flash` | Fast, cost-effective |
-| Worker (complex reasoning) | `gemini-2.5-pro` | Better reasoning |
-| Router/Dispatcher | `gemini-2.5-flash` | Classification is low-complexity |
-| Planner/Coordinator | `gemini-2.5-pro` | Planning needs strong reasoning |
-| Live/Multimodal | `gemini-2.5-flash-live` | Native audio/video support |
-| RAG Worker | `gemini-2.5-flash` | Retrieval + synthesis |
+| Worker (simple tasks) | `gemini-3.5-flash` | Fast, cost-effective |
+| Worker (complex reasoning) | `gemini-3.1-pro-preview` | Better reasoning |
+| Router/Dispatcher | `gemini-3.5-flash` | Classification is low-complexity |
+| Planner/Coordinator | `gemini-3.1-pro-preview` | Planning needs strong reasoning |
+| Live/Multimodal | `gemini-3.1-flash-live-preview` | Native audio/video support |
+| RAG Worker | `gemini-3.5-flash` | Retrieval + synthesis |

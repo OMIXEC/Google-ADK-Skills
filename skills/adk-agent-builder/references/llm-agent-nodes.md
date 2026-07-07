@@ -32,7 +32,7 @@ from google.adk.agents.llm_agent import LlmAgent
 
 writer = LlmAgent(
     name="writer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Write a short story.",
     output_schema=Story,
 )
@@ -51,13 +51,13 @@ from google.adk.agents.llm_agent import LlmAgent
 
 writer = LlmAgent(
     name="writer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Write a short story based on the user's prompt.",
 )
 
 reviewer = LlmAgent(
     name="reviewer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Review the following story and provide feedback.",
 )
 
@@ -99,7 +99,7 @@ class CodeOutput(BaseModel):
 
 writer = LlmAgent(
     name="writer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Write code. Return JSON with 'code' and 'language' fields.",
     output_schema=CodeOutput,
 )
@@ -133,7 +133,7 @@ from google.adk.agents.llm_agent import LlmAgent
 # single_turn (default when auto-wrapped): isolated, no session history
 classifier = LlmAgent(
     name="classifier",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Classify the input as positive, negative, or neutral.",
     output_schema=ClassificationResult,
 )
@@ -141,7 +141,7 @@ classifier = LlmAgent(
 # task mode: supports HITL, multi-turn within the task
 task_agent = LlmAgent(
     name="task_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     mode="task",
     instruction="Process the request.",
 )
@@ -156,7 +156,7 @@ Dynamic instructions with placeholders resolved from session state. **`{var}` te
 ```python
 agent = LlmAgent(
     name="personalized",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="""You are helping {user_name}.
 Their preferences are: {preferences}.
 Respond in {language}.""",
@@ -185,7 +185,7 @@ def build_instruction(ctx: ReadonlyContext) -> str:
 
 agent = LlmAgent(
     name="coordinator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction=build_instruction,
 )
 ```
@@ -204,7 +204,7 @@ class ReviewResult(BaseModel):
 
 reviewer = LlmAgent(
     name="reviewer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Review the code and provide structured feedback.",
     output_schema=ReviewResult,
 )
@@ -219,7 +219,7 @@ Store agent output in session state:
 ```python
 agent = LlmAgent(
     name="writer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Write a draft.",
     output_key="draft",  # Stores output in state['draft']
 )
@@ -232,7 +232,7 @@ Control conversation history:
 ```python
 agent = LlmAgent(
     name="stateless",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Process this input independently.",
     include_contents="none",  # Don't include session history
 )
@@ -253,7 +253,7 @@ def send_email(to: str, subject: str, body: str) -> str:
 
 agent = LlmAgent(
     name="assistant",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Help the user with their request.",
     tools=[search_database, send_email],
 )
@@ -290,7 +290,7 @@ def guard_callback(
 
 agent = LlmAgent(
     name="guarded",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     before_model_callback=guard_callback,
 )
 ```
@@ -309,7 +309,7 @@ def log_response(
 
 agent = LlmAgent(
     name="logged",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     after_model_callback=log_response,
 )
 ```
@@ -342,7 +342,7 @@ def validate_tool_result(
 
 agent = LlmAgent(
     name="audited",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     tools=[my_tool],
     before_tool_callback=audit_tool,
     after_tool_callback=validate_tool_result,
@@ -356,7 +356,7 @@ Pass a list of callbacks. They execute in order until one returns non-None:
 ```python
 agent = LlmAgent(
     name="multi_callback",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     before_model_callback=[safety_check, rate_limiter, logger],
 )
 ```
@@ -385,7 +385,7 @@ def handle_tool_error(
 
 agent = LlmAgent(
     name="resilient",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     on_model_error_callback=handle_model_error,
     on_tool_error_callback=handle_tool_error,
 )
@@ -413,9 +413,11 @@ from google.genai import types
 
 agent = LlmAgent(
     name="creative",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Write creative stories.",
     generate_content_config=types.GenerateContentConfig(
+        # Note: on Gemini 3.x, tuning sampling params (temperature/top_p/top_k)
+        # is no longer recommended; prefer a BuiltInPlanner thinking_level.
         temperature=0.9,
         top_p=0.95,
         max_output_tokens=2048,
@@ -430,13 +432,13 @@ Agents can transfer control to sub-agents:
 ```python
 specialist = LlmAgent(
     name="specialist",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Handle specialized requests.",
 )
 
 coordinator = LlmAgent(
     name="coordinator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Route requests to the specialist when needed.",
     sub_agents=[specialist],
 )
@@ -447,7 +449,7 @@ Control transfer behavior:
 ```python
 agent = LlmAgent(
     name="isolated",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     disallow_transfer_to_parent=True,
     disallow_transfer_to_peers=True,
 )

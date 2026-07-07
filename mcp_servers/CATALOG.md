@@ -2,6 +2,11 @@
 
 Complete catalog of MCP servers optimized for Google ADK agent integration. Includes configuration examples, environment variables, and best practices.
 
+> **ADK 2.3 native integration — no custom wrapper code.**
+> - **MCP tools:** `McpToolset` with `StdioConnectionParams` / `SseConnectionParams` from `google.adk.tools.mcp_tool` (see the `adk-mcp` skill).
+> - **Agent-to-agent:** `RemoteA2aAgent` (`google.adk.agents.remote_a2a_agent`) to consume a remote agent, and `to_a2a` (`google.adk.a2a.utils`) to expose one (see the `adk-a2a` skill; A2A is experimental — verify signatures).
+> Reference current signatures against `adk-python-v2.3/src/google/adk/`, never against `adk-python-v1/`.
+
 ## Quick Reference
 
 | Category | Server | Use Case |
@@ -77,7 +82,7 @@ def multimodal_search(query: str = None, image: str = None, audio: str = None, t
 # Agent with multimodal search
 multimodal_agent = Agent(
     name="multimodal_kb",
-    model="gemini-2.5-pro",
+    model="gemini-3.1-pro-preview",
     instruction="Search the multimodal knowledge base for relevant information.",
     tools=[FunctionTool(multimodal_search)],
 )
@@ -364,7 +369,7 @@ github_tools = McpToolset(
 # Full-stack agent
 full_stack_agent = Agent(
     name="full_stack_assistant",
-    model="gemini-2.5-pro",
+    model="gemini-3.1-pro-preview",
     instruction="""You have access to multiple tools:
 
 **Knowledge Base (Pinecone):**

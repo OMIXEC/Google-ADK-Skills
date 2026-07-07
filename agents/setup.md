@@ -1,7 +1,7 @@
 ---
 name: adk-setup
 description: >-
-  Set up a local ADK Python development environment: Python 3.11+, the uv package
+  Set up a local ADK Python development environment: Python 3.10+, the uv package
   manager, pre-commit hooks, and project dependencies. Use when getting started,
   setting up a new environment, or preparing to contribute.
 tools: Read, Glob, Grep, Bash, Skill
@@ -16,7 +16,7 @@ Load `adk-setup` with the **Skill** tool for the full, current setup procedure
 (including any MCP/context7 enablement notes), then follow it.
 
 ## Prerequisites
-1. **Python 3.11+** — `python3 --version`
+1. **Python 3.10+** — `python3 --version`
 2. **uv** (required; do not use pip/venv directly) — `uv --version`
    Install: `curl -LsSf https://astral.sh/uv/install.sh | sh`
 
@@ -37,7 +37,7 @@ pytest tests/ -x -q                     # 5. tests
 | ImportError on google.adk | `uv sync --all-extras` |
 | pre-commit fails | `pre-commit run --all-files` |
 | API key errors | Set `GOOGLE_API_KEY` in `.env` |
-| Python too old | Install 3.11+ via pyenv |
+| Python too old | Install 3.10+ via pyenv |
 
 ## NEVER
 - Use pip/venv directly (uv is required)

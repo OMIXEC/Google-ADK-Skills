@@ -73,7 +73,7 @@ maps_tool_set = McpToolset(
 
 # 3. Define the Agent that uses the tool
 navigation_agent = LlmAgent(
-    model='gemini-2.5-flash',
+    model='gemini-3.5-flash',
     name='MapsAssistantAgent',
     instruction=(
         'You are a Navigation Specialist. Use the tools provided by the MCP Toolset to answer '
@@ -85,7 +85,7 @@ navigation_agent = LlmAgent(
 
 # 4. Define the Root Agent (for ADK Web UI)
 root_agent = LlmAgent(
-    model='gemini-2.5-flash',
+    model='gemini-3.5-flash',
     name='RootAgent',
     instruction='Delegate to the MapsAssistantAgent for any questions about navigation or maps.',
     sub_agents=[navigation_agent]

@@ -108,10 +108,10 @@ Per workflow node:
 
 ### 7. MCP (Model Context Protocol) Integration
 
-MCP is the standard tool protocol for ADK. Use `MCPToolset` to connect agents to external tool servers.
+MCP is the standard tool protocol for ADK. Use `McpToolset` to connect agents to external tool servers.
 
 - **MCP server building**: Python (`mcp.server.stdio`, FastMCP), Go (`mcp-go`), TS (`@modelcontextprotocol/sdk`)
-- **MCP client**: `MCPToolset(connection_params=StdioServerParameters(...))` in `Agent.tools`
+- **MCP client**: `McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(...)))` in `Agent.tools`
 - **Transport**: stdio (local), SSE (remote), HTTP (production streaming)
 - **MCP vs FunctionTool**: MCP for side effects, external APIs, DB access, multi-language. FunctionTool for pure functions and internal logic.
 - **Security**: Auth at transport level, `tool_filter` allowlisting, parameterized DB queries in MCP tools.
@@ -179,7 +179,7 @@ Reference: `references/output-validation.md`
 
 Route prompts to the right model based on complexity, task type, and cost. Never use deprecated or blocked models.
 
-- **Complexity routing**: LOW → gemini-2.5-flash-lite, MEDIUM → gemini-2.5-flash, HIGH → gemini-2.5-pro
+- **Complexity routing**: LOW → gemini-3.1-flash-lite, MEDIUM → gemini-3.5-flash, HIGH → gemini-3.1-pro-preview
 - **ALL model types covered**: LLM (flash-lite/flash/pro), Live Audio, TTS, Image Gen, Video Gen, Embedding, Music Gen, Tool/Agent
 - **Blocked models (NEVER use)**: gemini-2.0-flash, gemini-2.0-flash-001, gemini-2.0-flash-lite, gemini-3-pro-preview, text-embedding-004, embedding-001, imagenet-3.0-generate-002, and others listed in model-routing.md
 - **Auto-fetch**: `scripts/fetch_models.py` scrapes ai.google.dev for latest models/deprecations — run weekly via CI
@@ -274,7 +274,7 @@ Load these as needed per mode:
 | `references/agent-modes.md` | WORKFLOW_DISCOVER/CREATE — Agent/LlmAgent, Workflow, ParallelAgent, SequentialAgent, LoopAgent, CustomAgent |
 | `references/agent-templates.md` | WORKFLOW_CREATE — agent type selection + templates |
 | `references/tool-design.md` | WORKFLOW_CREATE — tool validation |
-| `references/mcp-integration.md` | WORKFLOW_CREATE — MCP server building, MCPToolset, transport, MCP vs FunctionTool |
+| `references/mcp-integration.md` | WORKFLOW_CREATE — MCP server building, McpToolset, transport, MCP vs FunctionTool |
 | `references/a2a-deep-dive.md` | WORKFLOW_CREATE — AgentCard, ADK 2.x Task/A2A APIs, streaming, cross-language, auth |
 | `references/memory-management.md` | WORKFLOW_CREATE — SessionService, session.state, token budgeting, memory hierarchy |
 | `references/observability.md` | WORKFLOW_CREATE — logging/metrics wiring |

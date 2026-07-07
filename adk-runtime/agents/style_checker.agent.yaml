@@ -2,7 +2,7 @@
 # Source: adk-google-skills/skills/adk-style/SKILL.md
 
 name: style-checker
-model: gemini-2.5-flash
+model: gemini-3.5-flash
 description: >
   Enforce ADK code style and conventions: Python idioms, imports, typing,
   Pydantic patterns, formatting, logging, documentation, file organization,

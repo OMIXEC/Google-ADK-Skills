@@ -30,7 +30,7 @@ writer = Agent(
 )
 
 root_agent = Agent(
-    model='gemini-2.5-flash',
+    model='gemini-3.5-flash',
     name='coordinator',
     instruction=(
         'Delegate research to the researcher and '
@@ -65,7 +65,7 @@ worker = Agent(
 
 root_agent = Agent(
     name='coordinator',
-    model='gemini-2.5-flash',
+    model='gemini-3.5-flash',
     sub_agents=[worker],
     instruction='Delegate to worker via request_task_worker.',
 )
@@ -122,8 +122,8 @@ root_agent = LoopAgent(
 
 ## Model Configuration
 
-- Default model: `gemini-2.5-flash`
-- Override globally: `Agent.set_default_model('gemini-2.5-pro')`
+- Default model: `gemini-3.5-flash`
+- Override globally: `Agent.set_default_model('gemini-3.1-pro-preview')`
 - Model inheritance: sub-agents inherit parent's model if not set
 - Non-Gemini models via LiteLlm:
   ```python

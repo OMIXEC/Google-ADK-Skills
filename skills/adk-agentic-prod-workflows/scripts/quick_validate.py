@@ -124,9 +124,11 @@ def validate_python_workflow(path: Path) -> ValidationResult:
         if isinstance(node, ast.Call):
             if isinstance(node.func, ast.Name) and node.func.id in agent_types:
                 agent_defs.append(node)
-            # Check for MCPToolset usage
-            if isinstance(node.func, ast.Name) and node.func.id == "MCPToolset":
-                result.warnings.append(f"MCPToolset found — verify connection_params and tool_filter are configured")
+            # Check for McpToolset usage (MCPToolset is a deprecated alias)
+            if isinstance(node.func, ast.Name) and node.func.id in ("McpToolset", "MCPToolset"):
+                result.warnings.append("McpToolset found — verify connection_params and tool_filter are configured")
+                if node.func.id == "MCPToolset":
+                    result.warnings.append("MCPToolset is deprecated — use McpToolset instead")
 
         # Check FunctionTool() calls
         if isinstance(node, ast.Call):

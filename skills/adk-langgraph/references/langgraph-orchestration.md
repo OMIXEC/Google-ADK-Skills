@@ -80,7 +80,7 @@ def research_tool(query: str) -> str:
     """Research information using ADK agent."""
     researcher = Agent(
         name="researcher",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="Research and gather comprehensive information.",
     )
     # Execute ADK agent
@@ -93,7 +93,7 @@ def analysis_tool(data: str) -> str:
     """Analyze data using ADK agent."""
     analyst = Agent(
         name="analyst",
-        model="gemini-2.5-pro",
+        model="gemini-3.1-pro-preview",
         instruction="Analyze data and extract key insights.",
     )
     result = analyst.execute(data)
@@ -105,7 +105,7 @@ def writer_tool(content: str, style: str = "professional") -> str:
     """Write content using ADK agent."""
     writer = Agent(
         name="writer",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction=f"Write clear, {style} content.",
     )
     result = writer.execute(content)
@@ -208,7 +208,7 @@ def classify_intent(state: RouterState) -> dict:
     """Classify user intent using Gemini."""
     classifier = Agent(
         name="intent_classifier",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="""Classify the user intent into one of:
         - support: Customer support issues
         - sales: Sales inquiries, pricing
@@ -238,7 +238,7 @@ def route_by_intent(state: RouterState) -> Literal["support", "sales", "technica
 def support_agent(state: RouterState) -> dict:
     agent = Agent(
         name="support_agent",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="You are a helpful customer support agent. Be empathetic and solution-focused.",
     )
     result = agent.execute(state["messages"][-1].content)
@@ -247,7 +247,7 @@ def support_agent(state: RouterState) -> dict:
 def sales_agent(state: RouterState) -> dict:
     agent = Agent(
         name="sales_agent",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="You are a friendly sales agent. Focus on value and benefits.",
     )
     result = agent.execute(state["messages"][-1].content)
@@ -256,7 +256,7 @@ def sales_agent(state: RouterState) -> dict:
 def technical_agent(state: RouterState) -> dict:
     agent = Agent(
         name="technical_agent",
-        model="gemini-2.5-pro",  # More capable model for technical queries
+        model="gemini-3.1-pro-preview",  # More capable model for technical queries
         instruction="You are a technical support engineer. Provide detailed, accurate solutions.",
     )
     result = agent.execute(state["messages"][-1].content)
@@ -389,7 +389,7 @@ def generate_response(state: RAGState) -> dict:
     # ADK agent with RAG context
     rag_agent = Agent(
         name="rag_responder",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction=f"""Answer the user's question using the provided context.
 
 Context:
@@ -464,7 +464,7 @@ def generate_draft(state: ApprovalState) -> dict:
 
     writer = Agent(
         name="content_writer",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="Write professional, engaging content."
     )
 
@@ -495,7 +495,7 @@ def revise_draft(state: ApprovalState) -> dict:
 
     editor = Agent(
         name="editor",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="Revise content based on feedback while maintaining quality."
     )
 
@@ -596,7 +596,7 @@ def web_search(state: ResearchState) -> dict:
 
     searcher = Agent(
         name="web_searcher",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="Search and summarize web information."
     )
     result = searcher.execute(state["query"])
@@ -608,7 +608,7 @@ def database_search(state: ResearchState) -> dict:
 
     db_agent = Agent(
         name="db_searcher",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="Query internal knowledge base."
     )
     result = db_agent.execute(state["query"])
@@ -633,7 +633,7 @@ def quantitative_analysis(state: AnalysisState) -> dict:
     from google.adk.agents import Agent
     analyst = Agent(
         name="quant_analyst",
-        model="gemini-2.5-pro",
+        model="gemini-3.1-pro-preview",
         instruction="Perform quantitative analysis."
     )
     result = analyst.execute(state["data"])
@@ -643,7 +643,7 @@ def qualitative_analysis(state: AnalysisState) -> dict:
     from google.adk.agents import Agent
     analyst = Agent(
         name="qual_analyst",
-        model="gemini-2.5-pro",
+        model="gemini-3.1-pro-preview",
         instruction="Perform qualitative analysis."
     )
     result = analyst.execute(state["data"])
@@ -689,7 +689,7 @@ def synthesize_report(state: MainState) -> dict:
 
     synthesizer = Agent(
         name="report_writer",
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         instruction="Synthesize research and analysis into a comprehensive report."
     )
 
@@ -849,7 +849,7 @@ langgraph-adk-workflow/
 # requirements.txt
 langgraph>=0.2.0
 langchain-core>=0.3.0
-google-adk>=1.0.0
+google-adk>=2.3.0,<3
 pinecone>=5.0.0
 ```
 

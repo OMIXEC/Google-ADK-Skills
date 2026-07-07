@@ -172,7 +172,7 @@ class Config(BaseModel):
     env: str = os.getenv("ENV", "dev")
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
     google_project: str = os.getenv("GOOGLE_CLOUD_PROJECT", "")
-    model_name: str = os.getenv("MODEL_NAME", "gemini-2.5-flash")
+    model_name: str = os.getenv("MODEL_NAME", "gemini-3.5-flash")
 
     @property
     def is_production(self) -> bool:
@@ -180,9 +180,10 @@ class Config(BaseModel):
 
     @property
     def model_config(self) -> dict:
+        # Gemini 3.x: control reasoning via thinking_level, not temperature/top_p.
         if self.is_production:
-            return {"temperature": 0.1, "top_p": 0.95}
-        return {"temperature": 0.7, "top_p": 0.95}
+            return {"thinking_level": "low"}
+        return {"thinking_level": "medium"}
 
 config = Config()
 ```

@@ -29,7 +29,7 @@ Load with the **Skill** tool, read `references/`, then propose.
 |-----------|--------------|
 | Linear pipeline, fixed order | SequentialAgent |
 | Independent concurrent tasks | ParallelAgent |
-| Complex DAG, branching/merging | GraphAgent |
+| Complex DAG, branching/merging | Workflow (graph) |
 | Coordinator + specialized workers sharing state | Collaborative |
 | Iterative refinement with quality gate | LoopAgent |
 | Programmatic runtime composition | Dynamic |

@@ -80,7 +80,8 @@ import (
 
 
 def generate_graph_python(name: str) -> dict:
-    imports = """from google.adk import Agent, START, Workflow
+    imports = """from google.adk import Agent, Workflow
+from google.adk.workflow import START
 from google.adk.tools import FunctionTool
 from pydantic import BaseModel, Field
 import structlog
@@ -114,14 +115,14 @@ def process_query(params: ProcessInput) -> ProcessOutput:
 
 validator_agent = Agent(
     name="{name}_validator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Validate and sanitize user input before processing.",
     tools=[FunctionTool(validate_input)],
 )
 
 processor_agent = Agent(
     name="{name}_processor",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Process validated queries and return structured results.",
     tools=[FunctionTool(process_query)],
 )"""
@@ -132,7 +133,7 @@ processor_agent = Agent(
 
 reject_agent = Agent(
     name="reject_handler",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Tell the user their input was invalid and suggest fixes.",
 )
 
@@ -193,14 +194,14 @@ def transform_data(params: TransformDataInput) -> TransformDataOutput:
 
 fetch_agent = Agent(
     name="{name}_fetcher",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Fetch data from specified sources using the fetch_data tool.",
     tools=[FunctionTool(fetch_data)],
 )
 
 transform_agent = Agent(
     name="{name}_transformer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Transform raw data using the transform_data tool.",
     tools=[FunctionTool(transform_data)],
 )"""
@@ -295,28 +296,28 @@ def review_code(params: ReviewInput) -> ReviewOutput:
 
 researcher = Agent(
     name="{name}_researcher",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Research topics thoroughly using the research_topic tool.",
     tools=[FunctionTool(research_topic)],
 )
 
 coder = Agent(
     name="{name}_coder",
-    model="gemini-2.5-pro",
+    model="gemini-3.1-pro-preview",
     instruction="Write production code based on specifications.",
     tools=[FunctionTool(write_code)],
 )
 
 reviewer = Agent(
     name="{name}_reviewer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Review code for correctness and quality.",
     tools=[FunctionTool(review_code)],
 )
 
 coordinator = Agent(
     name="{name}_coordinator",
-    model="gemini-2.5-pro",
+    model="gemini-3.1-pro-preview",
     instruction=f\"\"\"You are a task coordinator for the {name} workflow.
     1. Analyze the user's goal
     2. Delegate research to {{name}}_researcher
@@ -378,21 +379,21 @@ def step_three(params: StepInput) -> StepOutput:
 
 agent_one = Agent(
     name="{name}_step_one",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Execute step 1 of the pipeline.",
     tools=[FunctionTool(step_one)],
 )
 
 agent_two = Agent(
     name="{name}_step_two",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Execute step 2 of the pipeline.",
     tools=[FunctionTool(step_two)],
 )
 
 agent_three = Agent(
     name="{name}_step_three",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Execute step 3 of the pipeline.",
     tools=[FunctionTool(step_three)],
 )"""
@@ -439,21 +440,21 @@ def process_chunk(params: TaskInput) -> TaskOutput:
 
 worker_a = Agent(
     name="{name}_worker_a",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Process data chunks assigned to Worker A.",
     tools=[FunctionTool(process_chunk)],
 )
 
 worker_b = Agent(
     name="{name}_worker_b",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Process data chunks assigned to Worker B.",
     tools=[FunctionTool(process_chunk)],
 )
 
 worker_c = Agent(
     name="{name}_worker_c",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Process data chunks assigned to Worker C.",
     tools=[FunctionTool(process_chunk)],
 )"""
@@ -524,14 +525,14 @@ def review_content(params: ReviewInput) -> ReviewOutput:
 
 generator = Agent(
     name="{name}_generator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Generate content based on the task. Use generate_content tool.",
     tools=[FunctionTool(generate_content)],
 )
 
 reviewer = Agent(
     name="{name}_reviewer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Review generated content against quality criteria. Score 0-1. "
                 "If score >= 0.8, call exit_loop. Otherwise provide specific feedback.",
     tools=[FunctionTool(review_content), FunctionTool(exit_loop)],
@@ -1125,14 +1126,14 @@ async function validateInput(params: z.infer<typeof ValidateInput>) {{
 
 const validatorAgent = new Agent({{
   name: '{safe_name}_validator',
-  model: 'gemini-2.5-flash',
+  model: 'gemini-3.5-flash',
   instruction: 'Validate and sanitize user input before processing.',
   tools: [new FunctionTool(validateInput, {{ schema: ValidateInput }})],
 }});
 
 const processorAgent = new Agent({{
   name: '{safe_name}_processor',
-  model: 'gemini-2.5-flash',
+  model: 'gemini-3.5-flash',
   instruction: 'Process validated queries and return structured results.',
   tools: [],
 }});"""
@@ -1185,7 +1186,7 @@ async function searchKnowledgeBase(params: z.infer<typeof SearchInput>) {{
 
 const mainAgent = new Agent({{
   name: '{safe_name}_agent',
-  model: 'gemini-2.5-flash',
+  model: 'gemini-3.5-flash',
   instruction: 'You are a production agent server. Handle requests using available tools.',
   tools: [new FunctionTool(searchKnowledgeBase, {{ schema: SearchInput }})],
 }});"""

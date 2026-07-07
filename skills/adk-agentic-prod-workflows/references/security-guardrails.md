@@ -287,7 +287,7 @@ OUTPUT RULES:
 
 agent = Agent(
     name="hardened_support",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction=hardened_instruction,
     tools=[lookup_product, get_order_status],
 )
@@ -406,7 +406,7 @@ security_plugin = SecurityPlugin(
 
 root_agent = LlmAgent(
     name="secure_workflow_root",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     plugins=[security_plugin],  # ← cascades to ALL sub-agents
     sub_agents=[child_a, child_b, child_c],
 )
@@ -457,12 +457,12 @@ security_plugin = SecurityPlugin(
 MCP tools run in separate processes. Apply these security controls:
 
 ```python
-from google.adk.tools import MCPToolset
+from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 from google.adk.tools.mcp import StdioServerParameters
 
 # Allowlist specific tools from MCP server
-secure_mcp = MCPToolset(
-    connection_params=StdioServerParameters(
+secure_mcp = McpToolset(
+    connection_params=StdioConnectionParams(server_params=StdioServerParameters(
         command="python3",
         args=["mcp_servers/db_server.py"],
         env={
@@ -470,13 +470,13 @@ secure_mcp = MCPToolset(
             "ALLOWED_TABLES": "orders,customers",  # Table allowlist
             "MAX_ROWS": "100",               # Row limit
         },
-    ),
+    )),
     tool_filter=["query_orders", "get_customer"],  # Only expose these tools
 )
 
 agent = Agent(
     name="secure_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     tools=[secure_mcp],
 )
 ```

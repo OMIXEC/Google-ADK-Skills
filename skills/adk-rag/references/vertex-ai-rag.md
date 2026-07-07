@@ -108,7 +108,7 @@ RAG_CORPUS = "projects/your-project/locations/us-central1/ragCorpora/your-corpus
 
 support_agent = Agent(
     name="support_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     description="Support agent with product knowledge",
     instruction="""
     You are a support agent with access to product documentation.

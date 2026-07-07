@@ -5,7 +5,8 @@ Uses ADK LoopAgent with max_iterations and quality gate via exit_loop tool.
 
 import os
 from google.adk.agents import LoopAgent
-from google.adk.tools.mcp_tool.mcp_toolset import MCPToolset, StdioServerParameters
+from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
+from mcp import StdioServerParameters
 
 from agents import build_generator, build_critic
 from tools import build_exit_loop_tool
@@ -35,11 +36,11 @@ def build_workflow_with_mcp(mcp_server_path: str) -> LoopAgent:
     critic = build_critic(exit_tool=exit_loop_tool)
 
     # Optional MCP tools if external services needed
-    mcp_tools = MCPToolset(
-        connection_params=StdioServerParameters(
+    mcp_tools = McpToolset(
+        connection_params=StdioConnectionParams(server_params=StdioServerParameters(
             command="python3",
             args=[mcp_server_path],
-        ),
+        )),
         tool_filter=os.getenv("MCP_TOOL_FILTER", "").split(",") if os.getenv("MCP_TOOL_FILTER") else None,
     )
 

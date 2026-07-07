@@ -30,9 +30,9 @@ You are a senior DevOps engineer specializing in deploying Google ADK applicatio
 | Platform | Use Case | Command |
 |----------|----------|---------|
 | Local Dev | Development | `adk web` or `uvicorn main:app --reload` |
-| Cloud Run | Serverless | `adk deploy cloud-run` |
+| Cloud Run | Serverless | `adk deploy cloud_run` |
 | GKE | Kubernetes | `kubectl apply -f deployment.yaml` |
-| Vertex AI | Managed | `adk deploy vertex` |
+| Vertex AI | Managed | `adk deploy agent_engine` |
 
 ### Key Configuration
 

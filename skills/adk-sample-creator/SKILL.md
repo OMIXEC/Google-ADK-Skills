@@ -5,11 +5,11 @@ description: Author new samples for the ADK Python repository. Use this skill wh
 
 # ADK Sample Creator
 
-This skill helps you create new samples for the ADK Python repository. You should search for subdirectories under `contributing` (such as `new_workflow_samples`, `workflow_samples`, etc.) and confirm with the user which folder they want to use before creating the sample.
+This skill helps you create new samples for the ADK Python repository. You should search for subdirectories under `contributing/samples` (such as `workflows`, `core`, `mcp`, etc.) and confirm with the user which folder they want to use before creating the sample.
 
 > [!TIP]
 
-> Before creating samples, you can use the `adk-style` skill to learn about ADK 2.0 architecture knowledge and best practices.
+> Before creating samples, you can use the `adk-style` skill to learn about ADK 2.x architecture knowledge and best practices.
 
 A sample consists of:
 
@@ -28,7 +28,7 @@ Use snake_case for the folder name (e.g., `dynamic_nodes`, `fan_out_fan_in`).
 The `agent.py` should focus on demonstrating a specific feature or agent pattern. Use absolute imports for testing convenience.
 
 > [!IMPORTANT]
-> **Model Selection**: Do not set the `model` parameter explicitly (e.g., `model="gemini-2.5-flash"`) on `Agent` instances in sample agents. Instead, let them default to the system-configured model, unless a specific model is explicitly requested by the user.
+> **Model Selection**: Do not set the `model` parameter explicitly (e.g., `model="gemini-3.5-flash"`) on `Agent` instances in sample agents. Instead, let them default to the system-configured model, unless a specific model is explicitly requested by the user.
 
 Choose one of the following patterns:
 
@@ -41,9 +41,9 @@ Use this when you need multiple nodes, routing, or parallel execution.
 ```python
 from google.adk import Agent
 from google.adk import Context
+from google.adk import Workflow
 from google.adk.workflow import node
 from google.adk.workflow import JoinNode
-from google.adk.workflow._workflow_class import Workflow
 ```
 
 **Anatomy:**

@@ -157,7 +157,7 @@ class InputBlockedError(Exception):
 # Wire into agent
 agent = LlmAgent(
     name="shielded_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="You are a helpful assistant.",
     before_agent_callback=input_shield,
     after_agent_callback=output_shield,

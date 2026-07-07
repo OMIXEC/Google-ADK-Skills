@@ -634,8 +634,8 @@ install_python_deps() {
     if [[ -f "$INSTALL_DIR/requirements.txt" ]]; then
         pip install -r "$INSTALL_DIR/requirements.txt"
     fi
-    if [[ -f "$INSTALL_DIR/adk-python/requirements.txt" ]]; then
-        pip install -r "$INSTALL_DIR/adk-python/requirements.txt"
+    if [[ -f "$INSTALL_DIR/adk-python-v1/requirements.txt" ]]; then
+        pip install -r "$INSTALL_DIR/adk-python-v1/requirements.txt"
     fi
 
     deactivate

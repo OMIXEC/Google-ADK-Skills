@@ -116,7 +116,7 @@ def generate_cloud_run_yaml(name: str, region: str = "us-central1") -> dict:
                         "image": f"{region}-docker.pkg.dev/${{PROJECT_ID}}/{name}/{name}:latest",
                         "env": [
                             {"name": "LOG_LEVEL", "value": "INFO"},
-                            {"name": "MODEL_NAME", "value": "gemini-2.5-flash"},
+                            {"name": "MODEL_NAME", "value": "gemini-3.5-flash"},
                         ],
                         "resources": {
                             "limits": {"cpu": "1000m", "memory": "512Mi"},
@@ -385,7 +385,7 @@ def generate_ecs_task_definition(name: str, region: str = "us-east-1") -> dict:
             "portMappings": [{"containerPort": 8080}],
             "environment": [
                 {"name": "LOG_LEVEL", "value": "INFO"},
-                {"name": "MODEL_NAME", "value": "gemini-2.5-flash"},
+                {"name": "MODEL_NAME", "value": "gemini-3.5-flash"},
             ],
             "secrets": [
                 {"name": "GOOGLE_API_KEY", "valueFrom": f"arn:aws:secretsmanager:{region}:${{AWS_ACCOUNT_ID}}:secret:google-api-key"},
@@ -460,7 +460,7 @@ def generate_lambda_config(name: str) -> dict:
         "memory_size": 1024,
         "environment": {
             "LOG_LEVEL": "INFO",
-            "MODEL_NAME": "gemini-2.5-flash",
+            "MODEL_NAME": "gemini-3.5-flash",
         },
         "triggers": {
             "api_gateway": {
@@ -496,7 +496,7 @@ def generate_container_apps_config(name: str, region: str = "eastus") -> dict:
                     "image": f"myacr.azurecr.io/{name}:latest",
                     "env": [
                         {"name": "LOG_LEVEL", "value": "INFO"},
-                        {"name": "MODEL_NAME", "value": "gemini-2.5-flash"},
+                        {"name": "MODEL_NAME", "value": "gemini-3.5-flash"},
                         {"name": "GOOGLE_API_KEY", "secretRef": "google-api-key"},
                     ],
                     "resources": {

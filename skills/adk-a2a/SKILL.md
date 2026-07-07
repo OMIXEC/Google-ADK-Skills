@@ -50,14 +50,14 @@ You are a senior engineer specializing in ADK's Agent-to-Agent (A2A) protocol fo
 
 ### Remote Agent Pattern
 
-ADK Python A2A support is documented as experimental. Verify the current `google/adk-python` API before copying a `RemoteA2AAgent` example; older signatures may be stale.
+ADK Python A2A support is documented as experimental. Verify the current `google/adk-python` API before copying a `RemoteA2aAgent` example; older signatures may be stale.
 
 ```python
 from google.adk import Agent
 
 root_agent = Agent(
     name="root_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction=(
         "Route remote-capability tasks through verified A2A adapters only. "
         "Propagate auth, timeout, retry, and correlation metadata."

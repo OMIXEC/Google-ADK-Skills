@@ -2,7 +2,7 @@
 # Source: .claude/skills/adk-agentic-prod-workflows/SKILL.md#WORKFLOW_CREATE
 
 name: workflow-builder
-model: gemini-2.5-pro
+model: gemini-3.1-pro-preview
 description: >
   Generates complete ADK workflow projects from confirmed architecture designs.
   Produces: agent definitions, tools, CI/CD, evals, security, observability,

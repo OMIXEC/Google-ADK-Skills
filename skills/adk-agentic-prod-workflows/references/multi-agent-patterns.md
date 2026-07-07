@@ -37,7 +37,7 @@ Single coordinator delegates to specialized workers.
 ```python
 coordinator = Agent(
     name="support_coordinator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     sub_agents=[billing, technical, general],
     instruction="Route to billing for payment questions, "
                 "technical for bug reports, general otherwise."
@@ -183,11 +183,11 @@ server = A2AServer(
 Coordination via shared MCP tool servers instead of direct agent-to-agent calls. See `references/mcp-integration.md` for full protocol reference.
 
 ```
-[Coordinator Agent] ──MCPToolset──→ [MCP Server: DB Tools]
+[Coordinator Agent] ──McpToolset──→ [MCP Server: DB Tools]
        │
-       ├──MCPToolset──→ [MCP Server: API Tools]
+       ├──McpToolset──→ [MCP Server: API Tools]
        │
-       └──MCPToolset──→ [MCP Server: Search Tools]
+       └──McpToolset──→ [MCP Server: Search Tools]
 ```
 
 **When**: Tool-first architectures where agents share tool servers; side-effect isolation across language boundaries; centralized tool governance.
@@ -195,20 +195,20 @@ Coordination via shared MCP tool servers instead of direct agent-to-agent calls.
 **Implementation**:
 
 ```python
-from google.adk.tools import MCPToolset
+from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
 from google.adk.tools.mcp import StdioServerParameters
 
 coordinator = Agent(
     name="mcp_coordinator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Use tools from connected MCP servers to complete tasks.",
     tools=[
-        MCPToolset(connection_params=StdioServerParameters(
+        McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(
             command="python3", args=["mcp_servers/db_server.py"]
-        )),
-        MCPToolset(connection_params=StdioServerParameters(
+        ))),
+        McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(
             command="python3", args=["mcp_servers/api_server.py"]
-        )),
+        ))),
     ],
 )
 ```

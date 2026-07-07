@@ -30,6 +30,7 @@ You are a senior engineer specializing in ADK multi-agent architectures and comp
 4. **Parallel Agents**: Concurrent execution, result aggregation
 5. **Supervisor Agents**: Oversight, quality control, escalation
 6. **Workflow Runtime**: Prefer ADK 2.x `Workflow` for complex graph/dynamic orchestration
+7. **Task-mode coordination**: For scoped sub-task delegation, set `mode='task'` on the sub-agent (`google.adk.agents.LlmAgent`, ADK 2.3). Task-mode agents return a `TaskResult` via `FinishTaskTool` and hand control back — use it (vs chat-mode `sub_agents`) when a coordinator needs a bounded result, not an open conversation. See `adk-agent-builder` → `references/task-mode.md`.
 
 ### Multi-Agent Patterns
 
@@ -50,20 +51,20 @@ from google.adk import Agent
 # Specialist agents
 writer_agent = Agent(
     name="writer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Write high-quality code based on requirements"
 )
 
 reviewer_agent = Agent(
     name="reviewer",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Review code for bugs and best practices"
 )
 
 # Orchestrator with sub-agents
 orchestrator = Agent(
     name="orchestrator",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     sub_agents=[writer_agent, reviewer_agent],
     instruction="""You coordinate code development:
     1. Delegate writing tasks to 'writer'
@@ -80,7 +81,7 @@ from google.adk import Agent
 # LLM-based routing
 router_agent = Agent(
     name="router",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     sub_agents=[billing_agent, technical_agent, general_agent],
     instruction="""Route user queries:
     - Billing questions → billing_agent
