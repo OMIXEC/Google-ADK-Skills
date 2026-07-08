@@ -1,7 +1,7 @@
 # Session Backends — Cloud SQL, Postgres, Firestore, SQLite, Vertex
 
 Choose a `SessionService` for durable conversation/state. All attach to the
-`Runner` via `session_service=`. Verified against
+`Runner` via `session_service=`. Verify with Context7 or the local mirror paths
 `adk-python-v2.3/src/google/adk/sessions` and `.../integrations/firestore`.
 
 ## Install extras

@@ -12,8 +12,8 @@ description: >-
 # adk-migration — ADK 1.x → 2.3
 
 Port an ADK 1.x codebase to 2.3 (`google-adk>=2.3.0,<3`). Every mapping below is
-verified against `adk-python-v2.3/src/google/adk`. Reference that tree for
-signatures — never `adk-python-v1/`.
+verified through Context7 `/google/adk-docs` and the local `adk-python-v2.3/`
+mirror when present. Never use `adk-python-v1/` for new ADK APIs.
 
 ## When to use
 
@@ -58,8 +58,9 @@ detail: `references/models-config.md`.
 ## Data / state incompatibility
 
 - **Session/state schema is not compatible** between 1.x and 2.3. Do not reuse
-  1.x-persisted sessions; start fresh or migrate with the tools under
-  `adk-python-v2.3/src/google/adk/sessions/migration/`.
+  1.x-persisted sessions; start fresh or migrate with tools under
+  `google.adk.sessions.migration` (local mirror path:
+  `adk-python-v2.3/src/google/adk/sessions/migration/`).
 - **Embedding spaces are incompatible** across embedding models — moving to
   `gemini-embedding-2` requires **re-embedding all stored vectors**.
 

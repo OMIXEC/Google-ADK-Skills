@@ -1,7 +1,8 @@
 # Model Catalog — Current Gemini 3.x (ADK 2.3)
 
 Authoritative model IDs for new ADK agents. Reference signatures against
-`adk-python-v2.3/src/google/adk/`. Cross-check live availability at
+Context7 `/google/adk-docs` and the local `adk-python-v2.3/` mirror when present.
+Cross-check live availability at
 <https://ai.google.dev/gemini-api/docs/models> and
 <https://ai.google.dev/gemini-api/docs/deprecations>.
 

@@ -2,26 +2,28 @@
 
 Status: **complete.** The bundle targets ADK **2.3.0 GA**. Runtime dependency is `google-adk>=2.3.0,<3` (root `requirements.txt`), Python **3.10+**.
 
+The full upstream `google/adk-python` repository is **not vendored** into this package. Keep a local `adk-python-v2.3/` checkout only as a gitignored source mirror when doing source-backed updates. The package should contain extracted skills, docs, commands, runtime configs, and the small legacy helper folder only.
+
 ## What moved
 
-The single vendored `adk-python/` folder was split:
+The old `adk-python/` helper folder was renamed:
 
 | Folder | Contents | Status |
 |--------|----------|--------|
-| `adk-python-v2.3/` | ADK 2.3.0 GA full source (`src/google/adk`, `pyproject.toml`) | **Source of truth.** Reference all API signatures here. |
-| `adk-python-v1/` | Repo helper tooling only (`tools/model_tools.py`, `tools/scaffold_tools.py`, `callbacks/`) + helper `requirements.txt` | **Reference-only.** Kept indefinitely for migration diffing and the legacy helper-import regression test. Not on any runtime import path for new code. Never copy patterns from it. |
+| `adk-python-v1/` | Repo helper tooling only (`tools/model_tools.py`, `tools/scaffold_tools.py`, `callbacks/`) + helper `requirements.txt` | **Legacy helper compatibility only.** Kept for installer/runtime-helper compatibility and the legacy helper-import regression test. Not on any runtime import path for new ADK code. Never copy patterns from it. |
+| `adk-python-v2.3/` | Optional local checkout of upstream ADK 2.3 source | **Ignored reference mirror.** Use for grep/source confirmation only when present. Do not commit or package it. |
 
 Path references were re-pointed off the deleted bare `adk-python/`:
 
-- `CLAUDE.md` — helper prose → `adk-python-v1/`; added "Vendored SDK — Source of Truth" + "v2.3 Core Concepts" sections pointing API references at `adk-python-v2.3/`.
+- `CLAUDE.md` — helper prose → `adk-python-v1/`; added Context7-first ADK 2.3 source policy and current core concepts.
 - `install.sh` — helper `requirements.txt` install → `adk-python-v1/requirements.txt`.
 - `.github/workflows/adk-skills-ci.yml` — helper install + `sys.path.insert` + `from tools.model_tools` regression test → `adk-python-v1/`.
-- `package.json` — `files` array `"adk-python"` → `"adk-python-v1"` + `"adk-python-v2.3"`.
+- `package.json` — `files` array `"adk-python"` → `"adk-python-v1"` only; the full upstream SDK checkout stays out of package artifacts.
 - `README.md` — added migration-status line; corrected runtime-helper Python requirement to 3.10+.
 
 ## Verified v2.3 feature names (corrections vs. common assumptions)
 
-Confirmed against `adk-python-v2.3/src/google/adk/`:
+Confirmed through Context7 `/google/adk-docs` and the local `adk-python-v2.3/` mirror where present:
 
 | Assumed | Correct in 2.3 | Location |
 |---------|----------------|----------|
@@ -34,7 +36,7 @@ Confirmed against `adk-python-v2.3/src/google/adk/`:
 | `request_input` HITL | `RequestInput` / `_request_input_tool` ✅ | `events/request_input.py`, `tools/_request_input_tool.py` |
 | Python 3.11+ | Python **3.10+** | `pyproject.toml:15` |
 
-The skills already used the correct names (`ctx.resume_inputs`, `JoinNode`, `Edge`, `node()`, `rerun_on_resume`); no skill code required correction. Only doc/version drift and dangling paths were fixed.
+The skills should use current names (`McpToolset`, `JoinNode`, `Edge`, `node()`, `rerun_on_resume`) and avoid stale names (`MCPToolset`, `ctx.resume_data`, `@edge`). Only relevant upstream ADK `.agents/skills` guidance should be copied into this repo; do not import the entire upstream SDK repository.
 
 ## Code migration status
 
@@ -51,4 +53,4 @@ Custom orchestration that now overlaps the native 2.3 graph engine (`Workflow` +
 
 ## v1 folder disposition
 
-`adk-python-v1/` is **kept indefinitely** as a reference/diff and to back the legacy helper regression test. It is not a runtime dependency and must not be deleted without explicit instruction.
+`adk-python-v1/` is kept as legacy helper compatibility and to back the helper regression test. It is not a runtime dependency and must not be used as a source for new ADK examples.

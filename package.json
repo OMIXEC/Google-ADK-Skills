@@ -19,7 +19,6 @@
     "adk-runtime",
     "adk_bidi",
     "adk-python-v1",
-    "adk-python-v2.3",
     "requirements.txt",
     "tests"
   ],

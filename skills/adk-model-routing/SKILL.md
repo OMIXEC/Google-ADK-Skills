@@ -15,8 +15,9 @@ description: >-
 
 Route each agent to the cheapest capable model, set the right thinking/effort
 level, and fall back safely when a model is unavailable. Grounded in the current
-Gemini 3.x guidance and ADK 2.3 (`adk-python-v2.3/`). Verify signatures against
-`adk-python-v2.3/src/google/adk/`, never `adk-python-v1/`.
+Gemini 3.x guidance and ADK 2.3. Verify signatures with Context7
+`/google/adk-docs` first, then the local `adk-python-v2.3/` mirror when present;
+never use `adk-python-v1/` for new ADK APIs.
 
 ## When to use
 
@@ -56,7 +57,7 @@ Gemini 3.x replaces raw `thinking_budget` with the `thinking_level` effort enum:
 `minimal`, `low`, `medium` (**default in 3.5**, changed from `high`), `high`.
 Full table, per-model support, and migration: `references/thinking-effort.md`.
 
-ADK 2.3 wiring (verified in `adk-python-v2.3/src/google/adk`):
+ADK 2.3 wiring (verified against Context7 and the local source mirror when present):
 
 ```python
 from google.adk.agents import LlmAgent

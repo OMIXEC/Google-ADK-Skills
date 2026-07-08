@@ -2,23 +2,25 @@
 
 This repo provides 28 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
 
-## Vendored SDK — Source of Truth
+## ADK 2.3 Source Policy
 
-Two ADK SDK folders are vendored side by side:
+Current ADK guidance is source-backed, not SDK-vendored:
 
-- **`adk-python-v2.3/`** — ADK 2.3.0 GA full source (`src/google/adk`, `pyproject.toml`). **Always reference `adk-python-v2.3/` for current API signatures.**
-- **`adk-python-v1/`** — legacy repo helper tooling (`tools/`, `callbacks/`) + its `requirements.txt`. **`adk-python-v1/` exists only for migration diffing — never copy patterns from it into new code.**
+- **Canonical docs:** use Context7 `/google/adk-docs` and the official ADK docs/API reference first.
+- **Local mirror:** `adk-python-v2.3/` may exist as an ignored local checkout of `google/adk-python` for grep/reference. Do not commit it, package it, or path-import from it.
+- **Packaged helpers:** `adk-python-v1/` contains legacy repo helper tooling (`tools/`, `callbacks/`) + its `requirements.txt`. It exists only for installer/helper compatibility and migration diffing. Never copy patterns from it into new ADK code.
 
-The active runtime dependency is `google-adk>=2.3.0,<3` (installed from PyPI via root `requirements.txt`), not a path import of the vendored folder. Python **3.10+** required (`adk-python-v2.3/pyproject.toml`).
+The active runtime dependency is `google-adk>=2.3.0,<3` (installed from PyPI via root `requirements.txt`), not a path import of a local SDK folder. Python **3.10+** required.
 
 ### v2.3 Core Concepts (assume available)
 
-Verified against `adk-python-v2.3/src/google/adk/`:
+Verified through Context7 `/google/adk-docs` and the local ADK 2.3 mirror when present:
 
-- **Graph Workflow Runtime** — `node()` decorator (`workflow/_node.py`) defines function/LLM nodes; edges are `Edge` instances (`workflow/_graph.py`), **not** an `@edge` decorator. Fan-out runs nodes concurrently; fan-in via `JoinNode` (`workflow/_join_node.py`) which waits for all named predecessors.
-- **Agent modes** — `LlmAgent.mode: Literal['chat', 'task', 'single_turn']` (`agents/llm_agent.py`). `task` delegates a scoped sub-task; `single_turn` completes without further user interaction; `chat` is the standard sub-agent.
-- **Human-in-the-loop (HITL)** — `request_input` tool (`tools/_request_input_tool.py`) pauses a run for input; the workflow checkpoints and resumes via **`ctx.resume_inputs`** (`agents/context.py`) — **not** `ctx.resume_data`.
-- **Task-mode coordination** — MAS coordination uses `mode='task'` plus `TaskRequest`/`TaskResult` and `FinishTaskTool` (`agents/llm/task/`). There is **no** standalone `Task` class.
+- **Graph Workflow Runtime** — `Workflow` plus `node()` define graph/dynamic orchestration. Use route maps and `Event(route=...)` for conditional routing. There is **no** `@edge` decorator in current docs.
+- **Dynamic nodes** — `ctx.run_node(...)` schedules nodes at runtime; orchestrator nodes that call interactive nodes must use `rerun_on_resume=True`.
+- **MCP tools** — current Python examples use `McpToolset` with `StdioConnectionParams` or `StreamableHTTPConnectionParams`. Treat `MCPToolset` as stale/deprecated spelling in this repo's generated examples.
+- **Human-in-the-loop (HITL)** — `RequestInput` pauses a workflow for user input; do not use the old **`ctx.resume_data`** spelling.
+- **Task-mode coordination** — MAS coordination uses `mode='task'` plus task request/result concepts. Do not invent a standalone `Task` class.
 - **Sessions/memory are v2.3-native** — `google.adk.sessions.*` and `google.adk.memory.*`. v1-persisted session/state is **not** schema-compatible with v2.3; do not reuse old persisted state.
 
 ## Skill Routing
@@ -44,7 +46,7 @@ When a user request matches a trigger below, invoke the corresponding skill.
 | `adk-a2a` | "A2A", "agent-to-agent", "cross-language agent", "AgentCard", "RemoteA2AAgent" |
 | `adk-memory` | "memory", "SessionService", "session state", "persistence" |
 | `adk-embeddings` | "embedding", "gemini-embedding-2", "vector store", "pgvector", "Cloud SQL", "Postgres session", "Firestore memory", "DatabaseSessionService", "vector search", "store embeddings in db" |
-| `adk-migration` | "migrate 1.x to 2.3", "upgrade ADK", "breaking changes", "deprecated API", "GraphAgent removed", "MCPToolset error", "ctx.resume_data", "port to 2.3" |
+| `adk-migration` | "migrate 1.x to 2.3", "upgrade ADK", "breaking changes", "deprecated API", "GraphAgent removed", "McpToolset error", "MCPToolset error", "ctx.resume_data", "port to 2.3" |
 | `adk-deployment` | "deploy", "Cloud Run", "Agent Engine", "GKE", "Terraform", "deployment manifest" |
 | `adk-backend` | "backend", "server", "API for agent" |
 | `adk-bidi-live` | "bidi", "live", "streaming audio", "voice agent", "real-time" |

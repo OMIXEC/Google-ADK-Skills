@@ -38,3 +38,4 @@ node_modules/
 
 # External repos embedded for reference (do not track)
 docs/adk-docs/gcp-blogs/
+adk-python-v2.3/
