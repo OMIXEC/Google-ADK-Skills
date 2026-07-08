@@ -58,15 +58,15 @@ google-adk>=2.3.0,<3      # was: google-adk 1.x
 google-genai>=2.0.0       # Interactions API (breaking changes from earlier)
 ```
 
-- **Python 3.10+** (`adk-python-v2.3/pyproject.toml` `requires-python = ">=3.10"`).
+- **Python 3.10+** (official ADK metadata advertises `requires-python = ">=3.10"`).
   Drop any 3.11-only assumption.
 - Prefer `uv` in repos standardized on it.
 
 ## Sessions & state
 
 - 1.x and 2.3 **session/state schemas are incompatible** — do not reuse persisted
-  1.x sessions. Migration helpers live under
-  `adk-python-v2.3/src/google/adk/sessions/migration/`.
+  1.x sessions. Migration helpers live under `google.adk.sessions.migration`
+  (local mirror path: `adk-python-v2.3/src/google/adk/sessions/migration/`).
 - New database/serverless backends in 2.3: `DatabaseSessionService`
   (Postgres/Cloud SQL/MySQL), `FirestoreSessionService`/`FirestoreMemoryService`
   (`google.adk.integrations.firestore`). See the `adk-embeddings` skill.

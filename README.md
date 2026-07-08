@@ -11,7 +11,7 @@ Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-
 - Python requirement: 3.10+; use `uv` in repos that already standardize on `uv`.
 - New Python workflow guidance should prefer ADK 2.x `Agent` plus `Workflow` graph/dynamic orchestration for complex flows. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic template workflows, but Python 2.x docs supersede them with graph/dynamic workflows for new complex systems.
 - Read [`docs/python-adk-2.md`](docs/python-adk-2.md) before changing ADK examples, runtime helpers, model IDs, MCP/A2A integrations, or migration guidance.
-- **Vendored SDK:** `adk-python-v2.3/` is the API source-of-truth; `adk-python-v1/` is reference-only (legacy repo helper tooling). See [`MIGRATION.md`](MIGRATION.md).
+- **Source-backed updates:** Context7 `/google/adk-docs` plus official ADK docs/API reference are canonical. A local `adk-python-v2.3/` checkout may be kept for grep/reference, but it is gitignored and not packaged. Copy only relevant upstream `.agents/skills` guidance into this repo's `skills/`, `agents/`, `commands/`, and docs. `adk-python-v1/` is legacy helper tooling only. See [`MIGRATION.md`](MIGRATION.md).
 
 ## Installation
 
@@ -149,7 +149,7 @@ Use `npx skills add OMIXEC/Google-ADK-Skills` as the reliable public path today.
 | `adk-git` | Git operations — commit, push, pull, rebase, branch, PR, cherry-pick with ADK commit conventions |
 | `adk-langgraph` | LangGraph orchestration — state machines, conditional edges, LLM-driven routing, ADK↔LangGraph interop |
 | `adk-litellm` | 100+ LLM providers — OpenAI, Anthropic, Bedrock, OpenRouter, Ollama, vLLM; model switching, cost optimization |
-| `adk-mcp` | MCP integration — MCPToolset, stdio/SSE/HTTP connection params, database toolboxes |
+| `adk-mcp` | MCP integration — McpToolset, stdio/streamable HTTP connection params, database toolboxes |
 | `adk-memory` | Memory and state — session state, long-term memory, persistence backends, cross-session recall |
 | `adk-migration` | ADK 1.x → 2.3 upgrade — breaking-change checklist, renamed APIs (Workflow/`McpToolset`/`ctx.resume_inputs`), deploy CLI, model/embedding/state changes |
 | `adk-model-routing` | Model selection, thinking/effort (`thinking_level`), and fallback — current Gemini 3.x catalog, routing by complexity/cost, primary→fallback chains |

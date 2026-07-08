@@ -365,7 +365,8 @@ class TestCrossSkillConsistency:
 class TestV23MigrationGuards:
     """Prevent regressions to ADK v1 paths and deprecated v2.3 API names.
 
-    `adk-python-v2.3/` is the API source-of-truth; `adk-python-v1/` is reference-only.
+    ADK docs/API reference are canonical. `adk-python-v2.3/` may exist as a
+    gitignored local source mirror; `adk-python-v1/` is legacy helper tooling.
     """
 
     # Deprecated tokens that must never appear in skill content.
@@ -434,6 +435,14 @@ class TestV23MigrationGuards:
             "Bare 'adk-python/' path (should be adk-python-v1/ or adk-python-v2.3/) in:\n"
             + "\n".join(offenders)
         )
+
+    def test_package_excludes_local_adk_source_mirror(self):
+        """The full upstream ADK checkout is a local mirror, not package payload."""
+        import json
+
+        package_json = REPO_ROOT / "package.json"
+        files = json.loads(package_json.read_text()).get("files", [])
+        assert "adk-python-v2.3" not in files
 
 
 # ── Integration: test quick_validate.py compatibility ─────────────────────────

@@ -25,7 +25,7 @@ from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent, LoopAgen
 from google.adk.runners import Runner, RunConfig, StreamingMode
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools import FunctionTool, google_search, exit_loop
-from google.adk.tools.mcp_tool import MCPToolset
+from google.adk.tools.mcp_tool import McpToolset
 from mcp import StdioServerParameters
 ```
 
@@ -46,7 +46,7 @@ from mcp import StdioServerParameters
 
 ## MCP Tools
 
-Current MCP examples use `MCPToolset` as an agent toolset:
+Current MCP examples use `McpToolset` as an agent toolset:
 
 ```python
 from google.adk import Agent

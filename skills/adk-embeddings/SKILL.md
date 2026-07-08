@@ -12,8 +12,9 @@ description: >-
 # adk-embeddings — Memory & Embeddings Across Databases
 
 Persist ADK agent memory to a real database and store embeddings for retrieval.
-Grounded in ADK 2.3 (`adk-python-v2.3/`) and the current Gemini embeddings guide.
-Verify signatures against `adk-python-v2.3/src/google/adk/`, never `adk-python-v1/`.
+Grounded in ADK 2.3 and the current Gemini embeddings guide. Verify signatures
+with Context7 `/google/adk-docs` first, then the local `adk-python-v2.3/` mirror
+when present; never use `adk-python-v1/` for new ADK APIs.
 
 ## When to use
 

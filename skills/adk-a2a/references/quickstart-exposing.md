@@ -138,7 +138,7 @@ a2a_root/
 You can now start the remote agent server, which will host the `a2a_app` within the hello_world agent:
 
 ```bash
-# Ensure current working directory is the ADK source checkout (adk-python-v2.3/)
+# Run from a local ADK source checkout if you are exercising upstream samples.
 # Start the remote agent using uvicorn
 uvicorn contributing.samples.a2a_root.remote_a2a.hello_world.agent:a2a_app --host localhost --port 8001
 ```

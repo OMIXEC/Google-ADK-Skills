@@ -90,8 +90,9 @@ class PgVectorMemoryService(BaseMemoryService):
 ```
 
 Attach on the `Runner` via `memory_service=PgVectorMemoryService(...)`. Confirm
-the exact `search_memory` return type and method signatures against
-`adk-python-v2.3/src/google/adk/memory/base_memory_service.py` before shipping.
+the exact `search_memory` return type and method signatures with Context7 or the
+local mirror path `adk-python-v2.3/src/google/adk/memory/base_memory_service.py`
+before shipping.
 
 ## Managed alternatives
 
