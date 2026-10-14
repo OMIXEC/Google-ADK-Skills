@@ -5,7 +5,7 @@ Use this reference before writing or updating Python ADK code. It reflects the c
 ## Version Baseline
 
 - Latest observed GitHub release: `v2.3.0` (`google-adk`), released 2026-06-18.
-- Package: `google-adk>=2.3.0,<3` for new production Python projects unless a project explicitly pins a tested lower version.
+- Package: `google-adk>=2.9.2,<3` for new production Python projects unless a project explicitly pins a tested lower version.
 - Python requirement: `>=3.10`; official metadata advertises Python 3.10 through 3.14.
 - ADK 2.0 includes breaking changes from 1.x in the agent API, event model, and session schema.
 - ADK 2.0 sessions are readable by ADK 1.28+ with extra fields ignored, but are incompatible with older 1.x versions.

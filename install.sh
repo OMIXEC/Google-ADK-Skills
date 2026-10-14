@@ -634,9 +634,6 @@ install_python_deps() {
     if [[ -f "$INSTALL_DIR/requirements.txt" ]]; then
         pip install -r "$INSTALL_DIR/requirements.txt"
     fi
-    if [[ -f "$INSTALL_DIR/adk-python-v1/requirements.txt" ]]; then
-        pip install -r "$INSTALL_DIR/adk-python-v1/requirements.txt"
-    fi
 
     deactivate
     log_info "Python dependencies installed"
@@ -869,7 +866,7 @@ create_shell_integration() {
 
 # Google-ADK-Skills
 export PATH="$INSTALL_DIR/venv/bin:\$PATH"
-alias adk='python -m adk_bidi'
+alias adk-demo='PYTHONPATH="$INSTALL_DIR/examples" python -m bidi_orchestrator'
 EOF
     log_info "Added to $shell_rc — run 'source $shell_rc' to activate"
 }

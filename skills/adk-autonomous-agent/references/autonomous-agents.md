@@ -109,8 +109,8 @@ Base autonomous agent with reasoning capabilities.
 
 **Generated Code:**
 ```python
-from adk_bidi import AutonomousAgent
-from adk_bidi.memory.persistent_store import InMemoryPersistentStore
+from bidi_orchestrator import AutonomousAgent
+from bidi_orchestrator.memory.persistent_store import InMemoryPersistentStore
 
 # Create autonomous agent
 agent = AutonomousAgent(
@@ -145,7 +145,7 @@ Specialized for information gathering and synthesis.
 
 **Generated Code:**
 ```python
-from adk_bidi.agents.autonomous_agent import ResearchAgent
+from bidi_orchestrator.agents.autonomous_agent import ResearchAgent
 
 # Create research agent
 agent = ResearchAgent(
@@ -174,7 +174,7 @@ Specialized for executing specific tasks with success criteria.
 
 **Generated Code:**
 ```python
-from adk_bidi.agents.autonomous_agent import TaskAgent
+from bidi_orchestrator.agents.autonomous_agent import TaskAgent
 
 # Create task agent with success criteria
 agent = TaskAgent(
@@ -275,8 +275,8 @@ import asyncio
 from google.adk.agents import Agent
 from google.adk.runners import Runner
 from google.adk.tools import FunctionTool
-from adk_bidi import AutonomousAgent
-from adk_bidi.memory.persistent_store import PersistentMemoryStore
+from bidi_orchestrator import AutonomousAgent
+from bidi_orchestrator.memory.persistent_store import PersistentMemoryStore
 
 # Define research tools
 def web_search(query: str) -> str:
@@ -357,8 +357,8 @@ asyncio.run(run_research("Recent advances in multimodal AI"))
 Enable agents to take initiative without explicit prompts.
 
 ```python
-from adk_bidi import AutonomousAgent
-from adk_bidi import StreamingPresets
+from bidi_orchestrator import AutonomousAgent
+from bidi_orchestrator import StreamingPresets
 
 # Create proactive agent
 agent = AutonomousAgent(
@@ -380,8 +380,8 @@ run_config = StreamingPresets.autonomous_proactive()
 Combine autonomous agents with supervisors.
 
 ```python
-from adk_bidi import AutonomousAgent, MultiAgentSupervisor, SharedMemory
-from adk_bidi.agents.autonomous_agent import ResearchAgent, TaskAgent
+from bidi_orchestrator import AutonomousAgent, MultiAgentSupervisor, SharedMemory
+from bidi_orchestrator.agents.autonomous_agent import ResearchAgent, TaskAgent
 
 # Create autonomous specialists
 researcher = ResearchAgent(
@@ -421,7 +421,7 @@ team = MultiAgentSupervisor(
 Track and manage reasoning phases.
 
 ```python
-from adk_bidi.agents.autonomous_agent import ReasoningPhase
+from bidi_orchestrator.agents.autonomous_agent import ReasoningPhase
 
 # Check current phase
 print(f"Current phase: {agent.current_phase}")  # ReasoningPhase.OBSERVE

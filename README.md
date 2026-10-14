@@ -6,12 +6,12 @@ Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-
 
 ## ADK Python 2.x Baseline
 
-- Current source target: `google/adk-python` 2.x, latest observed release `v2.3.0`.
-- Runtime dependency baseline for generated Python projects: `google-adk>=2.3.0,<3`.
-- Python requirement: 3.10+; use `uv` in repos that already standardize on `uv`.
-- New Python workflow guidance should prefer ADK 2.x `Agent` plus `Workflow` graph/dynamic orchestration for complex flows. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic template workflows, but Python 2.x docs supersede them with graph/dynamic workflows for new complex systems.
-- Read [`docs/python-adk-2.md`](docs/python-adk-2.md) before changing ADK examples, runtime helpers, model IDs, MCP/A2A integrations, or migration guidance.
-- **Source-backed updates:** Context7 `/google/adk-docs` plus official ADK docs/API reference are canonical. A local `adk-python-v2.3/` checkout may be kept for grep/reference, but it is gitignored and not packaged. Copy only relevant upstream `.agents/skills` guidance into this repo's `skills/`, `agents/`, `commands/`, and docs. `adk-python-v1/` is legacy helper tooling only. See [`MIGRATION.md`](MIGRATION.md).
+- Target: `google-adk>=2.9.2,<3`, validated through **2.12.0** (2026-10-13).
+- The **1.x line is still shipping in parallel** (latest 1.39.1); 2.x is not yet a replacement for every 1.x user.
+- Python: **3.10** for 2.9.2–2.11.0, **3.11** for 2.12.0. Supported through 3.15. Use `uv` in repos that already standardize on it.
+- New workflow guidance should prefer the 2.x `Agent` plus `Workflow` graph/dynamic orchestration for complex flows. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic template workflows.
+- Read [`docs/python-adk-2.md`](docs/python-adk-2.md) before changing ADK examples, model IDs, MCP/A2A integrations, or migration guidance.
+- **The SDK is never vendored.** `google-adk` installs from PyPI; always import from the installed `google.adk.*`. Context7 `/google/adk-docs` and the installed package are canonical. See [`MIGRATION.md`](MIGRATION.md).
 
 ## Installation
 
@@ -245,11 +245,9 @@ Google-ADK-Skills/
 │   ├── adk-build-agent.md
 │   ├── adk-install-skills.md
 │   └── adk-validate-skills.md
-├── adk-runtime/
-│   └── agents/              ← ADK Python runtime configs (.agent.yaml, loaded by ADK runner)
-│       ├── root_agent.yaml
-│       ├── architect.agent.yaml
-│       └── ... (11 configs)
+├── examples/
+│   └── bidi_orchestrator/   ← runnable bidirectional/voice orchestrator demo
+│       └── root_agent.yaml  ← its orchestrator config
 ├── bin/
 │   └── cli.js               ← npx shim → shells out to install.sh
 ├── tests/                   ← pytest skill validation suite
@@ -264,10 +262,10 @@ Google-ADK-Skills/
 └── requirements.txt
 ```
 
-**`agents/` vs `adk-runtime/agents/`**
+**`agents/` vs `examples/`**
 
 - `agents/*.md` — Claude Code subagent definitions. Each auto-loads the matching ADK skill via the Skill tool before executing. These run inside Claude Code.
-- `adk-runtime/agents/*.agent.yaml` — ADK Python runtime agent configs consumed by the ADK runner (`google-adk`). These configure Gemini-based agents in the ADK execution environment.
+- `examples/bidi_orchestrator/` — a runnable bidirectional/voice orchestrator demo with its own `root_agent.yaml`. Not a skill and not a subagent.
 
 ---
 
@@ -300,11 +298,10 @@ GOOGLE_CLOUD_PROJECT=your_project_id
 ## Requirements
 
 ```
-google-adk>=2.3.0,<3
-litellm>=1.0.0
+google-adk>=2.9.2,<3
 langgraph>=0.2.0
 pinecone>=5.0.0
-vertexai>=1.0.0
+google-cloud-aiplatform>=2.2
 fastapi>=0.100.0
 uvicorn>=0.20.0
 ```

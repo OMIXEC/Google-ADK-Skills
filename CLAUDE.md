@@ -2,26 +2,24 @@
 
 This repo provides 28 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
 
-## ADK 2.3 Source Policy
+## ADK 2.x Source Policy
 
-Current ADK guidance is source-backed, not SDK-vendored:
+Current ADK guidance is source-backed. **The SDK is never vendored into this repo:**
 
-- **Canonical docs:** use Context7 `/google/adk-docs` and the official ADK docs/API reference first.
-- **Local mirror:** `adk-python-v2.3/` may exist as an ignored local checkout of `google/adk-python` for grep/reference. Do not commit it, package it, or path-import from it.
-- **Packaged helpers:** `adk-python-v1/` contains legacy repo helper tooling (`tools/`, `callbacks/`) + its `requirements.txt`. It exists only for installer/helper compatibility and migration diffing. Never copy patterns from it into new ADK code.
+- **Canonical sources:** Context7 `/google/adk-docs`, the installed `google.adk` package, and `google/adk-python` at the matching tag.
+- **No local SDK folder.** There is no vendored SDK checkout, no local helper tree, and no committed source mirror. Never path-import the SDK.
+- **Version:** `google-adk>=2.9.2,<3` from PyPI (root `requirements.txt`), validated through 2.12.0. Python **3.10** for 2.9.2–2.11.0, **3.11** for 2.12.0.
 
-The active runtime dependency is `google-adk>=2.3.0,<3` (installed from PyPI via root `requirements.txt`), not a path import of a local SDK folder. Python **3.10+** required.
+### 2.x Core Concepts (assume available)
 
-### v2.3 Core Concepts (assume available)
-
-Verified through Context7 `/google/adk-docs` and the local ADK 2.3 mirror when present:
+Verified against Context7 `/google/adk-docs` and the installed `google.adk` package:
 
 - **Graph Workflow Runtime** — `Workflow` plus `node()` define graph/dynamic orchestration. Use route maps and `Event(route=...)` for conditional routing. There is **no** `@edge` decorator in current docs.
 - **Dynamic nodes** — `ctx.run_node(...)` schedules nodes at runtime; orchestrator nodes that call interactive nodes must use `rerun_on_resume=True`.
 - **MCP tools** — current Python examples use `McpToolset` with `StdioConnectionParams` or `StreamableHTTPConnectionParams`. Treat `MCPToolset` as stale/deprecated spelling in this repo's generated examples.
 - **Human-in-the-loop (HITL)** — `RequestInput` pauses a workflow for user input; do not use the old **`ctx.resume_data`** spelling.
 - **Task-mode coordination** — MAS coordination uses `mode='task'` plus task request/result concepts. Do not invent a standalone `Task` class.
-- **Sessions/memory are v2.3-native** — `google.adk.sessions.*` and `google.adk.memory.*`. v1-persisted session/state is **not** schema-compatible with v2.3; do not reuse old persisted state.
+- **Sessions/memory are 2.x-native** — `google.adk.sessions.*` and `google.adk.memory.*`. v1-persisted session/state is **not** schema-compatible with 2.x; do not reuse old persisted state.
 
 ## Skill Routing
 
@@ -46,7 +44,7 @@ When a user request matches a trigger below, invoke the corresponding skill.
 | `adk-a2a` | "A2A", "agent-to-agent", "cross-language agent", "AgentCard", "RemoteA2AAgent" |
 | `adk-memory` | "memory", "SessionService", "session state", "persistence" |
 | `adk-embeddings` | "embedding", "gemini-embedding-2", "vector store", "pgvector", "Cloud SQL", "Postgres session", "Firestore memory", "DatabaseSessionService", "vector search", "store embeddings in db" |
-| `adk-migration` | "migrate 1.x to 2.3", "upgrade ADK", "breaking changes", "deprecated API", "GraphAgent removed", "McpToolset error", "MCPToolset error", "ctx.resume_data", "port to 2.3" |
+| `adk-migration` | "migrate 1.x to 2.x", "upgrade ADK", "breaking changes", "deprecated API", "GraphAgent removed", "McpToolset error", "MCPToolset error", "ctx.resume_data", "port to 2.x" |
 | `adk-deployment` | "deploy", "Cloud Run", "Agent Engine", "GKE", "Terraform", "deployment manifest" |
 | `adk-backend` | "backend", "server", "API for agent" |
 | `adk-bidi-live` | "bidi", "live", "streaming audio", "voice agent", "real-time" |
@@ -64,9 +62,9 @@ Framework skills (`adk-litellm`, `adk-langgraph`) load their docs **context7-fir
 
 `agents/` holds Claude Code subagent `.md` files (`adk-architect`, `adk-agent-builder`, `adk-debugger`, `adk-git-ops`, `adk-style-checker`, `adk-workflow-designer`, `adk-workflow-builder`, `adk-setup`). Each subagent **adaptively loads the matching skill** via the Skill tool before executing, so its routing block mirrors the table above.
 
-## ADK Runtime Agents
+## Examples
 
-`adk-runtime/agents/` holds the ADK Python runtime configs — `.agent.yaml` files (plus `root_agent.yaml`) loaded by the ADK runtime. Python tools and callbacks supporting these are in `adk-python-v1/` (legacy helper location, kept as reference). These are **not** Claude Code subagents.
+`examples/bidi_orchestrator/` is a runnable bidirectional/voice orchestrator demo, including its own `root_agent.yaml` orchestrator config. It is **not** a skill and **not** a Claude Code subagent. The former `adk-runtime/` `.agent.yaml` format was retired — nothing loaded it.
 
 ## Installation
 

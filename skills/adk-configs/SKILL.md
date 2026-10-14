@@ -78,7 +78,7 @@ name = "my-adk-app"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-    "google-adk>=2.3.0,<3",
+    "google-adk>=2.9.2,<3",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
 ]

@@ -1,7 +1,7 @@
-# Model Catalog — Current Gemini 3.x (ADK 2.3)
+# Model Catalog — Current Gemini 3.x (ADK 2.x)
 
 Authoritative model IDs for new ADK agents. Reference signatures against
-Context7 `/google/adk-docs` and the local `adk-python-v2.3/` mirror when present.
+Context7 `/google/adk-docs` and the installed `google.adk` package.
 Cross-check live availability at
 <https://ai.google.dev/gemini-api/docs/models> and
 <https://ai.google.dev/gemini-api/docs/deprecations>.
@@ -42,4 +42,4 @@ explicitly required.
 ## SDK note
 
 Use the `google-genai` SDK v2.0.0+ for the Interactions API (breaking changes
-from earlier versions). ADK 2.3 depends on `google-adk>=2.3.0,<3`.
+from earlier versions). ADK 2.3 depends on `google-adk>=2.9.2,<3`.

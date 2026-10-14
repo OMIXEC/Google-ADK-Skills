@@ -11,9 +11,9 @@ description: >-
 
 # adk-migration — ADK 1.x → 2.3
 
-Port an ADK 1.x codebase to 2.3 (`google-adk>=2.3.0,<3`). Every mapping below is
-verified through Context7 `/google/adk-docs` and the local `adk-python-v2.3/`
-mirror when present. Never use `adk-python-v1/` for new ADK APIs.
+Port an ADK 1.x codebase to 2.x (`google-adk>=2.9.2,<3`). Every mapping below is
+verified through Context7 `/google/adk-docs` and the installed `google.adk`
+package.
 
 ## When to use
 
@@ -41,7 +41,7 @@ Scan the codebase (`grep`) for each left-hand pattern and apply the fix:
 | `gemini-2.0-*`, `gemini-1.5-*`, `gemini-2.5-*`, `gemini-pro` | `gemini-3.5-flash` / `gemini-3.1-flash-lite` / `gemini-3.1-pro-preview` |
 | `gemini-live-2.5-flash-native-audio`, `gemini-2.0-flash-live-001` | `gemini-3.1-flash-live-preview` |
 | `text-embedding-004`, `embedding-001` | `gemini-embedding-2` |
-| `google-adk` 1.x pin, Python 3.11-only | `google-adk>=2.3.0,<3`, Python **3.10+**, `google-genai` v2.0.0+ |
+| `google-adk` 1.x pin, Python 3.11-only | `google-adk>=2.9.2,<3`, Python **3.10+**, `google-genai` v2.0.0+ |
 
 Full old→new code samples: `references/api-changes.md`. Model/thinking/embedding
 detail: `references/models-config.md`.
@@ -59,14 +59,13 @@ detail: `references/models-config.md`.
 
 - **Session/state schema is not compatible** between 1.x and 2.3. Do not reuse
   1.x-persisted sessions; start fresh or migrate with tools under
-  `google.adk.sessions.migration` (local mirror path:
-  `adk-python-v2.3/src/google/adk/sessions/migration/`).
+  `google.adk.sessions.migration`.
 - **Embedding spaces are incompatible** across embedding models — moving to
   `gemini-embedding-2` requires **re-embedding all stored vectors**.
 
 ## Migration procedure
 
-1. Pin `google-adk>=2.3.0,<3` and `google-genai>=2.0.0`; set Python 3.10+.
+1. Pin `google-adk>=2.9.2,<3` and `google-genai>=2.0.0`; set Python 3.10+.
 2. Run the checklist grep-and-replace (start with imports, then call sites).
 3. Convert any `GraphAgent`/`add_edge` graphs to `Workflow`/`Edge`/`JoinNode`.
 4. Split any `LlmAgent` that has both `output_schema` and tools.

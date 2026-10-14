@@ -1,12 +1,16 @@
-# Claude-ADK-Skills Requirements
-# Production dependencies for Google ADK agent development
+# Google-ADK-Skills Requirements
+# Production dependencies for Google ADK agent development.
+#
+# Version policy: floor `google-adk` 2.9.2, validated through 2.12.0.
+# Python floor is 3.10 for 2.9.2-2.11.0 and 3.11 for 2.12.0.
 
 # Core Google ADK 2.x
-google-adk>=2.3.0,<3
+google-adk>=2.9.2,<3
 
-# LLM & AI
-vertexai>=1.0.0
-google-generativeai>=0.8.0
+# Google Cloud / Vertex AI
+# ADK 2.12 migrated to the `agentplatform` surface; google-cloud-aiplatform
+# provides the `vertexai` module used by the RAG references.
+google-cloud-aiplatform>=2.2
 
 # Multi-Agent Orchestration
 langgraph>=0.2.0

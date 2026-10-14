@@ -61,21 +61,21 @@ class ModelRoute:
 MODEL_ROUTES: dict[Complexity, ModelRoute] = {
     Complexity.LOW: ModelRoute(
         complexity=Complexity.LOW,
-        default_model="gemini-2.5-flash-lite",
-        fallback_model="gemini-2.5-flash",
+        default_model="gemini-3.5-flash-lite",
+        fallback_model="gemini-3.5-flash",
         max_tokens=1024,
         temperature=0.1,
     ),
     Complexity.MEDIUM: ModelRoute(
         complexity=Complexity.MEDIUM,
-        default_model="gemini-2.5-flash",
-        fallback_model="gemini-2.5-pro",
+        default_model="gemini-3.5-flash",
+        fallback_model="gemini-3.1-pro-preview",
         max_tokens=4096,
         temperature=0.3,
     ),
     Complexity.HIGH: ModelRoute(
         complexity=Complexity.HIGH,
-        default_model="gemini-2.5-pro",
+        default_model="gemini-3.1-pro-preview",
         fallback_model="gemini-3.5-flash",
         max_tokens=8192,
         temperature=0.5,
@@ -111,7 +111,7 @@ agent = Agent(
 ```python
 classifier = Agent(
     name="complexity_classifier",
-    model="gemini-2.5-flash-lite",  # Cheap model for classification
+    model="gemini-3.5-flash-lite",  # Cheap model for classification
     instruction="""Classify the following task into LOW, MEDIUM, or HIGH complexity.
     LOW: simple classification, greeting, single tool call, yes/no
     MEDIUM: Q&A, summarization, data extraction, 2-4 tool calls
@@ -390,16 +390,16 @@ validate_model("gemini-2.0-flash")     # Raises ValueError
 
 | Task Type | Primary Model | Fallback | Why |
 |-----------|--------------|----------|-----|
-| Greeting / simple Q&A | `gemini-2.5-flash-lite` | `gemini-2.5-flash` | Cheapest, fastest |
-| Classification / routing | `gemini-2.5-flash-lite` | `gemini-2.5-flash` | Low complexity |
-| Summarization | `gemini-2.5-flash` | `gemini-2.5-pro` | Medium complexity |
-| Q&A with context | `gemini-2.5-flash` | `gemini-2.5-pro` | Medium complexity |
-| Data extraction | `gemini-2.5-flash` | `gemini-2.5-pro` | Medium complexity |
-| Multi-step reasoning | `gemini-2.5-pro` | `gemini-3.5-flash` | High complexity |
-| Code generation (simple) | `gemini-2.5-flash` | `gemini-2.5-pro` | Medium complexity |
-| Code generation (complex) | `gemini-2.5-pro` | `gemini-3.5-flash` | High complexity |
-| Planning / orchestration | `gemini-2.5-pro` | `gemini-3.1-pro-preview` | Highest reasoning |
-| Real-time voice | `gemini-3.1-flash-live-preview` | `gemini-2.5-flash-native-audio-preview-12-2025` | Live audio |
+| Greeting / simple Q&A | `gemini-3.5-flash-lite` | `gemini-3.5-flash` | Cheapest, fastest |
+| Classification / routing | `gemini-3.5-flash-lite` | `gemini-3.5-flash` | Low complexity |
+| Summarization | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Q&A with context | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Data extraction | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Multi-step reasoning | `gemini-3.1-pro-preview` | `gemini-3.5-flash` | High complexity |
+| Code generation (simple) | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Code generation (complex) | `gemini-3.1-pro-preview` | `gemini-3.5-flash` | High complexity |
+| Planning / orchestration | `gemini-3.1-pro-preview` | `gemini-3.5-flash` | Highest reasoning |
+| Real-time voice | `gemini-3.1-flash-live-preview` | `gemini-live-2.5-flash-native-audio` | Live audio. Google now marks 3.1 Flash Live legacy; Gemini 3.8 Live is the successor. |
 | TTS / speech generation | `gemini-3.1-flash-tts-preview` | `gemini-2.5-flash-preview-tts` | TTS |
 | Image generation | `gemini-2.5-flash-image` | `gemini-3-pro-image-preview` | Native multimodal |
 | Video generation | `veo-3.1-generate-preview` | `veo-3.1-lite-generate-preview` | Video |
@@ -419,14 +419,14 @@ from google.adk import Agent
 # SIMPLE agent — flash-lite for speed/cost
 greeter = Agent(
     name="greeter",
-    model="gemini-2.5-flash-lite",
+    model="gemini-3.5-flash-lite",
     instruction="Greet users warmly.",
 )
 
 # STANDARD agent — flash for general tasks
 support = Agent(
     name="support_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3.5-flash",
     instruction="Handle customer inquiries with tools.",
     tools=[lookup_order, check_status],
 )
@@ -434,7 +434,7 @@ support = Agent(
 # COMPLEX agent — pro for reasoning/planning
 planner = Agent(
     name="planner",
-    model="gemini-2.5-pro",
+    model="gemini-3.1-pro-preview",
     instruction="Plan multi-step tasks and delegate to sub-agents.",
     sub_agents=[researcher, coder, reviewer],
 )

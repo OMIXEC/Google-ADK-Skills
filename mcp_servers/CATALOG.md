@@ -2,10 +2,10 @@
 
 Complete catalog of MCP servers optimized for Google ADK agent integration. Includes configuration examples, environment variables, and best practices.
 
-> **ADK 2.3 native integration — no custom wrapper code.**
+> **ADK 2.x native integration — no custom wrapper code.**
 > - **MCP tools:** `McpToolset` with `StdioConnectionParams` / `SseConnectionParams` from `google.adk.tools.mcp_tool` (see the `adk-mcp` skill).
 > - **Agent-to-agent:** `RemoteA2aAgent` (`google.adk.agents.remote_a2a_agent`) to consume a remote agent, and `to_a2a` (`google.adk.a2a.utils`) to expose one (see the `adk-a2a` skill; A2A is experimental — verify signatures).
-> Reference current signatures against `adk-python-v2.3/src/google/adk/`, never against `adk-python-v1/`.
+> Reference current signatures against the installed `google.adk` package. Never path-import a vendored SDK checkout.
 
 ## Quick Reference
 

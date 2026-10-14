@@ -48,8 +48,10 @@ eval_suites:
 
       - id: "edge_max_length"
         description: "Maximum input length handled"
+        # The harness expands query_repeat into a 4000-char payload. A Python
+        # `"A" * 4000` expression would make this file invalid YAML.
         input:
-          query: "A" * 4000
+          query_repeat: { char: "A", times: 4000 }
         assertions:
           - field: "latency_ms"
             operator: "lt"

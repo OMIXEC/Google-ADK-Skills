@@ -359,14 +359,14 @@ class TestCrossSkillConsistency:
                 print(f"  [INFO] {name}: no references/ or scripts/ links in body")
 
 
-# ── Migration guards: ADK v1 → v2.3 ───────────────────────────────────────────
+# ── Migration guards: ADK 1.x → 2.x ────────────────────────────────────────────
 
 
 class TestV23MigrationGuards:
-    """Prevent regressions to ADK v1 paths and deprecated v2.3 API names.
+    """Prevent regressions to ADK 1.x paths and retired 2.x API names.
 
-    ADK docs/API reference are canonical. `adk-python-v2.3/` may exist as a
-    gitignored local source mirror; `adk-python-v1/` is legacy helper tooling.
+    The upstream SDK is never vendored: `google-adk` is a PyPI dependency, and
+    any local source mirror is a gitignored checkout only.
     """
 
     # Deprecated tokens that must never appear in skill content.
@@ -375,7 +375,7 @@ class TestV23MigrationGuards:
     DEPRECATION_DOC_SKILLS = {"adk-migration"}
 
     def test_no_deprecated_v2_names_in_skills(self, skill_dirs):
-        """Skills must use v2.3 names (ctx.resume_inputs, Edge class), never v1-era guesses."""
+        """Skills must use current 2.x names (ctx.resume_inputs, Edge class), never v1-era guesses."""
         offenders = []
         for d in skill_dirs:
             if d.name in self.DEPRECATION_DOC_SKILLS:
@@ -396,7 +396,16 @@ class TestV23MigrationGuards:
         blocklist docs that merely *name* deprecated models don't false-positive.
         """
         import re
-        blocked = r"gemini-2\.0-[\w.-]+|gemini-1\.5-[\w.-]+|gemini-1\.0-[\w.-]+|gemini-3-pro-preview"
+        # 2.0/1.x are retired; 2.5 text models retire 2026-10-20; 3-pro-preview is stale.
+        blocked = (
+            r"gemini-2\.0-[\w.-]+"
+            r"|gemini-1\.5-[\w.-]+"
+            r"|gemini-1\.0-[\w.-]+"
+            r"|gemini-3-pro-preview"
+            r"|gemini-2\.5-pro"
+            r"|gemini-2\.5-flash-lite"
+            r"|gemini-2\.5-flash"
+        )
         pattern = re.compile(
             r"""(?:model\s*[:=]\s*|\.model\(\s*)['"](?:""" + blocked + r")['\"]"
         )
@@ -413,13 +422,12 @@ class TestV23MigrationGuards:
             + "\n".join(offenders)
         )
 
-    def test_no_bare_adk_python_path_in_config(self):
-        """Config/docs must reference adk-python-v1/ or adk-python-v2.3/, never bare adk-python/.
+    def test_no_local_adk_checkout_path_in_config(self):
+        """Config/docs must never path-reference a local vendored ADK checkout.
 
-        The literal 'adk-python/' (slash right after 'python') only matches the deleted
-        pre-split folder; 'adk-python-v1/' / 'adk-python-v2.3/' do not match.
+        The SDK is a PyPI dependency, not a repo folder, so any `adk-python`
+        occurrence in config or docs is a regression.
         """
-        # MIGRATION.md and the migrate-check command intentionally name the bare path in prose.
         targets = [
             REPO_ROOT / "CLAUDE.md",
             REPO_ROOT / "README.md",
@@ -427,13 +435,21 @@ class TestV23MigrationGuards:
             REPO_ROOT / "install.sh",
             REPO_ROOT / ".github" / "workflows" / "adk-skills-ci.yml",
         ]
+        import re
+
+        # A path reference like `adk-python/` or `adk-python-v1/`. The GitHub
+        # repository name `google/adk-python` has no trailing slash and is allowed.
+        vendored_path = re.compile(r"adk-python(?:-v?[\d][\d.]*)?/")
         offenders = []
         for t in targets:
-            if t.exists() and "adk-python/" in t.read_text(errors="ignore"):
-                offenders.append(str(t.relative_to(REPO_ROOT)))
+            if not t.exists():
+                continue
+            for i, line in enumerate(t.read_text(errors="ignore").splitlines(), 1):
+                if vendored_path.search(line):
+                    offenders.append(f"{t.relative_to(REPO_ROOT)}:{i}: {line.strip()[:100]}")
         assert not offenders, (
-            "Bare 'adk-python/' path (should be adk-python-v1/ or adk-python-v2.3/) in:\n"
-            + "\n".join(offenders)
+            "Local vendored ADK checkout path referenced in config/docs "
+            "(use the PyPI dependency `google-adk` instead):\n" + "\n".join(offenders)
         )
 
     def test_package_excludes_local_adk_source_mirror(self):

@@ -45,8 +45,8 @@ agent = LlmAgent(
 ```
 
 If both the planner and `generate_content_config` set thinking, the **planner's
-config wins**. Verify in Context7 or the local mirror path
-`adk-python-v2.3/src/google/adk/agents/llm_agent.py` when needed. A
+config wins**. Verify against `google.adk.agents.llm_agent` in the installed
+package when needed. A
 `ThinkingConfig` on a model that doesn't support thinking raises an error.
 
 ## Migration & best practices (all Gemini 3.x)

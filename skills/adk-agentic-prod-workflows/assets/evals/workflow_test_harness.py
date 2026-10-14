@@ -119,6 +119,24 @@ async def run_workflow(query: str, params: dict | None = None) -> dict:
 
 # ── Main harness ────────────────────────────────────────
 
+def resolve_query(input_cfg: dict) -> str:
+    """Build the query for an eval case.
+
+    Accepts either a literal ``query`` string or a ``query_repeat`` directive
+    (``{char: "A", times: 4000}``), so large payloads stay readable in YAML
+    without embedding a Python expression.
+    """
+    repeat = input_cfg.get("query_repeat")
+    if isinstance(repeat, dict):
+        char = str(repeat.get("char", ""))
+        try:
+            times = int(repeat.get("times", 0))
+        except (TypeError, ValueError):
+            times = 0
+        return char * max(times, 0)
+    return input_cfg.get("query", "")
+
+
 async def run_eval_suite(config: dict, verbose: bool = False) -> list[SuiteResult]:
     """Run all eval suites from config."""
     suite_results = []
@@ -134,9 +152,10 @@ async def run_eval_suite(config: dict, verbose: bool = False) -> list[SuiteResul
 
             start = time.monotonic()
             try:
+                input_cfg = case_cfg.get("input", {})
                 wf_result = await run_workflow(
-                    case_cfg.get("input", {}).get("query", ""),
-                    case_cfg.get("input", {}).get("params"),
+                    resolve_query(input_cfg),
+                    input_cfg.get("params"),
                 )
                 elapsed = (time.monotonic() - start) * 1000
 

@@ -15,9 +15,8 @@ description: >-
 
 Route each agent to the cheapest capable model, set the right thinking/effort
 level, and fall back safely when a model is unavailable. Grounded in the current
-Gemini 3.x guidance and ADK 2.3. Verify signatures with Context7
-`/google/adk-docs` first, then the local `adk-python-v2.3/` mirror when present;
-never use `adk-python-v1/` for new ADK APIs.
+Gemini 3.x guidance and ADK 2.x (`google-adk>=2.9.2,<3`). Verify signatures
+against Context7 `/google/adk-docs` and the installed `google.adk` package.
 
 ## When to use
 

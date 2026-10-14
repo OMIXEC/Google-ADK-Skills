@@ -762,7 +762,7 @@ async def search_web(query: str) -> str:
         connection_params=StdioConnectionParams(
             server_params=StdioServerParameters(
                 command='npx',
-                args=["-y", "@anthropic/mcp-server-brave-search"],
+                args=["-y", "@brave/brave-search-mcp-server"],
                 env={"BRAVE_API_KEY": os.getenv("BRAVE_API_KEY")},
             ),
         ),
@@ -849,7 +849,7 @@ langgraph-adk-workflow/
 # requirements.txt
 langgraph>=0.2.0
 langchain-core>=0.3.0
-google-adk>=2.3.0,<3
+google-adk>=2.9.2,<3
 pinecone>=5.0.0
 ```
 

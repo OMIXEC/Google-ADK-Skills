@@ -1,13 +1,13 @@
 # Session Backends — Cloud SQL, Postgres, Firestore, SQLite, Vertex
 
 Choose a `SessionService` for durable conversation/state. All attach to the
-`Runner` via `session_service=`. Verify with Context7 or the local mirror paths
-`adk-python-v2.3/src/google/adk/sessions` and `.../integrations/firestore`.
+`Runner` via `session_service=`. Verify against `google.adk.sessions` and
+`google.adk.integrations.firestore` in the installed package.
 
 ## Install extras
 
 ```bash
-pip install "google-adk>=2.3.0,<3"
+pip install "google-adk>=2.9.2,<3"
 # Database (Postgres/Cloud SQL/MySQL) — SQLAlchemy + an async driver:
 pip install "sqlalchemy>=2,<3" asyncpg           # or pg8000 / aiomysql
 # Cloud SQL (managed connector):

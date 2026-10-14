@@ -1,6 +1,6 @@
 # Upcoming Enhancements — ADK Skills Curriculum Alignment
 
-> **SDK migration: complete.** Bundle targets ADK 2.3.0 GA. `adk-python-v2.3/` is the API source-of-truth; `adk-python-v1/` is reference-only. See [`MIGRATION.md`](MIGRATION.md). The enhancements below are curriculum/coverage gaps, independent of the v1→v2.3 migration.
+> **SDK + restructure: complete.** Bundle targets ADK 2.9.2 → 2.12.0 (`google-adk>=2.9.2,<3`). The SDK is never vendored. See [`MIGRATION.md`](MIGRATION.md). The enhancements below are curriculum/coverage gaps, independent of the version and layout changes.
 
 ## Backend: thinking/effort + model-routing adoption (future plan)
 

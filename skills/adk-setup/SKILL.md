@@ -47,7 +47,7 @@ Run these commands from the project root:
    For a new ADK app without a checked-in `pyproject.toml`, start from the current ADK 2.x package:
 
    ```bash
-   uv add "google-adk>=2.3.0,<3"
+   uv add "google-adk>=2.9.2,<3"
    ```
 
 5. **Install development tools:**

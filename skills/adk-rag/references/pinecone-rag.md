@@ -825,7 +825,7 @@ pinecone-rag-agent/
 
 ```
 # requirements.txt
-google-adk>=2.3.0,<3
+google-adk>=2.9.2,<3
 pinecone>=5.0.0
 langgraph>=0.2.0
 langchain-core>=0.3.0

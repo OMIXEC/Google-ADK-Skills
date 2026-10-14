@@ -1,8 +1,8 @@
-# API Changes — ADK 1.x → 2.3 (old → new)
+# API Changes — ADK 1.x → 2.x (old → new)
 
-Verified through Context7 `/google/adk-docs` and the local `adk-python-v2.3/`
-mirror when present. Each block shows the removed/deprecated 1.x form and the
-2.3 replacement.
+Verified against Context7 `/google/adk-docs` and the installed `google.adk`
+package. Each block shows the removed/deprecated 1.x form and the 2.x
+replacement.
 
 ## Graph workflows
 

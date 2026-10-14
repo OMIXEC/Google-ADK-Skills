@@ -1,8 +1,8 @@
-module github.com/${YOUR_GITHUB_USERNAME}/template-sequential
+module github.com/example/template-sequential
 
 go 1.23
 
 require (
-	google.golang.org/adk v0.0.0
-	google.golang.org/genai v0.0.0
+	google.golang.org/adk v1.6.1
+	google.golang.org/genai v1.70.0
 )

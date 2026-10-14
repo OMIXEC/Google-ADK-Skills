@@ -16,9 +16,7 @@
     "agents",
     "commands",
     ".agents",
-    "adk-runtime",
-    "adk_bidi",
-    "adk-python-v1",
+    "examples",
     "requirements.txt",
     "tests"
   ],

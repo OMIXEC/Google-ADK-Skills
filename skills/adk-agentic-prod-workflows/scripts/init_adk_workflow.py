@@ -1624,7 +1624,7 @@ async def output_safety_guardrail(callback_context):
 
 def _write_shared_files(project_dir: Path, name: str, wf_type: str, lang: str) -> None:
     reqs = project_dir / "requirements.txt"
-    reqs.write_text("google-adk>=2.3.0,<3\nstructlog>=24.0.0\npydantic>=2.0.0\n")
+    reqs.write_text("google-adk>=2.9.2,<3\nstructlog>=24.0.0\npydantic>=2.0.0\n")
 
     gitignore = project_dir / ".gitignore"
     gitignore.write_text("""__pycache__/
