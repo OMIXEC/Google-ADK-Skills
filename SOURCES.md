@@ -44,6 +44,7 @@ Python number.
 |---|---|---|
 | Model IDs, capabilities, context/output limits | [Gemini API models](https://ai.google.dev/gemini-api/docs/models) | 2026-10-19 (page updated 2026-10-13) |
 | Shutdown dates, replacements, redirects | [Gemini API deprecations](https://ai.google.dev/gemini-api/docs/deprecations) | 2026-10-19 (page updated 2026-10-12) |
+| Gemini 3.8 Live contract (limits, capabilities, migration) | [Gemini 3.8 Live model page](https://ai.google.dev/gemini-api/docs/models/gemini-3.8-live) | 2026-10-19 (page updated 2026-09-15) |
 | Machine-readable snapshot | `skills/adk-agent-architecture/references/model-cache.json` | regenerated 2026-10-19 by `fetch_models.py` |
 
 The catalog is refreshed, not remembered: `fetch_models.py` parses the model

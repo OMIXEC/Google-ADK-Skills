@@ -36,6 +36,14 @@ Model-catalog refresh. Content-only; no skill was renamed or removed.
 - `adk-bidi-live` and every `references/adk-2x-baseline.md` now name
   `gemini-3.8-live` instead of the retiring
   `gemini-3.1-flash-live-preview` (shutdown 2026-11-17).
+- `adk-bidi-live` gains `references/gemini-3.8-live.md`: 131k input / 65k
+  output, audio-only response with transcription, no `thinking_level` or
+  `thinking_config` (use `gemini-3.8-live-extended-thinking` instead),
+  asynchronous function calling by default, `turn_complete=true` interrupts
+  generation, proactive audio permanently on, affective dialogue removed, and
+  all video frames sent by default.
+- `adk-model-routing` states the same Live constraint instead of implying a
+  thinking flag works in streaming.
 - Example code across all skills pins `gemini-3.8-flash` instead of
   `gemini-3.5-flash`.
 - `references/model-cache.json` regenerated: 54 models, 31 active, 15

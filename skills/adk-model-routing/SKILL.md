@@ -68,8 +68,8 @@ fails CI when this table drifts.
 | RAG, multi-step tools, content, most agents | `gemini-3.8-flash` | `medium` (default) |
 | Hard reasoning, architecture, difficult code | `gemini-3.1-pro-preview` | `high` |
 | Frontier tail, >65k output, hardest tasks | `gemini-4-argon` | `high` |
-| Live voice | `gemini-3.8-live` | n/a (streaming) |
-| Live voice that must reason | `gemini-3.8-live-extended-thinking` | n/a |
+| Live voice | `gemini-3.8-live` | omit `thinking_config` (rejected) |
+| Live voice that must reason | `gemini-3.8-live-extended-thinking` | model-level, not a thinking flag |
 
 Start at `gemini-3.8-flash`. Move down only for measured cost or latency, up
 only for measured quality. Argon is not a default: it is paid-only and its
@@ -86,7 +86,7 @@ shared 1M budget counts thinking and output.
 | Gemini 3.8 / 3.6 Flash | `low`, `medium`, `high` | `medium` | `minimal` → 400 |
 | Gemini 3.1 Pro (preview) | `low`, `medium`, `high` | `high` | `minimal` |
 | Gemini 3.5 Flash-Lite | `minimal`, `low`, `medium`, `high` | `low` | — |
-| Gemini 3.8 Live | n/a | — | thinking config on Live |
+| `gemini-3.8-live` | none | — | `thinking_level` / `thinking_config` rejected; use `gemini-3.8-live-extended-thinking` |
 
 Sampling parameters (`temperature`, `top_p`, `top_k`) are ignored by Gemini 3.x
 and 4. Do not send them expecting an effect. `candidate_count` is unsupported.

@@ -22,10 +22,17 @@ retired.
 | `gemini-3.5-flash-lite` | ✓ | ✓ | ✓ | ✓ | `low` |
 | `gemini-3.1-flash-lite` | ✓ | ✓ | ✓ | ✓ | `minimal` |
 | `gemini-3.1-pro-preview` | — | ✓ | ✓ | ✓ | `high` |
-| `gemini-3.8-live` | n/a | n/a | n/a | n/a | streaming |
+| `gemini-3.8-live` | — | — | — | — | omit `thinking_config`; rejected |
 
 Argon rejects `thinking_budget` outright with a 400. The 3.x family accepts it
 for compatibility but the value is not the supported control surface.
+
+## Live models
+
+`gemini-3.8-live` does not accept `thinking_level` or `thinking_config`. Omit
+both. Background reasoning during a live session is a different model:
+`gemini-3.8-live-extended-thinking`. Do not try to emulate it with a thinking
+flag on `gemini-3.8-live`.
 
 ## Setting it in ADK
 
