@@ -20,6 +20,19 @@ marketplace entry. It is deliberately independent of every ADK version.
 
 ---
 
+## [1.0.2] — 2026-10-19
+
+Patch release.
+
+### Fixed
+
+- `install.sh --ref <tag>` now works on the tarball fallback. The URL used
+  `archive/refs/heads/<ref>`, which only resolves branches, so a tag install
+  failed on machines without git. It now uses `archive/<ref>`, verified against
+  `v1.0.1` and `main`.
+
+---
+
 ## [1.0.1] — 2026-10-19
 
 Model-catalog refresh. Content-only; no skill was renamed or removed.
