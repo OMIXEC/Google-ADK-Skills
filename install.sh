@@ -530,7 +530,9 @@ check_dependencies() {
 # Tries a public HTTPS git clone first; falls back to a tarball download so the
 # installer works on machines without git (e.g. `curl | bash`). No PAT/SSH.
 REPO_HTTPS="https://github.com/${REPO_OWNER}/${REPO_NAME}.git"
-REPO_TARBALL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${GIT_REF}.tar.gz"
+# `/archive/${GIT_REF}.tar.gz` resolves both branch names and tags; the
+# refs/heads/ form breaks the documented `--ref <branch-or-tag>` contract.
+REPO_TARBALL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/${GIT_REF}.tar.gz"
 
 copy_local_checkout() {
     log_info "Installing from local checkout: $SOURCE_DIR"
