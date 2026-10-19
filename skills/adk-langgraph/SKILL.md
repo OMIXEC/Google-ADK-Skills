@@ -31,7 +31,7 @@ context7 is optional runtime enrichment; the bundled reference is always suffici
 - You want LangGraph's checkpointing alongside ADK tools as graph nodes
 
 For simple linear/parallel/loop pipelines, prefer native ADK
-(`adk-agentic-prod-workflows` / `adk-agents`) — don't add LangGraph weight.
+(`adk-graph-workflows` / `adk-agents`) — don't add LangGraph weight.
 
 ## Process
 1. Load docs (context7 → else `references/`)

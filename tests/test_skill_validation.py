@@ -23,7 +23,10 @@ MIN_BODY_LENGTH = 100
 KNOWN_SKILLS = {
     # Original core skills
     "adk-agent-builder",
-    "adk-agentic-prod-workflows",
+    "adk-graph-workflows",
+    "adk-agent-architecture",
+    "adk-deploy-production",
+    "adk-typescript-go-parity",
     "adk-architecture",
     "adk-debug",
     # Promoted doc-grounded skills
@@ -462,14 +465,14 @@ class TestQuickValidateIntegration:
 
     def test_quick_validate_exists(self):
         """quick_validate.py should be present."""
-        path = SKILLS_DIR / "adk-agentic-prod-workflows" / "scripts" / "quick_validate.py"
+        path = SKILLS_DIR / "adk-graph-workflows" / "scripts" / "quick_validate.py"
         assert path.exists(), f"quick_validate.py missing at {path}"
 
     def test_quick_validate_all_skills(self, skill_mds):
         """Run quick_validate.py on all SKILL.md files."""
         import subprocess
         quick_val = (
-            SKILLS_DIR / "adk-agentic-prod-workflows" / "scripts" / "quick_validate.py"
+            SKILLS_DIR / "adk-graph-workflows" / "scripts" / "quick_validate.py"
         )
         if not quick_val.exists():
             pytest.skip("quick_validate.py not found")
