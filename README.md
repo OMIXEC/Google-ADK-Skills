@@ -10,8 +10,10 @@ Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-
 - The **1.x line is still shipping in parallel** (latest 1.39.1); 2.x is not yet a replacement for every 1.x user.
 - Python: **3.10** for 2.9.2–2.11.0, **3.11** for 2.12.0. Supported through 3.15. Use `uv` in repos that already standardize on it.
 - New workflow guidance should prefer the 2.x `Agent` plus `Workflow` graph/dynamic orchestration for complex flows. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic template workflows.
-- Read [`docs/python-adk-2.md`](docs/python-adk-2.md) before changing ADK examples, model IDs, MCP/A2A integrations, or migration guidance.
+- Read [`COMPATIBILITY.md`](COMPATIBILITY.md) before changing examples, model IDs, or migration guidance. Each skill carries the same version floor in its own `references/adk-2x-baseline.md`, so a standalone install is never missing it.
 - **The SDK is never vendored.** `google-adk` installs from PyPI; always import from the installed `google.adk.*`. Context7 `/google/adk-docs` and the installed package are canonical. See [`MIGRATION.md`](MIGRATION.md).
+
+Version posture, sources, and history: [`COMPATIBILITY.md`](COMPATIBILITY.md) · [`SOURCES.md`](SOURCES.md) · [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Installation
 
