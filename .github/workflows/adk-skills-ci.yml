@@ -73,60 +73,15 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install parsers
-        run: pip install pyyaml
+        run: pip install pyyaml pytest
 
       - name: Validate every skill
-        run: |
-          python - <<'PY'
-          import pathlib, re, sys
-          import yaml
+        # --strict flips on after the taxonomy sweep (#10) adds negative
+        # triggers to every description. Until then those are warnings.
+        run: python scripts/validate_skills.py
 
-          NAME_RE = re.compile(r'^[a-z0-9]+(-[a-z0-9]+)*$')
-          errors = []
-          count = 0
-
-          for skill_dir in sorted(pathlib.Path('skills').iterdir()):
-              if not skill_dir.is_dir():
-                  continue
-              count += 1
-              md = skill_dir / 'SKILL.md'
-              if not md.exists():
-                  errors.append(f'{skill_dir}: missing SKILL.md')
-                  continue
-
-              text = md.read_text(encoding='utf-8')
-              m = re.match(r'^---\n(.*?)\n---', text, re.S)
-              if not m:
-                  errors.append(f'{skill_dir}: missing YAML frontmatter')
-                  continue
-
-              fm = yaml.safe_load(m.group(1)) or {}
-              name = fm.get('name')
-              desc = fm.get('description')
-
-              if not name:
-                  errors.append(f'{skill_dir}: frontmatter missing name')
-              else:
-                  if name != skill_dir.name:
-                      errors.append(f'{skill_dir}: name {name!r} != directory name')
-                  if not NAME_RE.match(str(name)):
-                      errors.append(f'{skill_dir}: name {name!r} is not kebab-case')
-                  if len(str(name)) > 64:
-                      errors.append(f'{skill_dir}: name exceeds 64 chars')
-
-              if not desc:
-                  errors.append(f'{skill_dir}: frontmatter missing description')
-              elif len(str(desc)) > 1024:
-                  errors.append(f'{skill_dir}: description exceeds 1024 chars ({len(str(desc))})')
-
-              if 'compatibility' not in fm:
-                  errors.append(f'{skill_dir}: frontmatter missing compatibility')
-
-          print(f'Validated {count} skills')
-          for e in errors:
-              print(f'ERROR: {e}')
-          sys.exit(1 if errors else 0)
-          PY
+      - name: Validate the validator
+        run: python -m pytest tests/ -q
 
   # ── Python + Go + TypeScript syntax across the repo ──
   lint-code:
