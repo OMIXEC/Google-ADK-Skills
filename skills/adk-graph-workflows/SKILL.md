@@ -1,16 +1,14 @@
 ---
 name: adk-graph-workflows
 description: >-
-  Designs and scaffolds ADK 2.x multi-agent workflows: graph, dynamic,
-  collaborative, and template (sequential, parallel, loop) shapes, project
-  layout, code generation, and extension of an existing workflow. Use when
-  deciding how agents and deterministic steps connect, scaffolding a workflow
-  project, routing conditionally, fanning out and joining, or adding nodes to a
-  running graph. Don't use for the internals of one agent — models, tools,
-  memory, MCP, A2A (use adk-agent-architecture); for CI/CD, containers, or
-  cloud targets (use adk-deploy-production); for Go or TypeScript templates
-  (use adk-typescript-go-parity); or for autonomous goal loops and LangGraph
-  state machines (use adk-autonomous-agent or adk-langgraph).
+  Designs and scaffolds ADK 2.x multi-agent workflows: graph, dynamic, collaborative,
+  and template (sequential, parallel, loop) shapes, project layout, code generation, and
+  extension of an existing workflow. Use when deciding how agents and deterministic
+  steps connect, scaffolding a workflow project, routing conditionally, or fanning out
+  and joining. Don't use for the internals of one agent (use adk-agent-architecture),
+  for CI/CD or cloud targets (use adk-deploy-production), for Go or TypeScript templates
+  (use adk-typescript-go-parity), or for autonomous loops and LangGraph (use
+  adk-agent-orchestration).
 compatibility: google-adk>=2.9.2,<3
 ---
 

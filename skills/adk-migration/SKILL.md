@@ -1,12 +1,13 @@
 ---
 name: adk-migration
 description: >-
-  Migrate ADK agents from 1.x to 2.3. Covers breaking API changes (graph
-  Workflow vs GraphAgent, McpToolset, BuiltInCodeExecutor, ctx.resume_inputs,
-  agent modes), renamed imports, deploy CLI changes, model/thinking/embedding
-  updates, and session/state incompatibility. Use when upgrading an ADK 1.x
-  codebase to 2.3, auditing code for deprecated 1.x APIs, or resolving 2.3
-  import/attribute errors.
+  Migrates ADK code from 1.x to the 2.x line through 2.12.0: breaking API changes
+  (Workflow versus GraphAgent, McpToolset, BuiltInCodeExecutor, ctx.resume_inputs, agent
+  modes), renamed imports, deploy CLI changes, model and embedding updates, and session
+  incompatibility. Use when upgrading an existing 1.x codebase or auditing for
+  deprecated 1.x APIs. Don't use for new 2.x work (use adk-agent-builder), for a
+  model-ID refresh alone (use adk-model-routing), or for repository contributor
+  conventions (see contributing/).
 compatibility: google-adk>=2.9.2,<3
 ---
 

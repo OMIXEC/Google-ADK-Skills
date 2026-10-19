@@ -1,6 +1,11 @@
 ---
 name: adk-prompts
-description: ADK prompt engineering expert covering agent instructions, few-shot examples, system prompts, and cost optimization strategies. Use when designing agent personalities, optimizing prompt tokens, or implementing few-shot learning patterns.
+description: >-
+  Writes and tunes ADK agent instructions: system prompts, few-shot examples,
+  output-shape guidance, and token-cost trade-offs. Use when the agent's behavior is
+  right in principle but wrong in wording or format. Don't use for choosing a persona
+  (use adk-agent-personas), for tool schemas (use adk-tools), or for authoring a skill
+  (use adk-skills-authoring).
 compatibility: google-adk>=2.9.2,<3
 ---
 

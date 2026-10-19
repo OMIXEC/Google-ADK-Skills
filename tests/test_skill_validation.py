@@ -32,6 +32,8 @@ KNOWN_SKILLS = {
     # Promoted doc-grounded skills
     "adk-a2a",
     "adk-agents",
+    "adk-agent-personas",
+    "adk-agent-orchestration",
     "adk-backend",
     "adk-bidi-live",
     "adk-configs",
@@ -46,10 +48,6 @@ KNOWN_SKILLS = {
     "adk-runtime",
     "adk-tools",
     # Converted legacy + new framework skills
-    "adk-autonomous-agent",
-    "adk-domain-expert",
-    "adk-langgraph",
-    "adk-persona",
     "adk-rag",
 }
 EXTRANEOUS_FILES = {"README.md", "CHANGELOG.md", "INSTALLATION_GUIDE.md", "QUICK_REFERENCE.md"}

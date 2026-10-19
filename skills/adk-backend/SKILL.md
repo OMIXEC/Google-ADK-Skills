@@ -1,6 +1,12 @@
 ---
 name: adk-backend
-description: ADK backend architecture expert covering runtime event loops, session management, state handling, and server implementation patterns. Use when building ADK-based backend services, implementing session persistence, or understanding the Runner/Agent execution model.
+description: >-
+  Builds the service layer around an ADK agent: HTTP server, request lifecycle, session
+  endpoints, and persistence wiring. Use when exposing an agent behind an API or
+  integrating it into an existing backend service. Don't use for the agent's tools or
+  memory design (use adk-agent-architecture), for execution internals such as callbacks
+  and the Runner loop (use adk-runtime), or for cloud deployment targets (use
+  adk-deployment).
 compatibility: google-adk>=2.9.2,<3
 ---
 

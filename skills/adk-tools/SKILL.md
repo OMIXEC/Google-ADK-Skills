@@ -1,6 +1,11 @@
 ---
 name: adk-tools
-description: ADK tools expert covering custom function tools, Google built-in tools (Search, Code Execution), OpenAPI integrations, and tool composition. Use when creating custom tools, integrating external APIs, or configuring built-in Google tools.
+description: >-
+  Defines the tools an ADK agent may call: function tools, Google built-in tools such as
+  Search and Code Execution, OpenAPI integrations, and tool composition. Use when
+  writing a tool, wiring an external API, or deciding between tool types. Don't use for
+  MCP servers (use adk-mcp), for debugging a tool call that already failed (use
+  adk-debug), or for skill authoring (use adk-skills-authoring).
 compatibility: google-adk>=2.9.2,<3
 ---
 

@@ -1,12 +1,13 @@
 ---
 name: adk-embeddings
 description: >-
-  ADK memory + embeddings across databases. Generate multimodal embeddings with
-  gemini-embedding-2, persist agent sessions/memory to Cloud SQL, Postgres,
-  Firestore, or SQLite, and store/retrieve vectors for RAG (pgvector, Firestore
-  vector). Use when choosing a session/memory backend, wiring a database
-  SessionService or MemoryService, generating embeddings, or building a
-  vector store for retrieval on an ADK agent.
+  Generates and stores embeddings for ADK agents: multimodal embeddings with
+  gemini-embedding-2, session and memory persistence in Cloud SQL, Postgres, Firestore,
+  or SQLite, and vector search through pgvector or Firestore vector. Use when choosing a
+  session or memory backend, wiring a database SessionService or MemoryService, or
+  building a vector store. Don't use for conversation memory policy (use adk-memory),
+  for document ingestion and retrieval design (use adk-rag), or for chat model selection
+  (use adk-model-routing).
 compatibility: google-adk>=2.9.2,<3
 ---
 

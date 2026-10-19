@@ -1,17 +1,14 @@
 ---
 name: adk-debug
 description: >-
-  Diagnoses misbehaving ADK agents by inspecting sessions, events, tool calls,
-  and the exact request that reached the model. Covers the `adk run` CLI and the
-  `adk web` dev server with its session, trace, and debug HTTP endpoints. Use
-  when an agent returns the wrong answer, ignores a tool or swallows a tool
-  error, hangs, loops, emits raw JSON instead of calling tools, is not
-  discovered by `adk web`, when a sub-agent cannot see the parent conversation,
-  or when you need the LLM request/response, token counts, or logs for a run.
-  Don't use for how ADK is designed internally (use `adk-architecture`), for
-  building a new agent or workflow (use `adk-agent-builder`), for environment or
-  dependency setup failures (use `adk-setup`), or for lint and style nits (use
-  `adk-style`).
+  Diagnoses a misbehaving ADK agent by inspecting sessions, events, tool calls, and the
+  exact request that reached the model. Covers the adk run CLI, the adk web dev server,
+  its session and trace endpoints, and a symptom catalogue for the common failure
+  shapes. Use when an agent returns the wrong answer, ignores or swallows a tool, hangs,
+  loops, emits raw JSON, or is not discovered. Don't use for how ADK is designed
+  internally (use adk-architecture), for building an agent (use adk-agent-builder), for
+  1.x to 2.x API errors (use adk-migration), or for deployment failures (use
+  adk-deploy-production).
 compatibility: google-adk>=2.9.2,<3
 ---
 

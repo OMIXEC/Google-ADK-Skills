@@ -1,14 +1,12 @@
 ---
 name: adk-skills-authoring
 description: >-
-  Authors ADK agent skills: the SKILL.md contract, folder layout, frontmatter
-  limits, the loader, SkillRegistry, and SkillToolset with its discovery and
-  lifecycle modes. Use when creating a skill, deciding what belongs in
-  SKILL.md versus references, wiring skills into an agent, choosing eager or
-  lazy discovery, or debugging a skill that will not load. Don't use for
-  authoring Claude Code or other harness-specific skill packs, for general
-  prompt writing (use adk-prompts), or for agent tool design outside the
-  skills subsystem (use adk-tools).
+  Authors ADK agent skills: the SKILL.md contract, folder layout, frontmatter limits,
+  the loader, SkillRegistry, and SkillToolset with its discovery and lifecycle modes.
+  Use when creating a skill, deciding what belongs in SKILL.md versus references, wiring
+  skills into an agent, or debugging a skill that will not load. Don't use for Claude
+  Code or other harness-specific skill packs, for general prompt writing (use
+  adk-prompts), or for tool design outside the skills subsystem (use adk-tools).
 compatibility: google-adk>=2.9.2,<3
 ---
 

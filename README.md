@@ -1,6 +1,6 @@
 # Google-ADK-Skills
 
-**28 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, Windsurf, and `.agents` libraries**
+**26 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, Windsurf, and `.agents` libraries**
 
 Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-agent orchestration, LangGraph state machines, LiteLLM multi-provider routing, real-time bidirectional streaming, RAG pipelines, MCP tool integration, autonomous agents, and production deployment.
 
@@ -120,38 +120,36 @@ The plugin is the only channel that installs the skills together with the bundle
 
 ---
 
-## Skills (25)
+## Skills (26)
 
 | Skill | Description |
 |-------|-------------|
-| `adk-a2a` | Agent-to-Agent protocol — remote agent calls, agent cards, HTTP delegation, distributed agent networks |
-| `adk-agent-builder` | Build, configure, and iterate on ADK agents — task mode, single-turn mode, graph-based workflows |
-| `adk-agentic-prod-workflows` | Production multi-agent workflow scaffold — graph/parallel/sequential/loop patterns, CI/CD, evals, observability |
-| `adk-agents` | Multi-agent composition — routing patterns, sequential/parallel execution, supervisor architectures |
-| `adk-architecture` | ADK internals — graph orchestration, event flow, BaseNode, NodeRunner, resumption, checkpointing |
-| `adk-autonomous-agent` | Self-reasoning agents — OODA loop, goal-directed execution, autonomous planning without per-step prompts |
-| `adk-backend` | Backend services — runtime event loops, session management, state handling, Runner/Agent execution model |
-| `adk-bidi-live` | Real-time streaming — Live API, live model (`gemini-3.1-flash-live-preview`), WebSocket, LiveRequestQueue |
-| `adk-configs` | Agent configuration — YAML agent definitions, environment variables, agent cards, deployment configs |
-| `adk-debug` | Debugging — session inspection, tool call tracing, event flow diagnosis, model troubleshooting |
-| `adk-deployment` | Production deployment — Cloud Run, GKE, Vertex AI Agent Engine, Docker, CI/CD pipelines |
-| `adk-embeddings` | Memory + embeddings across DBs — `gemini-embedding-2`, Cloud SQL/Postgres/Firestore SessionService, pgvector & Firestore vector stores |
-| `adk-domain-expert` | Bespoke specialist agents for any domain not covered by standard personas (tax law, marine biology, etc.) |
-| `adk-git` | Git operations — commit, push, pull, rebase, branch, PR, cherry-pick with ADK commit conventions |
-| `adk-langgraph` | LangGraph orchestration — state machines, conditional edges, LLM-driven routing, ADK↔LangGraph interop |
-| `adk-litellm` | 100+ LLM providers — OpenAI, Anthropic, Bedrock, OpenRouter, Ollama, vLLM; model switching, cost optimization |
-| `adk-mcp` | MCP integration — McpToolset, stdio/streamable HTTP connection params, database toolboxes |
-| `adk-memory` | Memory and state — session state, long-term memory, persistence backends, cross-session recall |
-| `adk-migration` | ADK 1.x → 2.3 upgrade — breaking-change checklist, renamed APIs (Workflow/`McpToolset`/`ctx.resume_inputs`), deploy CLI, model/embedding/state changes |
-| `adk-model-routing` | Model selection, thinking/effort (`thinking_level`), and fallback — current Gemini 3.x catalog, routing by complexity/cost, primary→fallback chains |
-| `adk-persona` | 30+ pre-built personas — tutor, coach, analyst, support rep; ready-made templates with optimized instructions |
-| `adk-prompts` | Prompt engineering — agent instructions, few-shot examples, system prompts, token cost optimization |
-| `adk-rag` | Retrieval-augmented generation — Pinecone (self-managed) or Vertex AI RAG (managed), embeddings, ingestion |
-| `adk-runtime` | Runtime architecture — event loops, Runner model, callbacks, Reason-Act cycle, internals |
-| `adk-sample-creator` | Author new samples and examples for the ADK Python repository |
-| `adk-setup` | Local dev environment setup — install dependencies, configure credentials, prepare for contributing |
-| `adk-style` | Code style — Python idioms, codebase conventions, imports, typing, Pydantic patterns, formatting |
-| `adk-tools` | Tools — custom function tools, Google built-in tools (Search, Code Execution), OpenAPI integrations |
+| `adk-a2a` | Agent-to-Agent protocol — agent cards, remote delegation, streaming tasks, auth propagation |
+| `adk-agent-architecture` | Agent internals — modes, tool boundaries, MCP, A2A, memory, structured output, model choice |
+| `adk-agent-builder` | Build one agent — instruction, tools, task/single-turn modes, first test |
+| `adk-agent-orchestration` | Runtime control — OODA loops, LangGraph state machines, stop conditions |
+| `adk-agent-personas` | Personas — 30+ templates plus a bespoke domain-expert generator |
+| `adk-agents` | Multi-agent composition — supervisor, router, delegation patterns |
+| `adk-architecture` | ADK internals — node/graph execution, Context, Events, checkpoint/resume, tracing |
+| `adk-backend` | Service layer — HTTP server, session endpoints, request lifecycle |
+| `adk-bidi-live` | Real-time — Live API, audio/video, WebSocket, LiveRequestQueue |
+| `adk-configs` | Declarative config — YAML agents, environment variables, agent cards |
+| `adk-debug` | Debugging — `adk run`/`adk web`, sessions, events, tool calls, symptom catalogue |
+| `adk-deploy-production` | Production readiness — CI/CD, guardrails, observability, resilience, evals, checklist |
+| `adk-deployment` | Deploy commands — Cloud Run, GKE, Agent Engine, Docker and Kubernetes manifests |
+| `adk-embeddings` | Embeddings and persistence — `gemini-embedding-2`, DB SessionService, pgvector/Firestore vector |
+| `adk-graph-workflows` | Workflow shape — graph/dynamic/collaborative/template, scaffolding, composition |
+| `adk-litellm` | Provider routing — 100+ providers, fallbacks, cost trade-offs |
+| `adk-mcp` | MCP — `McpToolset`, stdio/streamable HTTP, discovery, database toolboxes |
+| `adk-memory` | Memory policy — session state, long-term memory, persistence, cross-session recall |
+| `adk-migration` | 1.x → 2.x through 2.12.0 — breaking changes, renamed APIs, session incompatibility |
+| `adk-model-routing` | Model selection — Gemini 3.x catalog, `thinking_level`, fallback chains, retirement |
+| `adk-prompts` | Instructions — system prompts, few-shot examples, output shape, token cost |
+| `adk-rag` | RAG — Pinecone or Vertex AI RAG, ingestion, chunking, grounding |
+| `adk-runtime` | Execution internals — event loop, Runner, callbacks, Reason-Act cycle |
+| `adk-skills-authoring` | Skills subsystem — SKILL.md contract, loader, registry, `SkillToolset` |
+| `adk-tools` | Tools — function tools, Google built-ins, OpenAPI integrations, composition |
+| `adk-typescript-go-parity` | Go/TypeScript templates and parity notes |
 
 Skills are routed automatically via CLAUDE.md trigger words. You can also invoke any skill explicitly:
 
@@ -171,7 +169,7 @@ Claude Code matches the request to `adk-agent-builder` + `adk-memory` + `adk-dep
 Design a research pipeline with a web-search agent, an analyst, and a writer — deploy to Cloud Run
 ```
 
-Triggers: `adk-agents` → `adk-agentic-prod-workflows` → `adk-deployment`
+Triggers: `adk-agents` → `adk-graph-workflows` → `adk-deploy-production`
 
 ### Use a non-Google model
 
@@ -203,7 +201,7 @@ Triggers: `adk-bidi-live`
 Build a stateful customer onboarding workflow with conditional branching using LangGraph
 ```
 
-Triggers: `adk-langgraph`
+Triggers: `adk-agent-orchestration`
 
 ---
 
@@ -216,13 +214,14 @@ Google-ADK-Skills/
 ├── .claude-plugin/
 │   ├── plugin.json          ← Claude plugin manifest
 │   └── marketplace.json     ← marketplace listing
-├── skills/                  ← 28 skill directories (each: SKILL.md + references/)
+├── skills/                  ← 26 product skills (each: SKILL.md + references/)
 │   ├── adk-a2a/
 │   ├── adk-agent-builder/
-│   ├── adk-agentic-prod-workflows/
+│   ├── adk-graph-workflows/
 │   ├── adk-agents/
-│   ├── ... (25 total)
+│   ├── ... (26 total)
 │   └── adk-tools/
+├── contributing/            ← 8 contributor-only skills (opt-in: --with-contributing)
 ├── agents/                  ← Claude Code subagents (.md files, auto-loaded by Claude)
 │   ├── architect.md
 │   ├── agent-builder.md

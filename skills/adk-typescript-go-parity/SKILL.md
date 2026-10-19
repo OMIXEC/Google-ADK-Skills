@@ -1,12 +1,12 @@
 ---
 name: adk-typescript-go-parity
 description: >-
-  Reference templates and parity notes for building ADK agents in Go and
-  TypeScript. Use when the target runtime is Go or TypeScript, when porting a
-  Python workflow to either, or when checking whether a feature exists outside
-  Python. Don't use for Python agent or workflow work (use adk-graph-workflows
-  or adk-agent-architecture), or as a substitute for the current SDK reference
-  when an API signature matters.
+  Provides reference templates and parity notes for building ADK agents in Go and
+  TypeScript. Use when the target runtime is Go or TypeScript, when porting a Python
+  workflow to either, or when checking whether a feature exists outside Python. Don't
+  use for Python agent or workflow work (use adk-graph-workflows or
+  adk-agent-architecture), or as a substitute for the current SDK reference when a
+  signature matters.
 compatibility: google-adk>=2.9.2,<3
 ---
 

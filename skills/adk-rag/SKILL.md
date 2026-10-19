@@ -1,11 +1,11 @@
 ---
 name: adk-rag
 description: >-
-  Add retrieval-augmented generation to ADK agents. Build knowledge-powered
-  agents with either Pinecone (self-managed vector DB, embeddings, ingestion)
-  or Vertex AI RAG (managed corpora). Use when a request mentions RAG, knowledge
-  base, vector search, embeddings, document ingestion, or grounding an agent in
-  a corpus.
+  Adds retrieval-augmented generation to ADK agents with Pinecone (self-managed) or
+  Vertex AI RAG (managed corpora): ingestion, chunking, retrieval, and grounding. Use
+  when the agent must answer from a document corpus or a knowledge base. Don't use for
+  session or agent memory (use adk-memory), for raw vector-store plumbing and embedding
+  storage (use adk-embeddings), or for prompt design (use adk-prompts).
 compatibility: google-adk>=2.9.2,<3
 ---
 

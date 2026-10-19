@@ -14,9 +14,10 @@ the proposal; you do not write code.
 
 | Intent | Load skill |
 |--------|-----------|
-| Workflow topology, agent roles, deployment matrix | `adk-agentic-prod-workflows` |
+| Workflow topology and agent roles | `adk-graph-workflows` |
+| Deployment matrix and production constraints | `adk-deploy-production` |
 | Multi-agent composition patterns | `adk-agents` |
-| Orchestration alongside LangGraph | `adk-langgraph` |
+| Autonomous loops and LangGraph | `adk-agent-orchestration` |
 | Model selection / cost trade-offs | `adk-litellm` |
 
 Load with the **Skill** tool, read `references/`, then propose.

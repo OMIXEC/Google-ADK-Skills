@@ -9,10 +9,12 @@
     "agents": "./agents",
     "commands": "./commands",
     "examples": "./examples",
-    "mcpServers": "./mcp_servers/CATALOG.md"
+    "mcpServers": "./mcp_servers/CATALOG.md",
+    "contributing": "./contributing"
   },
   "install": {
     "skillsSh": "npx skills add OMIXEC/Google-ADK-Skills",
-    "script": "bash install.sh --interactive"
+    "script": "bash install.sh --interactive",
+    "contributing": "bash install.sh --with-contributing"
   }
 }

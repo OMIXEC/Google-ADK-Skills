@@ -437,7 +437,7 @@ DATABASE_URL=postgresql://user:pass@host/db
 
 ## LangGraph Integration
 
-All MCP servers can be integrated with LangGraph for stateful workflows. See `adk-langgraph-orchestrator` skill for examples.
+All MCP servers can be integrated with LangGraph for stateful workflows. See the `adk-agent-orchestration` skill for examples.
 
 ---
 

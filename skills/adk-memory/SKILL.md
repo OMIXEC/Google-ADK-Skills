@@ -1,6 +1,12 @@
 ---
 name: adk-memory
-description: ADK memory and state management expert covering session state, long-term memory, persistence backends, and cross-session recall. Use when implementing conversation memory, persisting agent state, or building knowledge-retrieval systems.
+description: >-
+  Manages conversation memory and state in ADK: session state, long-term memory,
+  persistence backends, and cross-session recall. Use when implementing memory policy,
+  persisting an agent's state, or deciding what survives a session. Don't use for
+  database-backed session wiring and vector stores (use adk-embeddings), for retrieval
+  over documents (use adk-rag), or for per-turn state passed between nodes (use
+  adk-agent-architecture).
 compatibility: google-adk>=2.9.2,<3
 ---
 

@@ -3,7 +3,7 @@ name: adk-agent-builder
 description: >-
   Build, test, and iterate on ADK agents: agent creation, mode configuration
   (task/single-turn), graph workflows with function nodes, routing/conditions,
-  LLM agent nodes, RAG, personas, domain experts, and samples. Use when creating
+  LLM agent nodes, RAG, personas, domain experts, and orchestration. Use when creating
   or configuring an ADK agent.
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 ---
@@ -25,10 +25,9 @@ Skills carry the bundled `references/` you must read first:
 | Instruction / prompt engineering | `adk-prompts` |
 | Model selection across providers (LiteLLM) | `adk-litellm` |
 | Retrieval-augmented generation | `adk-rag` |
-| Persona / character agent | `adk-persona` |
-| Domain-expert agent | `adk-domain-expert` |
-| Autonomous single-turn agent | `adk-autonomous-agent` |
-| Author an example/sample | `adk-sample-creator` |
+| Persona, character, or domain-expert agent | `adk-agent-personas` |
+| Autonomous or LangGraph control flow | `adk-agent-orchestration` |
+| Workflow topology | `adk-graph-workflows` |
 
 If several apply, load the most specific first; load others as needed.
 

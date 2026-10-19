@@ -1,6 +1,12 @@
 ---
 name: adk-bidi-live
-description: ADK bidirectional streaming and Live API expert covering real-time audio/video, WebSocket communication, LiveRequestQueue, Gemini Live API, and native audio models (gemini-3.1-flash-live-preview). Use when building real-time voice agents, implementing streaming chat, or working with multimodal live interactions.
+description: >-
+  Builds real-time ADK experiences on the Live API: bidirectional audio and video,
+  WebSocket streaming, LiveRequestQueue, and native audio models such as
+  gemini-3.1-flash-live-preview. Use when building a voice agent, streaming chat, or
+  multimodal live interaction. Don't use for request/response agents (use
+  adk-agent-builder), for tool design (use adk-tools), or for deploying the live
+  endpoint (use adk-deploy-production).
 compatibility: google-adk>=2.9.2,<3
 ---
 

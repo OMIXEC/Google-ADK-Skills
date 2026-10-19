@@ -1,6 +1,12 @@
 ---
 name: adk-litellm
-description: ADK LiteLLM integration expert covering 100+ LLM providers (OpenAI, Anthropic, Bedrock, OpenRouter), model switching, and cost optimization through provider flexibility. Use when integrating non-Google models, implementing model fallbacks, or optimizing costs across providers.
+description: >-
+  Routes ADK agents across 100+ model providers through LiteLLM: OpenAI, Anthropic,
+  Bedrock, OpenRouter, Ollama, and vLLM, with provider switching, fallbacks, and cost
+  trade-offs. Use when the agent must use a non-Google model or fail over across
+  providers. Don't use for choosing among Gemini models (use adk-model-routing), for
+  writing the instruction (use adk-prompts), or for deployment quotas (use
+  adk-deploy-production).
 compatibility: google-adk>=2.9.2,<3
 ---
 

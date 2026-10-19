@@ -1,6 +1,11 @@
 ---
 name: adk-mcp
-description: ADK Model Context Protocol (MCP) integration expert covering McpToolset, MCP servers, tool discovery, and database toolboxes. Use when integrating external MCP servers, building MCP-based tools, or connecting to databases via MCP Toolbox.
+description: >-
+  Integrates the Model Context Protocol into ADK agents: McpToolset, stdio and
+  streamable HTTP connections, tool discovery, filters, and MCP database toolboxes. Use
+  when consuming an external MCP server or building MCP-based tools. Don't use for
+  native function tools (use adk-tools), for agent-to-agent calls (use adk-a2a), or for
+  deploying the MCP server itself (use adk-deploy-production).
 compatibility: google-adk>=2.9.2,<3
 ---
 

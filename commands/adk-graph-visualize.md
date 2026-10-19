@@ -6,7 +6,7 @@ argument-hint: <path/to/workflow_module.py>
 
 Visualize the graph structure of an ADK 2.3 `Workflow` defined in `$ARGUMENTS` (default: search the repo for the nearest module exporting a `Workflow` or `root_agent`).
 
-Load the `adk-agentic-prod-workflows` skill first for the authoritative graph model, then inspect the target module. In ADK 2.3 the graph is built from:
+Load the `adk-graph-workflows` skill first for the authoritative graph model, then inspect the target module. In ADK 2.3 the graph is built from:
 
 - **Nodes** — functions decorated with `node()` (`google.adk.workflow._node`) and `LlmAgent` nodes.
 - **Edges** — `Edge` instances (`google.adk.workflow._graph`), including conditional/branch routes. There is **no** `@edge` decorator.

@@ -1,6 +1,11 @@
 ---
 name: adk-runtime
-description: ADK runtime architecture expert covering event loops, Runner execution model, callbacks, and the Reason-Act cycle. Use when understanding ADK internals, implementing custom callbacks, or debugging agent execution flow.
+description: >-
+  Explains and extends ADK execution internals: the event loop, Runner model, callbacks,
+  and the Reason-Act cycle. Use when implementing custom callbacks or understanding why
+  an invocation flowed the way it did. Don't use for the service layer around the agent
+  (use adk-backend), for workflow topology (use adk-graph-workflows), or for upgrading
+  1.x APIs (use adk-migration).
 compatibility: google-adk>=2.9.2,<3
 ---
 

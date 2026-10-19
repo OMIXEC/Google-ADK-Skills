@@ -1,16 +1,12 @@
 ---
 name: adk-architecture
 description: >-
-  Explains how the ADK runtime fits together: the node and graph execution
-  model, Context and Event flow, checkpoint and resume, tracing, and the rules
-  governing the public API surface. Use when answering "how does X work" about
-  ADK internals, tracing where an event or a piece of state comes from,
-  deciding where a new capability belongs, reviewing a change to BaseNode,
-  Workflow, Runner, Agent, Event or Context, working out why a node re-ran or
-  stayed waiting after a resume, or judging whether a change breaks the public
-  API. Don't use for assembling an agent from existing pieces (use
-  adk-agent-builder), diagnosing one failing run or test (use adk-debug), or
-  formatting and naming conventions (use adk-style).
+  Explains how the ADK runtime fits together: the node and graph execution model,
+  Context and Event flow, checkpoint and resume, tracing, and the rules governing the
+  public API surface. Use when answering "how does X work" about ADK internals, tracing
+  where an event or a piece of state comes from, or judging whether a change breaks the
+  public API. Don't use for assembling an agent (use adk-agent-builder), diagnosing one
+  failing run (use adk-debug), or upgrading 1.x code (use adk-migration).
 compatibility: google-adk>=2.9.2,<3
 ---
 

@@ -1,6 +1,6 @@
 # ADK Skills — Routing Rules
 
-This repo provides 28 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
+This repo provides 26 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
 
 ## ADK 2.x Source Policy
 
@@ -27,40 +27,38 @@ When a user request matches a trigger below, invoke the corresponding skill.
 
 | Skill | Triggers |
 |-------|----------|
-| `adk-agentic-prod-workflows` | "build a workflow", "design multi-agent system", "scaffold agent project", "deploy ADK agent", "production workflow", "graph/parallel/sequential/loop agent", "CI/CD for agents" |
-| `adk-agent-builder` | "create an agent", "build agent", "add agent node", "configure agent mode", "task mode", "single-turn agent" |
-| `adk-agents` | "multi-agent system", "agent composition", "supervisor", "agent team", "delegation", "routing patterns" |
-| `adk-architecture` | "how does ADK work", "event flow", "resumption", "checkpoint", "BaseNode", "NodeRunner", "runner roles", "LLM context orchestration" |
-| `adk-runtime` | "runtime", "runner", "context lifecycle", "invocation context", "span design" |
-| `adk-debug` | "debug agent", "inspect session", "troubleshoot tool call", "event flow issue", "model problem" |
-| `adk-git` | "commit", "push", "pull", "rebase", "branch", "PR", "cherry-pick" |
-| `adk-sample-creator` | "create a sample", "add example", "demonstrate agent pattern", "fan-out example" |
-| `adk-setup` | "set up ADK", "install ADK", "configure environment", "get started", "prepare to contribute" |
-| `adk-style` | "code style", "format code", "naming convention", "lint", "typing", "Pydantic pattern", "testing rules" |
-| `adk-tools` | "bind tools", "function tool", "OpenAPI tool", "Google API tool", "tool catalog" |
+| `adk-agent-builder` | "create an agent", "build agent", "task mode", "single-turn agent", "add a tool" |
+| `adk-agent-personas` | "persona", "character agent", "domain expert", "specialist agent", "ready-made role" |
+| `adk-agent-architecture` | "agent internals", "tool boundaries", "session state", "MCP vs A2A", "structured output" |
+| `adk-agents` | "multi-agent", "supervisor", "agent team", "delegation", "routing patterns" |
+| `adk-agent-orchestration` | "autonomous agent", "OODA", "goal-directed", "langgraph", "state machine", "checkpointed graph" |
+| `adk-graph-workflows` | "build a workflow", "graph workflow", "fan-out", "conditional routing", "scaffold workflow" |
+| `adk-runtime` | "runtime", "runner", "callbacks", "Reason-Act", "invocation context" |
+| `adk-backend` | "backend", "server", "API for agent", "session endpoint" |
 | `adk-configs` | "agent config", "agent YAML", "config schema" |
-| `adk-prompts` | "instruction", "prompt engineering", "system prompt for agent" |
-| `adk-mcp` | "MCP integration", "MCP toolset", "StdioServerParameters", "SseServerParams" |
-| `adk-a2a` | "A2A", "agent-to-agent", "cross-language agent", "AgentCard", "RemoteA2AAgent" |
-| `adk-memory` | "memory", "SessionService", "session state", "persistence" |
-| `adk-embeddings` | "embedding", "gemini-embedding-2", "vector store", "pgvector", "Cloud SQL", "Postgres session", "Firestore memory", "DatabaseSessionService", "vector search", "store embeddings in db" |
-| `adk-migration` | "migrate 1.x to 2.x", "upgrade ADK", "breaking changes", "deprecated API", "GraphAgent removed", "McpToolset error", "MCPToolset error", "ctx.resume_data", "port to 2.x" |
-| `adk-deployment` | "deploy", "Cloud Run", "Agent Engine", "GKE", "Terraform", "deployment manifest" |
-| `adk-backend` | "backend", "server", "API for agent" |
+| `adk-a2a` | "A2A", "agent-to-agent", "AgentCard", "remote agent", "cross-language agent" |
+| `adk-mcp` | "MCP", "McpToolset", "MCP server", "toolbox" |
 | `adk-bidi-live` | "bidi", "live", "streaming audio", "voice agent", "real-time" |
-| `adk-litellm` | "litellm", "OpenAI/Anthropic/Bedrock/OpenRouter model", "non-Google model", "model fallback", "cost optimization across providers" |
-| `adk-model-routing` | "which model", "model routing", "select model", "thinking level", "effort", "thinking_budget", "reasoning depth", "model catalog", "fallback chain", "deprecated model" |
-| `adk-langgraph` | "langgraph", "state machine workflow", "stateful graph", "conditional orchestration", "ADK↔LangGraph" |
-| `adk-rag` | "RAG", "knowledge base", "vector search", "embeddings", "Pinecone", "Vertex AI RAG", "document ingestion" |
-| `adk-persona` | "persona", "pre-built template", "character agent", "ready-made role" |
-| `adk-domain-expert` | "domain expert", "specialist agent", "expert for <domain>" |
-| `adk-autonomous-agent` | "autonomous agent", "self-reasoning", "OODA loop", "goal-directed", "proactive agent" |
+| `adk-tools` | "bind tools", "function tool", "OpenAPI tool", "Google API tool", "tool catalog" |
+| `adk-prompts` | "instruction", "prompt engineering", "system prompt", "few-shot" |
+| `adk-rag` | "RAG", "knowledge base", "Pinecone", "Vertex AI RAG", "document ingestion" |
+| `adk-embeddings` | "embedding", "gemini-embedding-2", "pgvector", "DatabaseSessionService", "vector store" |
+| `adk-memory` | "memory", "SessionService", "long-term memory", "cross-session" |
+| `adk-model-routing` | "which model", "thinking level", "model catalog", "deprecated model", "fallback chain" |
+| `adk-litellm` | "litellm", "OpenAI/Anthropic/Bedrock/OpenRouter", "non-Google model", "provider fallback" |
+| `adk-deploy-production` | "production readiness", "CI/CD for agents", "guardrails", "observability", "pre-deploy checklist", "retries" |
+| `adk-deployment` | "adk deploy", "Cloud Run", "GKE", "Agent Engine", "Dockerfile", "Kubernetes manifest" |
+| `adk-debug` | "debug agent", "inspect session", "tool call failed", "agent loops", "not discovered by adk web" |
+| `adk-migration` | "migrate 1.x to 2.x", "breaking changes", "GraphAgent", "ctx.resume_data", "upgrade ADK" |
+| `adk-architecture` | "how does ADK work", "event flow", "BaseNode", "NodeRunner", "resumption", "checkpoint" |
+| `adk-skills-authoring` | "create a skill", "SKILL.md", "SkillToolset", "skill registry", "skill won't load" |
+| `adk-typescript-go-parity` | "Go ADK", "TypeScript ADK", "port to Go/TS", "parity" |
 
-Framework skills (`adk-litellm`, `adk-langgraph`) load their docs **context7-first** (via the context7 MCP if available) and fall back to bundled `references/`.
+Framework skills (`adk-litellm`, `adk-agent-orchestration`) load their docs **context7-first** (via the context7 MCP if available) and fall back to bundled `references/`.
 
 ## Claude Code Subagents
 
-`agents/` holds Claude Code subagent `.md` files (`adk-architect`, `adk-agent-builder`, `adk-debugger`, `adk-git-ops`, `adk-style-checker`, `adk-workflow-designer`, `adk-workflow-builder`, `adk-setup`). Each subagent **adaptively loads the matching skill** via the Skill tool before executing, so its routing block mirrors the table above.
+`agents/` holds Claude Code subagent `.md` files (`adk-architect`, `adk-agent-builder`, `adk-debugger`, `adk-git-ops`, `adk-style-checker`, `adk-workflow-designer`, `adk-workflow-builder`, `adk-setup`). Each subagent **adaptively loads the matching skill** via the Skill tool before executing, so its routing block mirrors the table above. The `git-ops`, `setup`, and `style-checker` subagents depend on skills that now live in `contributing/`; install them with `install.sh --with-contributing` or those three will run without their reference material.
 
 ## Examples
 

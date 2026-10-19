@@ -12,7 +12,8 @@ project's commit conventions.
 
 ## Adaptive skill loading (do this first)
 
-Load `adk-git` with the **Skill** tool for the full commit/branch/PR conventions
+If the `adk-git` skill is installed (`install.sh --with-contributing`), load it
+with the **Skill** tool for the full commit/branch/PR conventions
 before performing multi-step git work.
 
 ## Commit Message Format — Conventional Commits

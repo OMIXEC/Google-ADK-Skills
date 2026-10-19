@@ -76,9 +76,10 @@ jobs:
         run: pip install pyyaml pytest
 
       - name: Validate every skill
-        # --strict flips on after the taxonomy sweep (#10) adds negative
-        # triggers to every description. Until then those are warnings.
-        run: python scripts/validate_skills.py
+        run: python scripts/validate_skills.py skills --strict
+
+      - name: Validate contributor skills
+        run: python scripts/validate_skills.py contributing
 
       - name: Validate the validator
         run: python -m pytest tests/ -q

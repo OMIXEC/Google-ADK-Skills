@@ -12,7 +12,8 @@ ADK Python project.
 
 ## Adaptive skill loading (do this first)
 
-Load `adk-style` with the **Skill** tool for the full ruleset and its per-topic
+If the `adk-style` skill is installed (`install.sh --with-contributing`), load
+it with the **Skill** tool for the full ruleset and its per-topic
 `references/` (visibility, imports, typing, pydantic, formatting, logging,
 file-organization, testing). Cite the reference file behind each finding.
 

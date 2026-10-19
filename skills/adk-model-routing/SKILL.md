@@ -1,14 +1,13 @@
 ---
 name: adk-model-routing
 description: >-
-  ADK model routing, thinking/effort levels, and fallback methodology for
-  production backends. Covers the current Gemini 3.x model catalog
+  Selects and routes models for ADK agents: the current Gemini 3.x catalog
   (gemini-3.5-flash, gemini-3.1-flash-lite, gemini-3.1-pro-preview,
-  gemini-3.1-flash-live-preview, gemini-embedding-2), thinking_level effort
-  tiers (minimal/low/medium/high), deprecation of thinking_budget and sampling
-  params, and primary→fallback chains. Use when selecting a model, tuning
-  thinking/effort, routing by task complexity/cost, or designing model fallback
-  for an ADK agent.
+  gemini-3.1-flash-live-preview, gemini-embedding-2), thinking_level effort tiers,
+  retired sampling parameters, and primary-to-fallback chains. Use when choosing a
+  model, tuning effort, routing by complexity or cost, or rejecting a retired ID. Don't
+  use for crossing to non-Google providers (use adk-litellm), for prompt wording (use
+  adk-prompts), or for deployment-time quotas (use adk-deploy-production).
 compatibility: google-adk>=2.9.2,<3
 ---
 

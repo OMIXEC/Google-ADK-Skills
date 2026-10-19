@@ -1,6 +1,12 @@
 ---
 name: adk-configs
-description: ADK configuration expert covering YAML agent definitions, environment variables, agent cards, and deployment configs. Use when setting up ADK projects, managing environment-specific settings, or defining agents declaratively.
+description: >-
+  Defines ADK agents declaratively: YAML agent definitions, environment variables, agent
+  cards, and per-environment configuration. Use when the agent should be configured
+  rather than coded, or when several environments share one definition. Don't use for
+  programmatic agent construction (use adk-agent-builder), for secrets and credential
+  handling (use adk-deploy-production), or for provider keys and fallbacks (use
+  adk-litellm).
 compatibility: google-adk>=2.9.2,<3
 ---
 

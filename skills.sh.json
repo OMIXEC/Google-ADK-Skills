@@ -3,55 +3,65 @@
   "notGrouped": "bottom",
   "groupings": [
     {
-      "title": "Agent Runtime",
-      "description": "Core ADK agent building, runtime, architecture, memory, and configuration skills.",
+      "title": "Build agents and workflows",
+      "description": "Who the agent is, what it is made of, and how the flow is shaped.",
       "skills": [
         "adk-agent-builder",
+        "adk-agent-personas",
+        "adk-agent-architecture",
         "adk-agents",
+        "adk-agent-orchestration",
+        "adk-graph-workflows"
+      ]
+    },
+    {
+      "title": "Runtime and interfaces",
+      "description": "Execution internals, the service layer, declarative config, and cross-process protocols.",
+      "skills": [
         "adk-runtime",
-        "adk-architecture",
         "adk-backend",
         "adk-configs",
-        "adk-memory",
-        "adk-setup"
-      ]
-    },
-    {
-      "title": "Workflows",
-      "description": "Production workflow, orchestration, autonomous agent, and agent-to-agent patterns.",
-      "skills": [
-        "adk-agentic-prod-workflows",
-        "adk-autonomous-agent",
-        "adk-langgraph",
         "adk-a2a",
-        "adk-domain-expert",
-        "adk-persona"
-      ]
-    },
-    {
-      "title": "Tools and Data",
-      "description": "Tooling, MCP, RAG, prompts, LiteLLM routing, and real-time bidirectional capabilities.",
-      "skills": [
-        "adk-tools",
         "adk-mcp",
-        "adk-rag",
-        "adk-embeddings",
-        "adk-prompts",
-        "adk-litellm",
-        "adk-model-routing",
         "adk-bidi-live"
       ]
     },
     {
-      "title": "Production",
-      "description": "Deployment, debugging, style, git, and sample authoring skills for shipping ADK systems.",
+      "title": "Tools, prompts, and knowledge",
+      "description": "What the agent may call, how it is told, and what it remembers or retrieves.",
       "skills": [
+        "adk-tools",
+        "adk-prompts",
+        "adk-rag",
+        "adk-embeddings",
+        "adk-memory"
+      ]
+    },
+    {
+      "title": "Models",
+      "description": "Which model runs, how effort is tuned, and how providers are crossed.",
+      "skills": [
+        "adk-model-routing",
+        "adk-litellm"
+      ]
+    },
+    {
+      "title": "Production",
+      "description": "Shipping, operating, debugging, and moving off 1.x.",
+      "skills": [
+        "adk-deploy-production",
         "adk-deployment",
-        "adk-migration",
         "adk-debug",
-        "adk-style",
-        "adk-git",
-        "adk-sample-creator"
+        "adk-migration",
+        "adk-architecture"
+      ]
+    },
+    {
+      "title": "Authoring",
+      "description": "Extending the library itself and the non-Python runtimes.",
+      "skills": [
+        "adk-skills-authoring",
+        "adk-typescript-go-parity"
       ]
     }
   ]

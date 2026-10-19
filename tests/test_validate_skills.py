@@ -220,3 +220,38 @@ def test_main_missing_path_is_usage_error(tmp_path):
 def test_inline_code_links_are_ignored(tmp_path):
     write_skill(tmp_path, "adk-good", body="Use `[Title](path/index.md)` as the shape.\n")
     assert validate(tmp_path) == []
+
+
+# ── Taxonomy surfaces: manifests must name every skill, and nothing else ─────
+
+
+def _skill_names() -> set[str]:
+    return {p.name for p in (REPO_ROOT / "skills").iterdir() if p.is_dir()}
+
+
+def _json_skill_names() -> list[str]:
+    import json
+
+    data = json.loads((REPO_ROOT / "skills.sh.json").read_text())
+    return [name for group in data["groupings"] for name in group["skills"]]
+
+
+def _table_skill_names(path: Path) -> set[str]:
+    import re
+
+    text = path.read_text()
+    return set(re.findall(r"^\| `(adk-[a-z0-9-]+)` \|", text, re.MULTILINE))
+
+
+def test_skills_sh_json_covers_every_skill_once():
+    names = _json_skill_names()
+    assert len(names) == len(set(names)), "duplicate skill in skills.sh.json"
+    assert set(names) == _skill_names()
+
+
+def test_claude_router_covers_every_skill():
+    assert _table_skill_names(REPO_ROOT / "CLAUDE.md") == _skill_names()
+
+
+def test_readme_skill_table_covers_every_skill():
+    assert _table_skill_names(REPO_ROOT / "README.md") == _skill_names()

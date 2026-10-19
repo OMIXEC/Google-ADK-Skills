@@ -1,6 +1,12 @@
 ---
 name: adk-deployment
-description: ADK deployment specialist covering Cloud Run, GKE, Vertex AI Agent Engine, and Docker containerization. Use when deploying ADK agents to production, configuring cloud infrastructure, or setting up CI/CD pipelines for ADK applications.
+description: >-
+  Runs ADK's own deploy path: Cloud Run, GKE, Vertex AI Agent Engine, and the Docker and
+  Kubernetes manifests behind them, using the adk deploy commands. Use when executing a
+  deployment or writing a provider-specific manifest. Don't use for CI/CD, security,
+  observability, evaluation, or the pre-deploy gate (use adk-deploy-production), for
+  agent design (use adk-agent-architecture), or for Go and TypeScript templates (use
+  adk-typescript-go-parity).
 compatibility: google-adk>=2.9.2,<3
 ---
 

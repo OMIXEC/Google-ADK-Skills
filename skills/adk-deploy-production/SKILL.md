@@ -1,15 +1,13 @@
 ---
 name: adk-deploy-production
 description: >-
-  Takes an ADK agent or workflow to production: CI/CD pipelines, container and
-  cloud targets (Cloud Run, Agent Engine, GKE, AWS, Azure), identity and
-  database integration, guardrails, observability, resilience, evaluation, and
-  the pre-deploy checklist. Use when packaging an agent, choosing a deployment
-  target, wiring auth or a database, adding tracing and metrics, designing
-  retries and fallbacks, or deciding whether a build is safe to ship. Don't use
-  for designing the workflow graph (use adk-graph-workflows), for agent internals
-  such as tools and memory (use adk-agent-architecture), or for Go/TypeScript
-  reference templates (use adk-typescript-go-parity).
+  Takes an ADK agent or workflow to production: CI/CD pipelines, container and cloud
+  targets, identity and database integration, guardrails, observability, resilience,
+  evaluation, and the pre-deploy checklist. Use when packaging an agent, wiring auth or
+  a database, adding tracing and metrics, designing retries and fallbacks, or deciding
+  whether a build is safe to ship. Don't use for the provider's own deploy command
+  syntax (use adk-deployment), for designing the workflow graph (use
+  adk-graph-workflows), or for agent internals (use adk-agent-architecture).
 compatibility: google-adk>=2.9.2,<3
 ---
 

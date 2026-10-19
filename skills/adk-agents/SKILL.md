@@ -1,6 +1,11 @@
 ---
 name: adk-agents
-description: ADK multi-agent systems expert covering agent composition, routing patterns, sequential/parallel execution, and supervisor architectures. Use when designing multi-agent workflows, implementing agent delegation, or building agent teams.
+description: >-
+  Composes multiple ADK agents into a team: supervisor, router, sequential and parallel
+  delegation, and sub-agent handoff. Use when deciding which agent owns which job and
+  how they delegate to each other. Don't use for edges between deterministic steps or
+  fan-out topology (use adk-graph-workflows), for one agent's tools or memory (use
+  adk-agent-architecture), or for calls across processes (use adk-a2a).
 compatibility: google-adk>=2.9.2,<3
 ---
 

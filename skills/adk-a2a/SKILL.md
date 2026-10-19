@@ -1,6 +1,11 @@
 ---
 name: adk-a2a
-description: ADK Agent-to-Agent (A2A) protocol expert covering remote agent communication, agent cards, HTTP-based delegation, and distributed agent systems. Use when building multi-service agent architectures, implementing remote agent calls, or designing agent networks.
+description: >-
+  Implements the ADK Agent-to-Agent (A2A) protocol: agent cards, remote delegation over
+  HTTP, streaming task exchange, and auth propagation across service boundaries. Use
+  when agents in different processes or languages must call each other. Don't use for
+  in-process sub-agent delegation (use adk-agent-architecture), for tool servers (use
+  adk-mcp), or for the shape of the local workflow (use adk-graph-workflows).
 compatibility: google-adk>=2.9.2,<3
 ---
 

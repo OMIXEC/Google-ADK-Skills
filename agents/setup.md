@@ -12,7 +12,8 @@ development environment for ADK Python.
 
 ## Adaptive skill loading (do this first)
 
-Load `adk-setup` with the **Skill** tool for the full, current setup procedure
+If the `adk-setup` skill is installed (`install.sh --with-contributing`), load
+it with the **Skill** tool for the full, current setup procedure
 (including any MCP/context7 enablement notes), then follow it.
 
 ## Prerequisites

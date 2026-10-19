@@ -1,17 +1,12 @@
 ---
 name: adk-agent-builder
 description: >-
-  Builds ADK (Agent Development Kit) Python agents: LLM agents with tools,
-  graph workflows of function and agent nodes, conditional routing, fan-out and
-  join, schema-validated delegation between agents, human-in-the-loop pauses,
-  and pytest coverage for all of it. Use when asked to create an agent or a
-  workflow, add a tool to one, branch or loop between nodes, run steps in
-  parallel, pause for user approval, or test an agent. Don't use for explaining
-  how ADK works internally or designing its core components (use
-  `adk-architecture`), for an agent that already runs but misbehaves (use
-  `adk-debug`), for authoring a sample under `contributing/` (use
-  `adk-sample-creator`), or for naming, typing, and formatting conventions (use
-  `adk-style`).
+  Builds a single ADK Python agent from scratch: the LLM agent, its instruction, its
+  tools, task and single-turn modes, and the first test. Use when creating one agent or
+  adding a tool or a mode to an existing one. Don't use for how multiple nodes connect
+  (use adk-graph-workflows), for deep tool, memory, or protocol design (use
+  adk-agent-architecture), for choosing a role (use adk-agent-personas), or for an agent
+  that already runs but misbehaves (use adk-debug).
 compatibility: google-adk>=2.9.2,<3
 ---
 

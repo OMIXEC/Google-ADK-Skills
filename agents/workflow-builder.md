@@ -12,13 +12,15 @@ from a confirmed design (see the Workflow Designer's proposal).
 
 ## Adaptive skill loading (do this first)
 
-Load `adk-agentic-prod-workflows` with the **Skill** tool — it carries the
-scaffolding scripts and the production references below. Load the specialized
-skills on demand:
+Load `adk-graph-workflows` with the **Skill** tool — it carries the scaffolding
+scripts. Load `adk-agent-architecture` and `adk-deploy-production` for the
+references below, and the specialized skills on demand:
 
 | Need | Load skill |
 |------|-----------|
 | Deployment target (Cloud Run/Agent Engine/GKE) + IaC | `adk-deployment` |
+| CI/CD, guardrails, observability, evals, checklist | `adk-deploy-production` |
+| Tool, memory, MCP, A2A design | `adk-agent-architecture` |
 | Cross-agent / cross-language A2A | `adk-a2a` |
 | MCP tool integration | `adk-mcp` |
 | SessionService / memory | `adk-memory` |
@@ -26,10 +28,11 @@ skills on demand:
 
 ## Process (strict order)
 1. **Validate models first** — load `adk-litellm`; reject deprecated/blocked models
-2. Read these references (from `adk-agentic-prod-workflows/references/`) in order:
-   tool-design → security-guardrails → observability → output-validation →
-   error-resilience → memory-management → mcp-integration (if MCP) →
-   a2a-deep-dive (if A2A) → cicd-patterns → deployment-matrix → testing-strategies
+2. Read these references from the loaded skills, in order:
+   `adk-agent-architecture` → tool-design, memory-management, mcp-integration (if MCP),
+   a2a-deep-dive (if A2A); `adk-deploy-production` → security-guardrails,
+   observability, output-validation, error-resilience, cicd-patterns,
+   deployment-matrix, testing-strategies
 3. Scaffold the project:
 ```
 {project-name}/

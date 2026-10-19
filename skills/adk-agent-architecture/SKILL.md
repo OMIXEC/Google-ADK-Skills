@@ -1,15 +1,14 @@
 ---
 name: adk-agent-architecture
 description: >-
-  Designs the internals of an ADK 2.x agent or cooperating set: agent modes,
-  tool boundaries, MCP and A2A integration, session state and memory, structured
-  output, and model routing. Use when deciding what one agent is made of, which
-  tools it may call, how it talks to another agent, what it remembers between
-  turns, or which model it should use. Don't use for how nodes and edges connect
-  (use adk-graph-workflows), for CI/CD, containers, or cloud deployment (use
-  adk-deploy-production), for LangGraph state machines or autonomous goal loops
-  (use adk-langgraph or adk-autonomous-agent), or for non-Google provider
-  wiring (use adk-litellm).
+  Designs the internals of an ADK 2.x agent or cooperating set: agent modes, tool
+  boundaries, MCP and A2A integration, session state and memory, structured output, and
+  model routing. Use when deciding what one agent is made of, which tools it may call,
+  how it talks to another agent, what it remembers between turns, or which model it
+  should use. Don't use for how nodes and edges connect (use adk-graph-workflows), for
+  CI/CD or cloud deployment (use adk-deploy-production), for autonomous loops or
+  LangGraph (use adk-agent-orchestration), or for non-Google provider wiring (use
+  adk-litellm).
 compatibility: google-adk>=2.9.2,<3
 ---
 

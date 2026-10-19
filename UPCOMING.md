@@ -12,7 +12,7 @@ The new `adk-model-routing` skill defines the target policy. Backend model route
 - **Fallback:** per-capability primary→fallback chains with circuit breaker + backoff; cross-provider via LiteLLM; emit `ok|degraded|error`. See `skills/adk-model-routing/references/fallback.md`.
 - **SDK:** `google-genai` v2.0.0+ for the Interactions API.
 
-Cross-reference audit of `adk-agentic-prod-workflows` against `docs/adk-course/` curriculum standards. Prioritized by production impact.
+Cross-reference audit of `adk-graph-workflows` against `docs/adk-course/` curriculum standards. Prioritized by production impact.
 
 ## CRITICAL (blocks production use)
 
