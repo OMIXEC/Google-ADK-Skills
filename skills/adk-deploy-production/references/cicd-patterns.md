@@ -172,7 +172,7 @@ class Config(BaseModel):
     env: str = os.getenv("ENV", "dev")
     log_level: str = os.getenv("LOG_LEVEL", "INFO")
     google_project: str = os.getenv("GOOGLE_CLOUD_PROJECT", "")
-    model_name: str = os.getenv("MODEL_NAME", "gemini-3.5-flash")
+    model_name: str = os.getenv("MODEL_NAME", "gemini-3.8-flash")
 
     @property
     def is_production(self) -> bool:

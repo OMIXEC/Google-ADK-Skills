@@ -252,13 +252,13 @@ Track token usage and cost in real-time. Enforce per-session budgets with hard c
 # verify current prices at ai.google.dev/pricing and update monthly.
 COST_PER_1M_INPUT = {
     "gemini-3.1-flash-lite": 0.075,
-    "gemini-3.5-flash":      0.15,
+    "gemini-3.8-flash":      0.15,
     "gemini-3.1-pro-preview": 1.25,
 }
 
 COST_PER_1M_OUTPUT = {
     "gemini-3.1-flash-lite": 0.30,
-    "gemini-3.5-flash":      0.60,
+    "gemini-3.8-flash":      0.60,
     "gemini-3.1-pro-preview": 10.00,
 }
 
@@ -343,7 +343,7 @@ async def after_model_callback_cost(callback_context):
 # Wire into agent
 agent = LlmAgent(
     name="cost_tracked_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     before_model_callback=before_model_callback_timer,
     after_model_callback=after_model_callback_cost,
 )

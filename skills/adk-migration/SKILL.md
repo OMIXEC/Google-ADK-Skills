@@ -40,8 +40,8 @@ Scan the codebase (`grep`) for each left-hand pattern and apply the fix:
 | `adk deploy cloud-run` / `adk deploy vertex` | `adk deploy cloud_run` / `adk deploy agent_engine` |
 | `thinking_budget=<int>` | `thinking_level="minimal\|low\|medium\|high"` |
 | `temperature` / `top_p` / `top_k` / `candidate_count` on Gemini 3.x | remove (no longer recommended / unsupported) |
-| `gemini-2.0-*`, `gemini-1.5-*`, `gemini-2.5-*`, `gemini-pro` | `gemini-3.5-flash` / `gemini-3.1-flash-lite` / `gemini-3.1-pro-preview` |
-| `gemini-live-2.5-flash-native-audio`, `gemini-2.0-flash-live-001` | `gemini-3.1-flash-live-preview` |
+| `gemini-2.0-*`, `gemini-1.5-*`, `gemini-2.5-*`, `gemini-pro` | `gemini-3.8-flash` / `gemini-3.1-flash-lite` / `gemini-3.1-pro-preview` |
+| `gemini-live-2.5-flash-native-audio`, `gemini-2.0-flash-live-001` | `gemini-3.8-live` |
 | `text-embedding-004`, `embedding-001` | `gemini-embedding-2` |
 | `google-adk` 1.x pin, Python 3.11-only | `google-adk>=2.9.2,<3`, Python **3.10+**, `google-genai` v2.0.0+ |
 

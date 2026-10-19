@@ -57,7 +57,7 @@ Tavily provides a search API that returns answers derived from real-time search 
     # Define the ADK agent, including the wrapped tool
     my_agent = Agent(
         name="langchain_tool_agent",
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         description="Agent to answer questions using TavilySearch.",
         instruction="I can answer your questions by searching the internet. Just ask me anything!",
         tools=[adk_tavily_tool] # Add the wrapped tool here
@@ -127,7 +127,7 @@ Serper API provides access to Google Search results programmatically. It allows 
     # Define the ADK agent
     my_agent = Agent(
         name="crewai_search_agent",
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         description="Agent to find recent news using the Serper search tool.",
         instruction="I can find the latest news for you. What topic are you interested in?",
         tools=[adk_serper_tool] # Add the wrapped tool here

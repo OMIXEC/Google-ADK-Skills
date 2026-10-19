@@ -16,12 +16,12 @@ language: python
 
 agents:
   - name: validator
-    model: gemini-3.5-flash
+    model: gemini-3.8-flash
     instruction: Validate incoming orders
     tools: [validate_order, check_inventory]
 
   - name: processor
-    model: gemini-3.5-flash
+    model: gemini-3.8-flash
     instruction: Process validated orders
     tools: [fulfill_order, send_confirmation]
 
@@ -175,7 +175,7 @@ def load_config(path: str) -> dict:
 
 
 def generate_python_agent(name: str, cfg: dict) -> str:
-    model = cfg.get("model", "gemini-3.5-flash")
+    model = cfg.get("model", "gemini-3.8-flash")
     instruction = cfg.get("instruction", f"Agent: {name}")
     tools = cfg.get("tools", [])
     tool_refs = ", ".join(tools) if tools else ""
@@ -353,7 +353,7 @@ import (
     lines.append("// ── Agent definitions ─────────────────────────────────────────────\n")
     for agent in agents_cfg:
         aname = agent.get("name", "unnamed")
-        model = agent.get("model", "gemini-3.5-flash")
+        model = agent.get("model", "gemini-3.8-flash")
         instruction = agent.get("instruction", f"Agent: {aname}")
         tools = agent.get("tools", [])
         tool_list = ", ".join(tools)
@@ -490,7 +490,7 @@ const {tname}Tool = new FunctionTool({tname}, {{ schema: {tname.title()}Input }}
     for agent in agents_cfg:
         aname = agent.get("name", "unnamed")
         agent_names.append(f"agent_{aname}")
-        model = agent.get("model", "gemini-3.5-flash")
+        model = agent.get("model", "gemini-3.8-flash")
         instruction = agent.get("instruction", f"Agent: {aname}")
         tools = agent.get("tools", [])
         tool_refs = ", ".join(f"{t}Tool" for t in tools) if tools else ""
@@ -685,7 +685,7 @@ from mcp import StdioServerParameters
 
 agent = Agent(
     name="{name}_mcp_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Use MCP tools to complete tasks. Each McpToolset gives access to specific external capabilities.",
     tools=[{', '.join(mcp_tool_vars)}],
 )

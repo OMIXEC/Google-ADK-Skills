@@ -111,14 +111,14 @@ from google.adk.tools import google_search  # Import the tool
 
 root_agent = Agent(
    name="google_search_agent",
-   model="gemini-3.1-flash-live-preview", # Live-capable model (must support bidiGenerateContent)
+   model="gemini-3.8-live", # Live-capable model (must support bidiGenerateContent)
    description="Agent to answer questions using Google Search.",
    instruction="Answer the question using the Google Search tool.",
    tools=[google_search],
 )
 ```
 
-**Note:**  To enable both text and audio/video input, the model must support the generateContent (for text) and bidiGenerateContent methods. Verify these capabilities by referring to the List Models Documentation. This quickstart uses the `gemini-3.1-flash-live-preview` model (Gemini Live API).
+**Note:**  To enable both text and audio/video input, the model must support the generateContent (for text) and bidiGenerateContent methods. Verify these capabilities by referring to the List Models Documentation. This quickstart uses the `gemini-3.8-live` model (Gemini Live API).
 
 Notice how easily you integrated grounding with Google Search capabilities.  The `Agent` class and the `google_search` tool handle the complex interactions with the LLM and grounding with the search API, allowing you to focus on the agent's *purpose* and *behavior*.
 
@@ -177,7 +177,7 @@ These console logs are important in case you develop your own streaming applicat
 6\. **Troubleshooting tips**
 
 - **When `ws://` doesn't work:** If you see any errors on the Chrome DevTools with regard to `ws://` connection, try replacing `ws://` with `wss://` on `app/static/js/app.js` at line 28. This may happen when you are running the sample on a cloud environment and using a proxy connection to connect from your browser.
-- **When the Live model doesn't work:** If you see errors on the app server console about `gemini-3.1-flash-live-preview` availability, check the List Models Documentation for a current Live-capable model (must support `bidiGenerateContent`) and update the model on `app/google_search_agent/agent.py` at line 6.
+- **When the Live model doesn't work:** If you see errors on the app server console about `gemini-3.8-live` availability, check the List Models Documentation for a current Live-capable model (must support `bidiGenerateContent`) and update the model on `app/google_search_agent/agent.py` at line 6.
 
 ## 4. Server code overview {#4.-server-side-code-overview}
 

@@ -37,7 +37,7 @@ Single coordinator delegates to specialized workers.
 ```python
 coordinator = Agent(
     name="support_coordinator",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     sub_agents=[billing, technical, general],
     instruction="Route to billing for payment questions, "
                 "technical for bug reports, general otherwise."
@@ -200,7 +200,7 @@ from google.adk.tools.mcp import StdioServerParameters
 
 coordinator = Agent(
     name="mcp_coordinator",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Use tools from connected MCP servers to complete tasks.",
     tools=[
         McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(

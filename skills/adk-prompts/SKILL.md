@@ -47,7 +47,7 @@ from google.adk import Agent
 # Agent with structured instructions
 agent = Agent(
     name="travel_planner",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You are a helpful assistant specializing in travel planning.
 
 ## Capabilities

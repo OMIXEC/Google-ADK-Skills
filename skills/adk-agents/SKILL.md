@@ -57,20 +57,20 @@ from google.adk import Agent
 # Specialist agents
 writer_agent = Agent(
     name="writer",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Write high-quality code based on requirements"
 )
 
 reviewer_agent = Agent(
     name="reviewer",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Review code for bugs and best practices"
 )
 
 # Orchestrator with sub-agents
 orchestrator = Agent(
     name="orchestrator",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     sub_agents=[writer_agent, reviewer_agent],
     instruction="""You coordinate code development:
     1. Delegate writing tasks to 'writer'
@@ -87,7 +87,7 @@ from google.adk import Agent
 # LLM-based routing
 router_agent = Agent(
     name="router",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     sub_agents=[billing_agent, technical_agent, general_agent],
     instruction="""Route user queries:
     - Billing questions → billing_agent

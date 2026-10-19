@@ -156,7 +156,7 @@ These console logs are important in case you develop your own streaming applicat
 6\. **Troubleshooting tips**
 
 - **When your browser can't connect to the server via SSH proxy:** SSH proxy used in various cloud services may not work with SSE. Please try without SSH proxy, such as using a local laptop, or try the [WebSocket](custom-streaming-ws.md) version.
-- **When the Live model doesn't work:** If you see errors on the app server console about `gemini-3.1-flash-live-preview` availability, check the List Models Documentation for a current Live-capable model (must support `bidiGenerateContent`) and update the model on `app/google_search_agent/agent.py` at line 6.
+- **When the Live model doesn't work:** If you see errors on the app server console about `gemini-3.8-live` availability, check the List Models Documentation for a current Live-capable model (must support `bidiGenerateContent`) and update the model on `app/google_search_agent/agent.py` at line 6.
 
 ## 4. Agent definition
 
@@ -169,7 +169,7 @@ from google.adk.tools import google_search  # Import the tool
 
 root_agent = Agent(
    name="google_search_agent",
-   model="gemini-3.1-flash-live-preview", # Live-capable model (must support bidiGenerateContent)
+   model="gemini-3.8-live", # Live-capable model (must support bidiGenerateContent)
    description="Agent to answer questions using Google Search.",
    instruction="Answer the question using the Google Search tool.",
    tools=[google_search],

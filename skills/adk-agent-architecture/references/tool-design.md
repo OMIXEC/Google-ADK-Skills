@@ -187,7 +187,7 @@ internal_tools = FunctionTool(transform_data)
 
 agent = Agent(
     name="hybrid_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     tools=[internal_tools, db_tools, api_tools],
 )
 ```

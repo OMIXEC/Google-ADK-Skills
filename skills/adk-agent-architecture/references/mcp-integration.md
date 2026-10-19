@@ -235,7 +235,7 @@ from mcp import StdioServerParameters
 
 # Stdio transport (local MCP server)
 agent = LlmAgent(
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     name="db_assistant",
     instruction="Use database tools to help users query and insert data.",
     tools=[
@@ -256,7 +256,7 @@ agent = LlmAgent(
 from google.adk.tools.mcp_tool import McpToolset, SseServerParams
 
 agent = LlmAgent(
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     name="remote_assistant",
     instruction="Use remote tools to help users.",
     tools=[

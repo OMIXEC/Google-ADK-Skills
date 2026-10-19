@@ -40,8 +40,10 @@ surface in examples.
 
 ## Model IDs
 
-Prefer current IDs: `gemini-3.5-flash`, `gemini-3.1-flash-lite`,
-`gemini-3.1-pro-preview`, `gemini-3.1-flash-live-preview` (live audio).
+Prefer current IDs: `gemini-3.8-flash` (default), `gemini-3.5-flash-lite`,
+`gemini-3.1-pro-preview`, `gemini-4-argon` (frontier), and `gemini-3.8-live`
+(live audio; `gemini-3.8-live-extended-thinking` when background reasoning is
+needed). `gemini-3.8-flash` routes to 3.6; `gemini-3.7-flash` routes to 3.8.
 Avoid stale `gemini-2.0-flash*` examples unless the project pins them.
 
 ## Migration cautions

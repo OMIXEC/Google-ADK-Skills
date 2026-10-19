@@ -164,7 +164,7 @@ from google.adk.agents.llm_agent import Agent
 from google.genai import types
 
 root_agent = Agent(
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     name="root_agent",
     instruction="""
       <You are a helpful assistant that can roll dice and check if numbers are prime.

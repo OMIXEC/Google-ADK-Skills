@@ -47,7 +47,7 @@ Python matrix, core imports, and the migration cautions.
   session, an external store for cross-session facts. Do not treat one as the
   other.
 - **Models are pinned.** Route by complexity (`gemini-3.1-flash-lite`,
-  `gemini-3.5-flash`, `gemini-3.1-pro-preview`) and never ship a `latest` alias
+  `gemini-3.8-flash`, `gemini-3.1-pro-preview`) and never ship a `latest` alias
   or a retired model ID.
 
 ## Agent templates

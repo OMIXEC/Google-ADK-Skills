@@ -6,7 +6,7 @@
 
 The new `adk-model-routing` skill defines the target policy. Backend model routers should adopt it:
 
-- **Model catalog:** standardize on `gemini-3.5-flash` (balanced), `gemini-3.1-flash-lite` (high-volume), `gemini-3.1-pro-preview` (complex), `gemini-3.1-flash-live-preview` (live), `gemini-embedding-2` (embeddings). Reject blocked IDs on config load.
+- **Model catalog:** standardize on `gemini-3.8-flash` (balanced), `gemini-3.5-flash-lite` (high-volume), `gemini-3.1-pro-preview` (complex), `gemini-4-argon` (frontier), `gemini-3.8-live` (live), `gemini-embedding-2` (embeddings). Reject blocked IDs on config load.
 - **Thinking/effort:** map operating mode + complexity → `thinking_level` (`minimal`/`low`/`medium`/`high`); default `medium`. Ambient→`minimal`, assist→`low`–`medium`, complex/safety→`high` (safety never below `medium`). Wire via `BuiltInPlanner(thinking_config=types.ThinkingConfig(...))` or `generate_content_config`.
 - **Deprecate:** remove `thinking_budget`, `temperature`/`top_p`/`top_k`, and `candidate_count` from Gemini 3.x calls. Never set `thinking_level` + `thinking_budget` together (400).
 - **Fallback:** per-capability primary→fallback chains with circuit breaker + backoff; cross-provider via LiteLLM; emit `ok|degraded|error`. See `skills/adk-model-routing/references/fallback.md`.

@@ -45,7 +45,7 @@ You can take an existing agent built using ADK and make it A2A-compatible by sim
 ```python
 # Your agent code here
 root_agent = Agent(
-    model='gemini-3.5-flash',
+    model='gemini-3.8-flash',
     name='hello_world_agent',
 
     <...your agent code...>

@@ -40,7 +40,7 @@ Use this skill when:
 --success-criteria "[criterion1,criterion2]" # For task type
 --enable-proactivity "true|false"            # Proactive behavior
 --max-thoughts "50"                          # Reasoning history limit
---model "gemini-3.1-flash-live-preview" # Live model
+--model "gemini-3.8-live" # Live model
 ```
 
 ## Autonomous Reasoning Loop
@@ -117,7 +117,7 @@ agent = AutonomousAgent(
     name="autonomous_assistant",
     goal="Help users complete their tasks efficiently",
     instruction="Be proactive and explain your reasoning.",
-    model="gemini-3.1-flash-live-preview",
+    model="gemini-3.8-live",
     max_thoughts=50,
     enable_proactivity=True,
     persistent_memory=InMemoryPersistentStore(),  # Optional long-term memory

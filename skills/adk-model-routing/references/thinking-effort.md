@@ -1,34 +1,33 @@
-# Thinking / Effort Levels (Gemini 3.x)
+# Thinking / Effort Levels
 
-Gemini 3.x models are reasoning models. Control reasoning depth with the
-`thinking_level` effort enum instead of the raw numeric `thinking_budget`.
+Gemini 3.x and 4 use `thinking_level`, an effort enum. `thinking_budget` is
+retired.
 
-## Effort tiers
+## Tiers
 
-| Level | When to use |
-|-------|-------------|
-| `minimal` | Response speed. Chat, quick factual answers, simple tool calls. |
-| `low` | Code/agentic tasks needing lower latency and fewer steps; light analysis/writing. |
-| `medium` **(default in 3.5)** | Best quality for most tasks. Recommended for complex code and agentic use cases. |
-| `high` | Maximizes reasoning + tool use. Hard math, difficult code/agent tasks, extended thoughts. |
-
-Default effort changed from `high` (Gemini 3 Flash Preview) to **`medium`** in
-Gemini 3.5 Flash. Start at `medium`; use `low`/`minimal` for speed and cost,
-`high` for the hardest problems.
+| Level | Use |
+|---|---|
+| `minimal` | Speed only. Chat, extraction, simple calls. Accepted by 3.5 Flash-Lite; rejected by Argon and the 3.8 family. |
+| `low` | Latency-sensitive agents, light analysis. |
+| `medium` | Default for most work. |
+| `high` | Hard math, difficult code, long-horizon agents, safety-critical decisions. |
 
 ## Per-model support
 
-| Level | 3.5 Flash | 3.1 Pro | 3.1 Flash-Lite | 3 Flash |
-|-------|-----------|---------|----------------|---------|
-| `minimal` | ✓ | — | ✓ (default) | ✓ |
-| `low` | ✓ | ✓ | ✓ | ✓ |
-| `medium` | ✓ (default) | ✓ | ✓ | ✓ |
-| `high` | ✓ (dynamic) | ✓ (default, dynamic) | ✓ (dynamic) | ✓ (default, dynamic) |
+| Model | `minimal` | `low` | `medium` | `high` | Default |
+|---|---|---|---|---|---|
+| `gemini-4-argon` | — (400) | ✓ | ✓ | ✓ | `medium` |
+| `gemini-3.8-flash` | — (400) | ✓ | ✓ | ✓ | `medium` |
+| `gemini-3.6-flash` | — | ✓ | ✓ | ✓ | `medium` |
+| `gemini-3.5-flash-lite` | ✓ | ✓ | ✓ | ✓ | `low` |
+| `gemini-3.1-flash-lite` | ✓ | ✓ | ✓ | ✓ | `minimal` |
+| `gemini-3.1-pro-preview` | — | ✓ | ✓ | ✓ | `high` |
+| `gemini-3.8-live` | n/a | n/a | n/a | n/a | streaming |
 
-## Setting it in ADK 2.3
+Argon rejects `thinking_budget` outright with a 400. The 3.x family accepts it
+for compatibility but the value is not the supported control surface.
 
-`types.ThinkingConfig` (from `google.genai`) carries `thinking_level`,
-`thinking_budget`, and `include_thoughts`. Attach via a planner or the model config:
+## Setting it in ADK
 
 ```python
 from google.adk.agents import LlmAgent
@@ -36,7 +35,7 @@ from google.adk.planners import BuiltInPlanner
 from google.genai import types
 
 agent = LlmAgent(
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     name="coder",
     planner=BuiltInPlanner(
         thinking_config=types.ThinkingConfig(thinking_level="medium"),
@@ -44,34 +43,30 @@ agent = LlmAgent(
 )
 ```
 
-If both the planner and `generate_content_config` set thinking, the **planner's
-config wins**. Verify against `google.adk.agents.llm_agent` in the installed
-package when needed. A
-`ThinkingConfig` on a model that doesn't support thinking raises an error.
+If both the planner and `generate_content_config` set thinking, the planner
+wins. Never set `thinking_level` and `thinking_budget` in one request; the API
+returns 400 and a retry will fail the same way.
 
-## Migration & best practices (all Gemini 3.x)
+## Sampling parameters
 
-- **Replace `thinking_budget` → `thinking_level`.** Do not set both in one
-  request → `400`. (`thinking_budget` still works for backward-compat but is not
-  recommended.)
-- **Remove `temperature`, `top_p`, `top_k`** — no longer recommended; defaults
-  are tuned for 3.x reasoning. For determinism, use a system instruction with
-  explicit rules instead.
-- **Remove `candidate_count`** — not supported on Gemini 3.x.
-- **Thought preservation** is automatic across turns. For stateless multi-turn
-  function calling, keep thought signatures in `contents` (official SDKs handle this).
-- **Reduce excess tool calls:** lower the thinking level first; if it persists,
-  add a system instruction capping the tool-call budget.
-- **Function-calling strict matching:** every `FunctionResponse` must include the
-  call `id`, match the `name`, and return exactly one response per `FunctionCall`.
+`temperature`, `top_p`, and `top_k` are ignored by Gemini 3.x and 4. Send them
+and nothing changes; rely on them and behavior drifts for reasons you cannot
+see. For determinism, put explicit rules in the system instruction.
+`candidate_count` is unsupported.
 
-## Backend effort mapping (future plan)
+## Function calling
 
-Map operating mode + complexity → effort:
+- Echo `id` and `name` on every `FunctionResponse`; one response per
+  `FunctionCall`.
+- Keep thought signatures in `contents` for stateless multi-turn calls. SDKs
+  handle this when history is passed through unchanged.
+- The last message must not have `role="model"`.
+
+## Effort mapping
 
 | Mode / complexity | thinking_level |
-|-------------------|----------------|
-| Ambient / passive monitor | `minimal` |
-| On-demand assist, tool-calling, RAG | `low`–`medium` |
-| Complex reasoning, planning | `high` |
-| Safety-critical decisions | `high` (never below `medium`) |
+|---|---|
+| Ambient monitor, extraction | `minimal` (where supported) |
+| On-demand assist, RAG, tools | `low`–`medium` |
+| Complex planning and code | `high` |
+| Safety-critical | `high`, never below `medium` |

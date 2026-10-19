@@ -121,7 +121,7 @@ from google.adk.tools.skill_toolset import SkillToolset
 toolset = SkillToolset(skills=load_skills_from_dir("skills"))
 root_agent = Agent(
     name="assistant",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Load a skill before answering a task it covers.",
     tools=[toolset],
 )

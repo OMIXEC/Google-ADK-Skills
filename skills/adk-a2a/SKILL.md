@@ -63,7 +63,7 @@ from google.adk import Agent
 
 root_agent = Agent(
     name="root_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction=(
         "Route remote-capability tasks through verified A2A adapters only. "
         "Propagate auth, timeout, retry, and correlation metadata."

@@ -1,591 +1,1015 @@
 {
-  "fetched_at": "2026-05-27T15:27:23.952496+00:00",
+  "fetched_at": "2026-10-19T16:47:45.548933+00:00",
   "sources": [
     "https://ai.google.dev/gemini-api/docs/models",
     "https://ai.google.dev/gemini-api/docs/deprecations"
   ],
   "summary": {
-    "total": 109,
-    "active": 83,
-    "deprecated": 23,
-    "blocked": 3
+    "total": 54,
+    "active": 31,
+    "deprecated": 15,
+    "blocked": 8
   },
   "models_by_type": {
     "llm_pro": [
       {
-        "id": "gemini-2-5-pro",
+        "id": "gemini-2.5-pro",
+        "name": "Gemini 2.5 Pro",
         "type": "llm_pro",
         "status": "stable",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2.5-pro",
-        "type": "llm_pro",
-        "status": "deprecated",
-        "shutdown_date": "2026-10-16"
-      },
-      {
-        "id": "gemini-3-pro-image-preview",
-        "type": "llm_pro",
-        "status": "preview",
-        "shutdown_date": null
+        "release_date": "2025-06-17",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "gemini-3-pro-preview",
+        "name": "Gemini 3 Pro Preview",
         "type": "llm_pro",
         "status": "blocked",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-3-pro-preview-deprecated",
-        "type": "llm_pro",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-3.1-pro",
-        "type": "llm_pro",
-        "status": "stable",
-        "shutdown_date": null
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "gemini-3.1-pro-preview",
+        "name": "Gemini 3.1 Pro",
         "type": "llm_pro",
         "status": "preview",
-        "shutdown_date": null
+        "release_date": "2026-02-19",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
-        "id": "gemini_25_pro",
+        "id": "gemini-4-argon",
+        "name": "Gemini 4 Argon",
         "type": "llm_pro",
         "status": "stable",
-        "shutdown_date": null
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       }
     ],
     "llm_flash": [
       {
-        "id": "gemini-2-0-flash-deprecated",
-        "type": "llm_flash",
-        "status": "stable",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2-5-flash",
-        "type": "llm_flash",
-        "status": "stable",
-        "shutdown_date": null
-      },
-      {
         "id": "gemini-2.0-flash",
+        "name": "Gemini 2.0 Flash",
         "type": "llm_flash",
         "status": "blocked",
-        "shutdown_date": "2026-06-01"
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "gemini-2.5-flash",
+        "name": "Gemini 2.5 Flash",
         "type": "llm_flash",
-        "status": "deprecated",
-        "shutdown_date": "2026-10-16"
-      },
-      {
-        "id": "gemini-2.5-flash-image",
-        "type": "llm_flash",
-        "status": "deprecated",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2.5-flash-preview-09-2025",
-        "type": "llm_flash",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "stable",
+        "release_date": "2025-06-17",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "gemini-3-flash-preview",
+        "name": "Gemini 3 Flash",
         "type": "llm_flash",
         "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-3.1-flash-image-preview",
-        "type": "llm_flash",
-        "status": "preview",
-        "shutdown_date": null
+        "release_date": "2025-12-17",
+        "shutdown_date": null,
+        "replacement": "gemini-3.6-flash"
       },
       {
         "id": "gemini-3.5-flash",
+        "name": "gemini-3.5-flash",
         "type": "llm_flash",
         "status": "deprecated",
-        "shutdown_date": null
+        "release_date": "2026-05-19",
+        "shutdown_date": null,
+        "replacement": "gemini-3.6-flash (not available to select in Google AI Studio; the endpoint is not shutting down and automatically routes API requests to gemini-3.6-flash )"
       },
       {
-        "id": "gemini-flash-latest",
+        "id": "gemini-3.6-flash",
+        "name": "Gemini 3.6 Flash",
         "type": "llm_flash",
         "status": "stable",
-        "shutdown_date": null
+        "release_date": "2026-07-21",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
-        "id": "gemini_25_flash",
+        "id": "gemini-3.7-flash",
+        "name": "gemini-3.7-flash",
+        "type": "llm_flash",
+        "status": "deprecated",
+        "release_date": "2026-08-13",
+        "shutdown_date": null,
+        "replacement": "gemini-3.8-flash (not available to select in Google AI Studio; the endpoint is not shutting down and automatically routes API requests to gemini-3.8-flash )"
+      },
+      {
+        "id": "gemini-3.8-flash",
+        "name": "Gemini 3.8 Flash",
         "type": "llm_flash",
         "status": "stable",
-        "shutdown_date": null
+        "release_date": "2026-09-02",
+        "shutdown_date": null,
+        "replacement": null
       }
     ],
     "llm_flash_lite": [
       {
-        "id": "gemini-2-0-flash-lite-deprecated",
-        "type": "llm_flash_lite",
-        "status": "stable",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2-5-flash-lite",
-        "type": "llm_flash_lite",
-        "status": "stable",
-        "shutdown_date": null
-      },
-      {
         "id": "gemini-2.0-flash-lite",
+        "name": "Gemini 2.0 Flash-Lite",
         "type": "llm_flash_lite",
         "status": "blocked",
-        "shutdown_date": "2026-06-01"
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "gemini-2.5-flash-lite",
+        "name": "Gemini 2.5 Flash-Lite",
         "type": "llm_flash_lite",
-        "status": "deprecated",
-        "shutdown_date": "2026-10-16"
-      },
-      {
-        "id": "gemini-2.5-flash-lite-preview-09-2025",
-        "type": "llm_flash_lite",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "stable",
+        "release_date": "2025-07-22",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "gemini-3.1-flash-lite",
+        "name": "Gemini 3.1 Flash-Lite",
         "type": "llm_flash_lite",
         "status": "deprecated",
-        "shutdown_date": null
+        "release_date": "2026-05-07",
+        "shutdown_date": "2027-05-07",
+        "replacement": "gemini-3.5-flash-lite"
       },
       {
         "id": "gemini-3.1-flash-lite-preview",
+        "name": "Gemini 3.1 Flash-Lite Preview",
         "type": "llm_flash_lite",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "blocked",
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       },
       {
-        "id": "gemini_25_flash-lite",
+        "id": "gemini-3.5-flash-lite",
+        "name": "Gemini 3.5 Flash-Lite",
         "type": "llm_flash_lite",
         "status": "stable",
-        "shutdown_date": null
+        "release_date": "2026-07-21",
+        "shutdown_date": null,
+        "replacement": null
       }
     ],
     "live_audio": [
       {
-        "id": "gemini-2-5-flash-live-preview",
-        "type": "live_audio",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2-5-flash-live-preview-2",
-        "type": "live_audio",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
         "id": "gemini-2.5-flash-native-audio-preview-12-2025",
+        "name": "Gemini 2.5 Flash Live",
         "type": "live_audio",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-3-1-flash-live-preview-2",
-        "type": "live_audio",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "deprecated",
+        "release_date": "2025-12-12",
+        "shutdown_date": "2026-11-17",
+        "replacement": "gemini-3.8-live"
       },
       {
         "id": "gemini-3.1-flash-live-preview",
+        "name": "Gemini 3.1 Flash Live",
+        "type": "live_audio",
+        "status": "deprecated",
+        "release_date": "2026-03-11",
+        "shutdown_date": "2026-11-17",
+        "replacement": "gemini-3.8-live"
+      },
+      {
+        "id": "gemini-3.5-live-translate-preview",
+        "name": "Gemini 3.5 Live Translate",
         "type": "live_audio",
         "status": "preview",
-        "shutdown_date": null
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "gemini-3.8-live",
+        "name": "Gemini 3.8 Live",
+        "type": "live_audio",
+        "status": "stable",
+        "release_date": "2026-09-15",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "gemini-3.8-live-extended-thinking",
+        "name": "Gemini 3.8 Live Extended Thinking",
+        "type": "live_audio",
+        "status": "stable",
+        "release_date": "2026-09-15",
+        "shutdown_date": null,
+        "replacement": null
       }
     ],
     "tts": [
       {
-        "id": "gemini-2-5-flash-tts-preview",
-        "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2-5-flash-tts-preview-2",
-        "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2-5-pro-tts-preview",
-        "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-2-5-pro-tts-preview-2",
-        "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
         "id": "gemini-2.5-flash-preview-tts",
+        "name": "Gemini 2.5 Flash TTS",
         "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "deprecated",
+        "release_date": "2025-05-20",
+        "shutdown_date": "2026-11-17",
+        "replacement": "gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts"
       },
       {
         "id": "gemini-2.5-pro-preview-tts",
+        "name": "Gemini 2.5 Pro TTS",
         "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "deprecated",
+        "release_date": "2025-05-20",
+        "shutdown_date": "2026-11-17",
+        "replacement": "gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts"
       },
       {
         "id": "gemini-3.1-flash-tts-preview",
+        "name": "Gemini 3.1 Flash TTS",
         "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "deprecated",
+        "release_date": "2026-02-26",
+        "shutdown_date": "2026-11-17",
+        "replacement": "gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts"
       },
       {
-        "id": "gemini-3.1-flash-tts-preview-2",
+        "id": "gemini-3.8-flash-lite-tts",
+        "name": "Gemini 3.8 Flash-Lite TTS",
         "type": "tts",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "stable",
+        "release_date": "2026-09-22",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "gemini-3.8-flash-tts",
+        "name": "Gemini 3.8 Flash TTS",
+        "type": "tts",
+        "status": "stable",
+        "release_date": "2026-09-22",
+        "shutdown_date": null,
+        "replacement": null
+      }
+    ],
+    "transcribe": [
+      {
+        "id": "gemini-3.5-transcribe",
+        "name": "Gemini 3.5 Transcribe",
+        "type": "transcribe",
+        "status": "stable",
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "gemini-3.5-transcribe-live",
+        "name": "gemini-3.5-transcribe-live",
+        "type": "transcribe",
+        "status": "stable",
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       }
     ],
     "image_gen": [
       {
-        "id": "imagen-4",
+        "id": "gemini-2.5-flash-image",
+        "name": "Nano Banana",
+        "type": "image_gen",
+        "status": "deprecated",
+        "release_date": "2025-10-02",
+        "shutdown_date": "2027-03-15",
+        "replacement": "gemini-3.1-flash-lite-image"
+      },
+      {
+        "id": "gemini-3-pro-image",
+        "name": "Nano Banana Pro",
         "type": "image_gen",
         "status": "stable",
-        "shutdown_date": null
+        "release_date": "2026-05-28",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "gemini-3.1-flash-image",
+        "name": "Nano Banana 2",
+        "type": "image_gen",
+        "status": "stable",
+        "release_date": "2026-05-28",
+        "shutdown_date": null,
+        "replacement": "gemini-nano-banana-2.1"
+      },
+      {
+        "id": "gemini-3.1-flash-lite-image",
+        "name": "Nano Banana 2 Lite",
+        "type": "image_gen",
+        "status": "stable",
+        "release_date": "2026-06-30",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "gemini-nano-banana-2.1",
+        "name": "Nano Banana 2.1",
+        "type": "image_gen",
+        "status": "stable",
+        "release_date": "2026-10-06",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "imagen-4.0-generate",
+        "name": "imagen-4.0-generate",
+        "type": "image_gen",
+        "status": "blocked",
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       }
     ],
     "video_gen": [
       {
-        "id": "veo-2.0-generate-001",
+        "id": "gemini-omni-1.1-flash",
+        "name": "Gemini Omni Flash",
         "type": "video_gen",
-        "status": "deprecated",
-        "shutdown_date": null
+        "status": "stable",
+        "release_date": "2026-08-27",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
-        "id": "veo-3-1-preview",
+        "id": "gemini-omni-flash-preview",
+        "name": "gemini-omni-flash-preview",
         "type": "video_gen",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "deprecated",
+        "release_date": "2026-06-30",
+        "shutdown_date": "2026-10-22",
+        "replacement": "gemini-omni-1.1-flash"
+      },
+      {
+        "id": "veo-3.1-fast-generate-preview",
+        "name": "veo-3.1-fast-generate-preview",
+        "type": "video_gen",
+        "status": "deprecated",
+        "release_date": "2025-10-15",
+        "shutdown_date": "2026-10-22",
+        "replacement": "gemini-omni-1.1-flash"
       },
       {
         "id": "veo-3.1-generate-preview",
+        "name": "Veo 3.1",
         "type": "video_gen",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "veo-3.1-lite",
-        "type": "video_gen",
-        "status": "stable",
-        "shutdown_date": null
+        "status": "deprecated",
+        "release_date": "2025-10-15",
+        "shutdown_date": "2026-10-22",
+        "replacement": "gemini-omni-1.1-flash"
       },
       {
         "id": "veo-3.1-lite-generate-preview",
+        "name": "Veo 3.1 Lite",
         "type": "video_gen",
-        "status": "preview",
-        "shutdown_date": null
-      }
-    ],
-    "embedding": [
-      {
-        "id": "embeddings",
-        "type": "embedding",
         "status": "deprecated",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-embedding-001",
-        "type": "embedding",
-        "status": "deprecated",
-        "shutdown_date": "2026-07-14"
-      },
-      {
-        "id": "gemini-embedding-2",
-        "type": "embedding",
-        "status": "deprecated",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-embeddings",
-        "type": "embedding",
-        "status": "stable",
-        "shutdown_date": null
+        "release_date": "2026-03-31",
+        "shutdown_date": "2026-10-22",
+        "replacement": "gemini-omni-1.1-flash"
       }
     ],
     "music_gen": [
       {
-        "id": "lyria-3-clip",
-        "type": "music_gen",
-        "status": "stable",
-        "shutdown_date": null
-      },
-      {
         "id": "lyria-3-clip-preview",
+        "name": "Lyria 3 Clip",
         "type": "music_gen",
         "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "lyria-3-pro",
-        "type": "music_gen",
-        "status": "stable",
-        "shutdown_date": null
+        "release_date": "2026-03-25",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "lyria-3-pro-preview",
+        "name": "Lyria 3 Pro",
         "type": "music_gen",
         "status": "preview",
-        "shutdown_date": null
+        "release_date": "2026-03-25",
+        "shutdown_date": null,
+        "replacement": "lyria-3.5"
       },
       {
-        "id": "lyria-realtime",
+        "id": "lyria-3.5",
+        "name": "Lyria 3.5",
         "type": "music_gen",
         "status": "stable",
-        "shutdown_date": null
+        "release_date": "2026-09-03",
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "lyria-realtime-exp",
+        "name": "Lyria RealTime",
         "type": "music_gen",
         "status": "experimental",
-        "shutdown_date": null
+        "release_date": "2025-05-20",
+        "shutdown_date": null,
+        "replacement": null
+      }
+    ],
+    "embedding": [
+      {
+        "id": "gemini-embedding-001",
+        "name": "Gemini Embedding",
+        "type": "embedding",
+        "status": "deprecated",
+        "release_date": "2025-07-14",
+        "shutdown_date": "2028-05-14",
+        "replacement": "gemini-embedding-2"
+      },
+      {
+        "id": "gemini-embedding-2",
+        "name": "gemini-embedding-2",
+        "type": "embedding",
+        "status": "stable",
+        "release_date": "2026-04-22",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "gemini-embedding-2-preview",
+        "name": "Gemini Embedding 2",
+        "type": "embedding",
+        "status": "preview",
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       }
     ],
     "tool_agent": [
       {
-        "id": "antigravity-agent",
+        "id": "antigravity-preview-05-2026",
+        "name": "antigravity-preview-05-2026",
+        "type": "tool_agent",
+        "status": "blocked",
+        "release_date": "2026-05-19",
+        "shutdown_date": "2026-10-05",
+        "replacement": "antigravity-preview-09-2026"
+      },
+      {
+        "id": "antigravity-preview-09-2026",
+        "name": "Antigravity Agent",
+        "type": "tool_agent",
+        "status": "preview",
+        "release_date": "2026-09-17",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "deep-research-max-preview-04-2026",
+        "name": "Gemini Deep Research Max",
+        "type": "tool_agent",
+        "status": "preview",
+        "release_date": "2026-04-21",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "deep-research-preview-04-2026",
+        "name": "Gemini Deep Research",
+        "type": "tool_agent",
+        "status": "preview",
+        "release_date": "2026-04-21",
+        "shutdown_date": null,
+        "replacement": null
+      },
+      {
+        "id": "deep-research-pro-preview-12-2025",
+        "name": "deep-research-pro-preview-12-2025",
         "type": "tool_agent",
         "status": "deprecated",
-        "shutdown_date": null
-      },
-      {
-        "id": "antigravity-preview",
-        "type": "tool_agent",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "antigravity-preview-05-2026",
-        "type": "tool_agent",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "computer-use-preview",
-        "type": "tool_agent",
-        "status": "preview",
-        "shutdown_date": null
+        "release_date": "2025-12-11",
+        "shutdown_date": "2026-10-23",
+        "replacement": "deep-research-preview-04-2026"
       },
       {
         "id": "gemini-2.5-computer-use-preview-10-2025",
+        "name": "Computer Use",
         "type": "tool_agent",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-deep-research-max-preview",
-        "type": "tool_agent",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-deep-research-preview",
-        "type": "tool_agent",
-        "status": "preview",
-        "shutdown_date": null
-      },
-      {
-        "id": "gemini-robotics-er-1.5-preview",
-        "type": "tool_agent",
-        "status": "deprecated",
-        "shutdown_date": "2026-04-30"
+        "status": "blocked",
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       },
       {
         "id": "gemini-robotics-er-1.6-preview",
+        "name": "Gemini Robotics ER 1.6",
         "type": "tool_agent",
-        "status": "preview",
-        "shutdown_date": null
+        "status": "blocked",
+        "release_date": "2026-04-14",
+        "shutdown_date": "2026-08-31",
+        "replacement": "gemini-robotics-er-2-preview"
       },
       {
-        "id": "gemini-robotics-preview",
+        "id": "gemini-robotics-er-2-preview",
+        "name": "Gemini Robotics ER 2",
         "type": "tool_agent",
         "status": "preview",
-        "shutdown_date": null
+        "release_date": null,
+        "shutdown_date": null,
+        "replacement": null
       }
     ]
   },
-  "deprecated_models": [
+  "active_models": [
     {
-      "id": "Embeddings",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
-    },
-    {
-      "id": "antigravity-agent",
+      "id": "antigravity-preview-09-2026",
+      "name": "Antigravity Agent",
       "type": "tool_agent",
-      "status": "deprecated",
-      "shutdown_date": null
+      "status": "preview",
+      "release_date": "2026-09-17",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "embeddings",
-      "type": "embedding",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "deep-research-max-preview-04-2026",
+      "name": "Gemini Deep Research Max",
+      "type": "tool_agent",
+      "status": "preview",
+      "release_date": "2026-04-21",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "deep-research-preview-04-2026",
+      "name": "Gemini Deep Research",
+      "type": "tool_agent",
+      "status": "preview",
+      "release_date": "2026-04-21",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
       "id": "gemini-2.5-flash",
+      "name": "Gemini 2.5 Flash",
       "type": "llm_flash",
-      "status": "deprecated",
-      "shutdown_date": "2026-10-16"
-    },
-    {
-      "id": "gemini-2.5-flash-image",
-      "type": "llm_flash",
-      "status": "deprecated",
-      "shutdown_date": null
+      "status": "stable",
+      "release_date": "2025-06-17",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
       "id": "gemini-2.5-flash-lite",
+      "name": "Gemini 2.5 Flash-Lite",
       "type": "llm_flash_lite",
-      "status": "deprecated",
-      "shutdown_date": "2026-10-16"
+      "status": "stable",
+      "release_date": "2025-07-22",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
       "id": "gemini-2.5-pro",
+      "name": "Gemini 2.5 Pro",
       "type": "llm_pro",
-      "status": "deprecated",
-      "shutdown_date": "2026-10-16"
+      "status": "stable",
+      "release_date": "2025-06-17",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-3.1-flash-lite",
-      "type": "llm_flash_lite",
-      "status": "deprecated",
-      "shutdown_date": null
-    },
-    {
-      "id": "gemini-3.5",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
-    },
-    {
-      "id": "gemini-3.5-flash",
+      "id": "gemini-3-flash-preview",
+      "name": "Gemini 3 Flash",
       "type": "llm_flash",
-      "status": "deprecated",
-      "shutdown_date": null
+      "status": "preview",
+      "release_date": "2025-12-17",
+      "shutdown_date": null,
+      "replacement": "gemini-3.6-flash"
     },
     {
-      "id": "gemini-api",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3-pro-image",
+      "name": "Nano Banana Pro",
+      "type": "image_gen",
+      "status": "stable",
+      "release_date": "2026-05-28",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-api-2.png",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3.1-flash-image",
+      "name": "Nano Banana 2",
+      "type": "image_gen",
+      "status": "stable",
+      "release_date": "2026-05-28",
+      "shutdown_date": null,
+      "replacement": "gemini-nano-banana-2.1"
     },
     {
-      "id": "gemini-api-hovercard",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3.1-flash-lite-image",
+      "name": "Nano Banana 2 Lite",
+      "type": "image_gen",
+      "status": "stable",
+      "release_date": "2026-06-30",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-api-hovercard-button",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3.1-pro-preview",
+      "name": "Gemini 3.1 Pro",
+      "type": "llm_pro",
+      "status": "preview",
+      "release_date": "2026-02-19",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-api-logo-dark-theme.svg",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3.5-flash-lite",
+      "name": "Gemini 3.5 Flash-Lite",
+      "type": "llm_flash_lite",
+      "status": "stable",
+      "release_date": "2026-07-21",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-api-logo.svg",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3.5-live-translate-preview",
+      "name": "Gemini 3.5 Live Translate",
+      "type": "live_audio",
+      "status": "preview",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-api-model-table",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3.5-transcribe",
+      "name": "Gemini 3.5 Transcribe",
+      "type": "transcribe",
+      "status": "stable",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-api-switcher",
-      "type": "llm_unknown",
-      "status": "deprecated",
-      "shutdown_date": null
+      "id": "gemini-3.5-transcribe-live",
+      "name": "gemini-3.5-transcribe-live",
+      "type": "transcribe",
+      "status": "stable",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-embedding-001",
-      "type": "embedding",
-      "status": "deprecated",
-      "shutdown_date": "2026-07-14"
+      "id": "gemini-3.6-flash",
+      "name": "Gemini 3.6 Flash",
+      "type": "llm_flash",
+      "status": "stable",
+      "release_date": "2026-07-21",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "name": "Gemini 3.8 Flash",
+      "type": "llm_flash",
+      "status": "stable",
+      "release_date": "2026-09-02",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-3.8-flash-lite-tts",
+      "name": "Gemini 3.8 Flash-Lite TTS",
+      "type": "tts",
+      "status": "stable",
+      "release_date": "2026-09-22",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-3.8-flash-tts",
+      "name": "Gemini 3.8 Flash TTS",
+      "type": "tts",
+      "status": "stable",
+      "release_date": "2026-09-22",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-3.8-live",
+      "name": "Gemini 3.8 Live",
+      "type": "live_audio",
+      "status": "stable",
+      "release_date": "2026-09-15",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-3.8-live-extended-thinking",
+      "name": "Gemini 3.8 Live Extended Thinking",
+      "type": "live_audio",
+      "status": "stable",
+      "release_date": "2026-09-15",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-4-argon",
+      "name": "Gemini 4 Argon",
+      "type": "llm_pro",
+      "status": "stable",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
     },
     {
       "id": "gemini-embedding-2",
+      "name": "gemini-embedding-2",
       "type": "embedding",
-      "status": "deprecated",
-      "shutdown_date": null
+      "status": "stable",
+      "release_date": "2026-04-22",
+      "shutdown_date": null,
+      "replacement": null
     },
     {
-      "id": "gemini-robotics-er-1.5-preview",
+      "id": "gemini-embedding-2-preview",
+      "name": "Gemini Embedding 2",
+      "type": "embedding",
+      "status": "preview",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-nano-banana-2.1",
+      "name": "Nano Banana 2.1",
+      "type": "image_gen",
+      "status": "stable",
+      "release_date": "2026-10-06",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-omni-1.1-flash",
+      "name": "Gemini Omni Flash",
+      "type": "video_gen",
+      "status": "stable",
+      "release_date": "2026-08-27",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-robotics-er-2-preview",
+      "name": "Gemini Robotics ER 2",
+      "type": "tool_agent",
+      "status": "preview",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "lyria-3-clip-preview",
+      "name": "Lyria 3 Clip",
+      "type": "music_gen",
+      "status": "preview",
+      "release_date": "2026-03-25",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "lyria-3-pro-preview",
+      "name": "Lyria 3 Pro",
+      "type": "music_gen",
+      "status": "preview",
+      "release_date": "2026-03-25",
+      "shutdown_date": null,
+      "replacement": "lyria-3.5"
+    },
+    {
+      "id": "lyria-3.5",
+      "name": "Lyria 3.5",
+      "type": "music_gen",
+      "status": "stable",
+      "release_date": "2026-09-03",
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "lyria-realtime-exp",
+      "name": "Lyria RealTime",
+      "type": "music_gen",
+      "status": "experimental",
+      "release_date": "2025-05-20",
+      "shutdown_date": null,
+      "replacement": null
+    }
+  ],
+  "deprecated_models": [
+    {
+      "id": "deep-research-pro-preview-12-2025",
+      "name": "deep-research-pro-preview-12-2025",
       "type": "tool_agent",
       "status": "deprecated",
-      "shutdown_date": "2026-04-30"
+      "release_date": "2025-12-11",
+      "shutdown_date": "2026-10-23",
+      "replacement": "deep-research-preview-04-2026"
     },
     {
-      "id": "geminiAPI",
-      "type": "llm_unknown",
+      "id": "gemini-2.5-flash-image",
+      "name": "Nano Banana",
+      "type": "image_gen",
       "status": "deprecated",
-      "shutdown_date": null
+      "release_date": "2025-10-02",
+      "shutdown_date": "2027-03-15",
+      "replacement": "gemini-3.1-flash-lite-image"
     },
     {
-      "id": "veo-2.0-generate-001",
+      "id": "gemini-2.5-flash-native-audio-preview-12-2025",
+      "name": "Gemini 2.5 Flash Live",
+      "type": "live_audio",
+      "status": "deprecated",
+      "release_date": "2025-12-12",
+      "shutdown_date": "2026-11-17",
+      "replacement": "gemini-3.8-live"
+    },
+    {
+      "id": "gemini-2.5-flash-preview-tts",
+      "name": "Gemini 2.5 Flash TTS",
+      "type": "tts",
+      "status": "deprecated",
+      "release_date": "2025-05-20",
+      "shutdown_date": "2026-11-17",
+      "replacement": "gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts"
+    },
+    {
+      "id": "gemini-2.5-pro-preview-tts",
+      "name": "Gemini 2.5 Pro TTS",
+      "type": "tts",
+      "status": "deprecated",
+      "release_date": "2025-05-20",
+      "shutdown_date": "2026-11-17",
+      "replacement": "gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts"
+    },
+    {
+      "id": "gemini-3.1-flash-lite",
+      "name": "Gemini 3.1 Flash-Lite",
+      "type": "llm_flash_lite",
+      "status": "deprecated",
+      "release_date": "2026-05-07",
+      "shutdown_date": "2027-05-07",
+      "replacement": "gemini-3.5-flash-lite"
+    },
+    {
+      "id": "gemini-3.1-flash-live-preview",
+      "name": "Gemini 3.1 Flash Live",
+      "type": "live_audio",
+      "status": "deprecated",
+      "release_date": "2026-03-11",
+      "shutdown_date": "2026-11-17",
+      "replacement": "gemini-3.8-live"
+    },
+    {
+      "id": "gemini-3.1-flash-tts-preview",
+      "name": "Gemini 3.1 Flash TTS",
+      "type": "tts",
+      "status": "deprecated",
+      "release_date": "2026-02-26",
+      "shutdown_date": "2026-11-17",
+      "replacement": "gemini-3.8-flash-tts or gemini-3.8-flash-lite-tts"
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "name": "gemini-3.5-flash",
+      "type": "llm_flash",
+      "status": "deprecated",
+      "release_date": "2026-05-19",
+      "shutdown_date": null,
+      "replacement": "gemini-3.6-flash (not available to select in Google AI Studio; the endpoint is not shutting down and automatically routes API requests to gemini-3.6-flash )"
+    },
+    {
+      "id": "gemini-3.7-flash",
+      "name": "gemini-3.7-flash",
+      "type": "llm_flash",
+      "status": "deprecated",
+      "release_date": "2026-08-13",
+      "shutdown_date": null,
+      "replacement": "gemini-3.8-flash (not available to select in Google AI Studio; the endpoint is not shutting down and automatically routes API requests to gemini-3.8-flash )"
+    },
+    {
+      "id": "gemini-embedding-001",
+      "name": "Gemini Embedding",
+      "type": "embedding",
+      "status": "deprecated",
+      "release_date": "2025-07-14",
+      "shutdown_date": "2028-05-14",
+      "replacement": "gemini-embedding-2"
+    },
+    {
+      "id": "gemini-omni-flash-preview",
+      "name": "gemini-omni-flash-preview",
       "type": "video_gen",
       "status": "deprecated",
-      "shutdown_date": null
+      "release_date": "2026-06-30",
+      "shutdown_date": "2026-10-22",
+      "replacement": "gemini-omni-1.1-flash"
+    },
+    {
+      "id": "veo-3.1-fast-generate-preview",
+      "name": "veo-3.1-fast-generate-preview",
+      "type": "video_gen",
+      "status": "deprecated",
+      "release_date": "2025-10-15",
+      "shutdown_date": "2026-10-22",
+      "replacement": "gemini-omni-1.1-flash"
+    },
+    {
+      "id": "veo-3.1-generate-preview",
+      "name": "Veo 3.1",
+      "type": "video_gen",
+      "status": "deprecated",
+      "release_date": "2025-10-15",
+      "shutdown_date": "2026-10-22",
+      "replacement": "gemini-omni-1.1-flash"
+    },
+    {
+      "id": "veo-3.1-lite-generate-preview",
+      "name": "Veo 3.1 Lite",
+      "type": "video_gen",
+      "status": "deprecated",
+      "release_date": "2026-03-31",
+      "shutdown_date": "2026-10-22",
+      "replacement": "gemini-omni-1.1-flash"
     }
   ],
   "blocked_models": [
     {
+      "id": "antigravity-preview-05-2026",
+      "name": "antigravity-preview-05-2026",
+      "type": "tool_agent",
+      "status": "blocked",
+      "release_date": "2026-05-19",
+      "shutdown_date": "2026-10-05",
+      "replacement": "antigravity-preview-09-2026"
+    },
+    {
       "id": "gemini-2.0-flash",
+      "name": "Gemini 2.0 Flash",
       "type": "llm_flash",
       "status": "blocked",
-      "shutdown_date": "2026-06-01"
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
     },
     {
       "id": "gemini-2.0-flash-lite",
+      "name": "Gemini 2.0 Flash-Lite",
       "type": "llm_flash_lite",
       "status": "blocked",
-      "shutdown_date": "2026-06-01"
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-2.5-computer-use-preview-10-2025",
+      "name": "Computer Use",
+      "type": "tool_agent",
+      "status": "blocked",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
     },
     {
       "id": "gemini-3-pro-preview",
+      "name": "Gemini 3 Pro Preview",
       "type": "llm_pro",
       "status": "blocked",
-      "shutdown_date": null
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-3.1-flash-lite-preview",
+      "name": "Gemini 3.1 Flash-Lite Preview",
+      "type": "llm_flash_lite",
+      "status": "blocked",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
+    },
+    {
+      "id": "gemini-robotics-er-1.6-preview",
+      "name": "Gemini Robotics ER 1.6",
+      "type": "tool_agent",
+      "status": "blocked",
+      "release_date": "2026-04-14",
+      "shutdown_date": "2026-08-31",
+      "replacement": "gemini-robotics-er-2-preview"
+    },
+    {
+      "id": "imagen-4.0-generate",
+      "name": "imagen-4.0-generate",
+      "type": "image_gen",
+      "status": "blocked",
+      "release_date": null,
+      "shutdown_date": null,
+      "replacement": null
     }
   ]
 }

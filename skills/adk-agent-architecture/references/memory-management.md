@@ -444,7 +444,7 @@ async def after_agent_auto_save(callback_context):
 ```python
 entry_agent = LlmAgent(
     name="learning_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You are a personal assistant that learns about the user over time.
     When you learn a new fact about the user, mark it with [REMEMBER: <fact>].
     Use preload_memory() at the start of each session to recall past facts.""",

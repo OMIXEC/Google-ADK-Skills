@@ -65,11 +65,22 @@ the only 1.x material it carries is the migration path.
 
 | Retired | Use instead |
 |---|---|
-| `gemini-2.0-flash`, `gemini-2.0-flash-001`, `gemini-2.0-flash-lite` | `gemini-3.5-flash` or `gemini-3.1-flash-lite` |
-| `gemini-2.5-flash`, other 2.5 text models | `gemini-3.5-flash` |
+| `gemini-2.0-flash`, `-001`, `-lite`, `-lite-001` | `gemini-3.6-flash` or `gemini-3.1-flash-lite` |
 | `gemini-3-pro-preview` | `gemini-3.1-pro-preview` |
-| `gemini-2.0-flash-exp`, `gemini-2.0-flash-live-001` | `gemini-3.1-flash-live-preview` |
-| `text-embedding-004`, `embedding-001` | `gemini-embedding-2` |
+| `gemini-3.1-flash-lite-preview` | `gemini-3.1-flash-lite` |
+| `gemini-2.0-flash-live-001`, `gemini-3.1-flash-live-preview`, `gemini-2.5-flash-native-audio-preview-12-2025` | `gemini-3.8-live` |
+| `gemini-3.1-flash-tts-preview`, `gemini-2.5-*-preview-tts` | `gemini-3.8-flash-tts` |
+| `text-embedding-004`, `embedding-001`, `gemini-embedding-001` | `gemini-embedding-2` |
+| `imagen-4.0-*` | `gemini-nano-banana-2.1` |
+| `veo-3.1-*-preview` | `gemini-omni-1.1-flash` |
+
+Redirecting endpoints still answer but do not run the model you named:
+`gemini-3.5-flash` → `gemini-3.6-flash`, `gemini-3.7-flash` →
+`gemini-3.8-flash`.
+
+Shutdown dates that are close enough to plan around: Live and TTS previews
+**2026-11-17**, Veo 3.1 previews **2026-10-22**, `gemini-3.1-flash-lite`
+**2027-05-07**.
 
 Retired IDs are rejected by the repository tests
 (`TestV23MigrationGuards.test_no_blocked_model_ids_in_assignments`).

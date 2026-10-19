@@ -353,7 +353,7 @@ def rag_search(query: str, namespace: str = "product_docs") -> str:
 # Create RAG-enabled agent
 rag_agent = Agent(
     name="knowledge_assistant",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     description="AI assistant with access to product documentation",
     instruction="""You are a knowledgeable assistant with access to a comprehensive knowledge base.
 
@@ -711,7 +711,7 @@ def generate_response(state: RAGPipelineState) -> dict:
 
     agent = Agent(
         name="rag_responder",
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         instruction=f"""Answer based on this context:
 
 {context}
@@ -770,7 +770,7 @@ from mcp import StdioServerParameters
 
 # Use Pinecone via MCP server
 pinecone_agent = Agent(
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     name="pinecone_mcp_agent",
     instruction="Search and manage the vector knowledge base",
     tools=[

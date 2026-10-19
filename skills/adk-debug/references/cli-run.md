@@ -85,7 +85,7 @@ from google.adk import Agent
 from google.adk.runners import InMemoryRunner
 from google.genai import types
 
-agent = Agent(name="test", model="gemini-3.5-flash", instruction="...")
+agent = Agent(name="test", model="gemini-3.8-flash", instruction="...")
 runner = InMemoryRunner(agent=agent, app_name="test")
 
 

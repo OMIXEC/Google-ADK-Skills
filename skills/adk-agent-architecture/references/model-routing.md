@@ -7,34 +7,39 @@
 ### Blocked Models (DO NOT USE)
 
 ```
-gemini-2.0-flash              → shutdown June 1, 2026
-gemini-2.0-flash-001          → shutdown June 1, 2026
-gemini-2.0-flash-lite         → shutdown June 1, 2026
-gemini-2.0-flash-lite-001     → shutdown June 1, 2026
-gemini-3-pro-preview          → shut down March 9, 2026
-text-embedding-004            → shut down Jan 14, 2026
-embedding-001                 → shut down Oct 30, 2025
-imagen-3.0-generate-002       → shut down Nov 10, 2025
-veo-2.0-generate-001          → shutdown coming soon
-gemini-2.5-pro-preview-*      → shut down Dec 2, 2025
-gemini-2.5-flash-preview-*    → shut down Nov 2025–Feb 2026
-gemini-robotics-er-1.5-preview → shut down April 30, 2026
+gemini-2.0-flash              → shut down 2026-06-01
+gemini-2.0-flash-001          → shut down 2026-06-01
+gemini-2.0-flash-lite         → shut down 2026-06-01
+gemini-2.0-flash-lite-001     → shut down 2026-06-01
+gemini-3-pro-preview          → shut down 2026-03-09
+gemini-3.1-flash-lite-preview → shut down 2026-05-25
+gemini-3.1-flash-live-preview → shuts down 2026-11-17
+gemini-3.1-flash-tts-preview  → shuts down 2026-11-17
+gemini-2.5-flash-native-audio-preview-12-2025 → shuts down 2026-11-17
+text-embedding-004            → shut down 2026-01-14
+embedding-001                 → shut down 2025-10-30
+imagen-4.0-*                  → shut down 2026-08-17
+veo-3.1-*-preview             → shuts down 2026-10-22
+gemini-robotics-er-1.6-preview → shut down 2026-08-31
 ```
 
 Always check: https://ai.google.dev/gemini-api/docs/models and https://ai.google.dev/gemini-api/docs/deprecations
 
-## Model Catalog (Stable + Preview — May 2026)
+## Model Catalog (verified 2026-10-19)
 
 ### LLM Models — Text Generation & Reasoning
 
 | Model | Tier | Best For | Status |
 |-------|------|----------|--------|
-| `gemini-3.5-flash` | Flash (high-end) | Agentic tasks, coding, sustained frontier performance | Stable |
-| `gemini-3.1-pro-preview` | Pro | Complex reasoning, advanced problem-solving, vibe coding | Preview |
-| `gemini-3.1-flash-lite` | Flash-Lite | Budget-friendly, high-volume, rivaling larger models | Stable |
-| `gemini-2.5-pro` | Pro (previous gen) | Advanced reasoning, deep coding — **shutdown Oct 16, 2026** | Stable (migrating) |
-| `gemini-2.5-flash` | Flash (previous gen) | Low-latency, high-volume, reasoning tasks — **shutdown Oct 16, 2026** | Stable (migrating) |
-| `gemini-2.5-flash-lite` | Flash-Lite (prev) | Fastest budget model — **shutdown Oct 16, 2026** | Stable (migrating) |
+| `gemini-4-argon` | Frontier | Long-horizon agentic work, >65k output, hardest reasoning (paid only) | Stable |
+| `gemini-3.8-flash` | Flash (high-end) | Agentic tasks, coding, sustained frontier performance — **default** | Stable |
+| `gemini-3.6-flash` | Flash (previous) | Pin when 3.8 is unavailable | Stable |
+| `gemini-3.5-flash-lite` | Flash-Lite | Budget-friendly, high-volume | Stable |
+| `gemini-3.1-pro-preview` | Pro | Complex reasoning, advanced problem-solving | Preview |
+| `gemini-3.1-flash-lite` | Flash-Lite (retiring) | Budget tier; **shutdown 2027-05-07** | Stable |
+| `gemini-2.5-pro` | Pro (previous gen) | Legacy; no shutdown announced | Stable |
+| `gemini-2.5-flash` | Flash (previous gen) | Legacy; no shutdown announced | Stable |
+| `gemini-2.5-flash-lite` | Flash-Lite (prev) | Legacy; no shutdown announced | Stable |
 
 ### Complexity-Based Prompt Routing
 
@@ -56,29 +61,25 @@ class ModelRoute:
     default_model: str
     fallback_model: str
     max_tokens: int
-    temperature: float
 
 MODEL_ROUTES: dict[Complexity, ModelRoute] = {
     Complexity.LOW: ModelRoute(
         complexity=Complexity.LOW,
         default_model="gemini-3.5-flash-lite",
-        fallback_model="gemini-3.5-flash",
+        fallback_model="gemini-3.8-flash",
         max_tokens=1024,
-        temperature=0.1,
     ),
     Complexity.MEDIUM: ModelRoute(
         complexity=Complexity.MEDIUM,
-        default_model="gemini-3.5-flash",
+        default_model="gemini-3.8-flash",
         fallback_model="gemini-3.1-pro-preview",
         max_tokens=4096,
-        temperature=0.3,
     ),
     Complexity.HIGH: ModelRoute(
         complexity=Complexity.HIGH,
         default_model="gemini-3.1-pro-preview",
-        fallback_model="gemini-3.5-flash",
+        fallback_model="gemini-3.8-flash",
         max_tokens=8192,
-        temperature=0.5,
     ),
 }
 
@@ -96,6 +97,9 @@ def get_model_for_task(query: str, tools_count: int = 0) -> str:
     complexity = classify_complexity(query, tools_count)
     route = MODEL_ROUTES[complexity]
     return route.default_model
+
+# Sampling parameters (temperature/top_p/top_k) are ignored by Gemini 3.x and 4;
+# do not route quality by changing them.
 
 # Usage in agent creation
 agent = Agent(
@@ -129,8 +133,9 @@ def route_by_llm(query: str) -> str:
 
 | Model | Type | Best For | Status |
 |-------|------|----------|--------|
-| `gemini-3.1-flash-live-preview` | Live Audio | Real-time dialogue, voice-first AI, sub-second latency | Preview |
-| `gemini-2.5-flash-native-audio-preview-12-2025` | Live Audio | Conversational agents with native audio streaming | Preview |
+| `gemini-3.8-live` | Live Audio | Real-time dialogue, voice-first AI, sub-second latency — **default** | Stable |
+| `gemini-3.8-live-extended-thinking` | Live Audio | Voice plus background reasoning | Stable |
+| `gemini-3.5-live-translate-preview` | Live Translate | Speech translation | Preview |
 
 ```python
 from google.adk import Agent
@@ -139,7 +144,7 @@ from google.adk.run_config import RunConfig, StreamingMode
 
 live_agent = Agent(
     name="voice_assistant",
-    model="gemini-3.1-flash-live-preview",
+    model="gemini-3.8-live",
     instruction="Respond conversationally. Keep answers brief.",
     tools=[weather_tool, search_tool],
 )
@@ -390,23 +395,23 @@ validate_model("gemini-2.0-flash")     # Raises ValueError
 
 | Task Type | Primary Model | Fallback | Why |
 |-----------|--------------|----------|-----|
-| Greeting / simple Q&A | `gemini-3.5-flash-lite` | `gemini-3.5-flash` | Cheapest, fastest |
-| Classification / routing | `gemini-3.5-flash-lite` | `gemini-3.5-flash` | Low complexity |
-| Summarization | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
-| Q&A with context | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
-| Data extraction | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
-| Multi-step reasoning | `gemini-3.1-pro-preview` | `gemini-3.5-flash` | High complexity |
-| Code generation (simple) | `gemini-3.5-flash` | `gemini-3.1-pro-preview` | Medium complexity |
-| Code generation (complex) | `gemini-3.1-pro-preview` | `gemini-3.5-flash` | High complexity |
-| Planning / orchestration | `gemini-3.1-pro-preview` | `gemini-3.5-flash` | Highest reasoning |
-| Real-time voice | `gemini-3.1-flash-live-preview` | `gemini-live-2.5-flash-native-audio` | Live audio. Google now marks 3.1 Flash Live legacy; Gemini 3.8 Live is the successor. |
+| Greeting / simple Q&A | `gemini-3.5-flash-lite` | `gemini-3.8-flash` | Cheapest, fastest |
+| Classification / routing | `gemini-3.5-flash-lite` | `gemini-3.8-flash` | Low complexity |
+| Summarization | `gemini-3.8-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Q&A with context | `gemini-3.8-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Data extraction | `gemini-3.8-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Multi-step reasoning | `gemini-3.1-pro-preview` | `gemini-3.8-flash` | High complexity |
+| Code generation (simple) | `gemini-3.8-flash` | `gemini-3.1-pro-preview` | Medium complexity |
+| Code generation (complex) | `gemini-3.1-pro-preview` | `gemini-3.8-flash` | High complexity |
+| Planning / orchestration | `gemini-3.1-pro-preview` | `gemini-3.8-flash` | Highest reasoning |
+| Real-time voice | `gemini-3.8-live` | `gemini-live-2.5-flash-native-audio` | Live audio. Google now marks 3.1 Flash Live legacy; Gemini 3.8 Live is the successor. |
 | TTS / speech generation | `gemini-3.1-flash-tts-preview` | `gemini-2.5-flash-preview-tts` | TTS |
 | Image generation | `gemini-2.5-flash-image` | `gemini-3-pro-image-preview` | Native multimodal |
 | Video generation | `veo-3.1-generate-preview` | `veo-3.1-lite-generate-preview` | Video |
 | Embeddings / RAG | `gemini-embedding-2` | `gemini-embedding-001` | Multimodal emb |
 | Music generation | `lyria-3-pro-preview` | `lyria-3-clip-preview` | Music |
 | Agent / tool use (simple) | `gemini-2.5-flash` | `gemini-2.5-flash-lite` | Flash balances speed+reasoning |
-| Agent / tool use (complex) | `gemini-3.5-flash` | `gemini-2.5-pro` | Frontier agentic perf |
+| Agent / tool use (complex) | `gemini-3.8-flash` | `gemini-2.5-pro` | Frontier agentic perf |
 | Deep research | `gemini-deep-research-preview` | `gemini-2.5-pro` | Multi-source analysis |
 | Screen automation | `computer-use-preview` | — | UI agent |
 | Robotics | `gemini-robotics-er-1.6-preview` | — | Embodied reasoning |
@@ -426,7 +431,7 @@ greeter = Agent(
 # STANDARD agent — flash for general tasks
 support = Agent(
     name="support_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Handle customer inquiries with tools.",
     tools=[lookup_order, check_status],
 )
@@ -442,7 +447,7 @@ planner = Agent(
 # LIVE agent — live model for real-time audio
 voice_agent = Agent(
     name="voice_assistant",
-    model="gemini-3.1-flash-live-preview",
+    model="gemini-3.8-live",
     instruction="Respond conversationally. Keep answers under 30 seconds.",
 )
 ```
@@ -481,7 +486,7 @@ MODEL_MEDIUM_COMPLEXITY=gemini-2.5-flash
 MODEL_HIGH_COMPLEXITY=gemini-2.5-pro
 
 # Specialized Models
-MODEL_LIVE_AUDIO=gemini-3.1-flash-live-preview
+MODEL_LIVE_AUDIO=gemini-3.8-live
 MODEL_TTS=gemini-3.1-flash-tts-preview
 MODEL_IMAGE_GEN=gemini-2.5-flash-image
 MODEL_VIDEO_GEN=veo-3.1-generate-preview

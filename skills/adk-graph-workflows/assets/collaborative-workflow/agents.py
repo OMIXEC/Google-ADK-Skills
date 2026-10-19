@@ -10,7 +10,7 @@ from .tools import research_topic, write_code, review_code
 
 researcher = Agent(
     name="researcher",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You are a research specialist.
     Use research_topic to gather information on assigned topics.
     Return structured findings with sources.
@@ -30,7 +30,7 @@ coder = Agent(
 
 reviewer = Agent(
     name="reviewer",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You are a code reviewer.
     Use review_code to check implementations for:
     - Correctness against the specification

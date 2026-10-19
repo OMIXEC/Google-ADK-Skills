@@ -287,7 +287,7 @@ OUTPUT RULES:
 
 agent = Agent(
     name="hardened_support",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction=hardened_instruction,
     tools=[lookup_product, get_order_status],
 )
@@ -406,7 +406,7 @@ security_plugin = SecurityPlugin(
 
 root_agent = LlmAgent(
     name="secure_workflow_root",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     plugins=[security_plugin],  # ← cascades to ALL sub-agents
     sub_agents=[child_a, child_b, child_c],
 )
@@ -476,7 +476,7 @@ secure_mcp = McpToolset(
 
 agent = Agent(
     name="secure_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     tools=[secure_mcp],
 )
 ```

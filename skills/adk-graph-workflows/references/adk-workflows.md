@@ -265,7 +265,7 @@ Insert human review/approval steps into automated workflows:
 ```python
 approval_request = Agent(
     name="approval_requester",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""Generate an approval request for the human reviewer.
     Output format: {"action": "request_approval", "summary": "...", "details": {...}}""",
 )

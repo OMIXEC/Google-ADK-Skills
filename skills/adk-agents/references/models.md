@@ -130,7 +130,7 @@ For deployed applications, a service account is the standard method.
     # --- Example using a stable Gemini Flash model ---
     agent_gemini_flash = LlmAgent(
         # Use the latest stable Flash model identifier
-        model="gemini-3.5-flash",
+        model="gemini-3.8-flash",
         name="gemini_flash_agent",
         instruction="You are a fast and helpful Gemini assistant.",
         # ... other agent parameters
@@ -156,7 +156,7 @@ For deployed applications, a service account is the standard method.
     LlmAgent agentGeminiFlash =
         LlmAgent.builder()
             // Use the latest stable Flash model identifier
-            .model("gemini-3.5-flash") // Set ENV variables to use this model
+            .model("gemini-3.8-flash") // Set ENV variables to use this model
             .name("gemini_flash_agent")
             .instruction("You are a fast and helpful Gemini assistant.")
             // ... other agent parameters

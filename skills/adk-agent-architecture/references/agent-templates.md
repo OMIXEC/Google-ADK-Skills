@@ -18,7 +18,7 @@ def process_order(order_id: str, action: str) -> dict:
 
 agent = Agent(
     name="order_worker",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You are an order processing agent.
     For each request:
     1. Identify the required action (validate, fulfill, cancel)
@@ -47,7 +47,7 @@ retrieval_tool = VertexAiRagRetrieval(
 
 agent = Agent(
     name="knowledge_worker",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You are a knowledge assistant.
     Always search the knowledge base before answering.
     Cite sources when providing information.
@@ -66,7 +66,7 @@ Routes requests to specialized sub-agents.
 ```python
 router = Agent(
     name="router",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     sub_agents=[billing_agent, tech_agent, general_agent],
     instruction="""You are a request router.
     Classify the user's request and delegate:
@@ -116,7 +116,7 @@ from google.adk.agents import LiveRequestQueue
 
 live_agent = Agent(
     name="voice_assistant",
-    model="gemini-3.1-flash-live-preview",
+    model="gemini-3.8-live",
     instruction="""You are a voice assistant.
     Respond conversationally. Keep answers brief (under 30 seconds spoken).
     Use tools for real-time data lookup when needed.""",
@@ -223,7 +223,7 @@ remote_mcp = McpToolset(
 
 agent = Agent(
     name="mcp_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Use MCP tools for external operations. Use FunctionTool for internal logic.",
     tools=[
         FunctionTool(internal_helper),  # Pure functions, internal logic
@@ -284,7 +284,7 @@ class AnalysisResult(BaseModel):
 
 analyzer = Agent(
     name="analyzer",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Analyze the input and return structured results.",
     output_schema=AnalysisResult,  # Enforces this schema, disables tools
 )
@@ -302,9 +302,9 @@ analyzer = Agent(
 
 | Role | Recommended Model | Reason |
 |------|-------------------|--------|
-| Worker (simple tasks) | `gemini-3.5-flash` | Fast, cost-effective |
+| Worker (simple tasks) | `gemini-3.8-flash` | Fast, cost-effective |
 | Worker (complex reasoning) | `gemini-3.1-pro-preview` | Better reasoning |
-| Router/Dispatcher | `gemini-3.5-flash` | Classification is low-complexity |
+| Router/Dispatcher | `gemini-3.8-flash` | Classification is low-complexity |
 | Planner/Coordinator | `gemini-3.1-pro-preview` | Planning needs strong reasoning |
-| Live/Multimodal | `gemini-3.1-flash-live-preview` | Native audio/video support |
-| RAG Worker | `gemini-3.5-flash` | Retrieval + synthesis |
+| Live/Multimodal | `gemini-3.8-live` | Native audio/video support |
+| RAG Worker | `gemini-3.8-flash` | Retrieval + synthesis |

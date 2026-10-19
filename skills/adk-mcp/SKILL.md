@@ -62,7 +62,7 @@ mcp_tools = McpToolset(
 
 agent = Agent(
     name="mcp_agent",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="Use filesystem tools only when needed.",
     tools=[mcp_tools],
 )

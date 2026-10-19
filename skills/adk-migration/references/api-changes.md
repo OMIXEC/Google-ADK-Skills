@@ -37,7 +37,7 @@ Fan-in uses `JoinNode` (waits for all named predecessors). `Edge` fields are
 
 ```python
 # 2.3: mode is explicit
-agent = LlmAgent(model="gemini-3.5-flash", name="worker",
+agent = LlmAgent(model="gemini-3.8-flash", name="worker",
                  mode="task")   # 'chat' | 'task' | 'single_turn'
 ```
 

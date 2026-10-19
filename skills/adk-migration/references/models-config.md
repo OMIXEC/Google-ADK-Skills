@@ -6,11 +6,11 @@ Replace every deprecated Gemini model with a current 3.x ID.
 
 | Deprecated | Replacement |
 |------------|-------------|
-| `gemini-2.0-flash`, `gemini-2.0-flash-001`, `gemini-2.5-flash` | `gemini-3.5-flash` |
+| `gemini-2.0-flash`, `gemini-2.0-flash-001`, `gemini-2.5-flash` | `gemini-3.8-flash` |
 | `gemini-2.0-flash-lite*`, `gemini-2.5-flash-lite` | `gemini-3.1-flash-lite` |
 | `gemini-2.5-pro`, `gemini-3-pro-preview` | `gemini-3.1-pro-preview` |
-| `gemini-2.0-flash-exp`, `gemini-2.0-flash-live-001`, `gemini-live-2.5-flash-native-audio` | `gemini-3.1-flash-live-preview` |
-| `gemini-1.5-*`, `gemini-1.0-*`, `gemini-pro` | `gemini-3.5-flash` |
+| `gemini-2.0-flash-exp`, `gemini-2.0-flash-live-001`, `gemini-live-2.5-flash-native-audio` | `gemini-3.8-live` |
+| `gemini-1.5-*`, `gemini-1.0-*`, `gemini-pro` | `gemini-3.8-flash` |
 
 See the `adk-model-routing` skill for routing by complexity/cost.
 
@@ -27,7 +27,7 @@ generate_content_config = types.GenerateContentConfig(
 # 2.3
 from google.adk.planners import BuiltInPlanner
 agent = LlmAgent(
-    model="gemini-3.5-flash", name="worker",
+    model="gemini-3.8-flash", name="worker",
     planner=BuiltInPlanner(
         thinking_config=types.ThinkingConfig(thinking_level="medium"),
     ),

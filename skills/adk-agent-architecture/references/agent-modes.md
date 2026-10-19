@@ -54,7 +54,7 @@ agent = LlmAgent(
     # ── Core ──────────────────────────────────
     name="my_agent",                    # Required — unique agent name
     description="What this agent does", # Used for routing and agent cards
-    model="gemini-3.5-flash",           # Model string or BaseLlm instance
+    model="gemini-3.8-flash",           # Model string or BaseLlm instance
 
     # ── Instructions ──────────────────────────
     instruction="""You are a helpful assistant.
@@ -461,7 +461,7 @@ User Input → [Classify Intent] → Route to Handler → Response
 # Router: classify and delegate in one shot
 router = LlmAgent(
     name="router",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""Classify the user's request into one category:
     - 'billing': Payment, invoices, refunds → transfer to billing_agent
     - 'support': Technical issues, bugs → transfer to support_agent
@@ -492,7 +492,7 @@ User Input → Thought → Action (tool call) → Observation → Thought → Ac
 # ReAct: think, act, observe, repeat
 react_agent = LlmAgent(
     name="react_researcher",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You are a research agent using the ReAct pattern.
 
     Follow this cycle:
@@ -536,7 +536,7 @@ planner = LlmAgent(
 
 executor = LlmAgent(
     name="executor",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""Execute the plan in session.state['plan'].
     Complete each step before moving to the next.
     Mark steps as [DONE] when complete.
@@ -546,7 +546,7 @@ executor = LlmAgent(
 
 validate = LlmAgent(
     name="validator",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""Verify the execution plan was completed:
     1. Are all steps marked [DONE]?
     2. Do findings support the conclusion?

@@ -89,7 +89,7 @@ You are a historian specializing in {{ domain }}.
 
 historian_agent = Agent(
     name="historian",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     description="Historian specializing in {{ domain }}",
     instruction=instruction,
     tools=[
@@ -260,7 +260,7 @@ provider before starting any exercise program.
 
 fitness_coach_agent = Agent(
     name="fitness_coach",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction=instruction,
     tools=[
         FunctionTool(analyze_form),
@@ -427,7 +427,7 @@ Tutor: "Buenos dias! Como estas hoy?" (Good morning! How are you today?)
 
 language_tutor_agent = Agent(
     name="language_tutor_{{ language }}",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction=instruction,
     tools=[
         FunctionTool(translate_phrase),
@@ -604,7 +604,7 @@ You are a culinary expert specializing in {{ cuisine }} cuisine.
 
 cooking_expert_agent = Agent(
     name="cooking_expert",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction=instruction,
     tools=[
         FunctionTool(search_recipes),
@@ -769,7 +769,7 @@ cooking_expert_agent = Agent(
 $ /adk-persona-builder --persona fitness_coach --specialization "yoga"
 
 Persona: Fitness Coach (Yoga)
-Model: gemini-3.5-flash
+Model: gemini-3.8-flash
 Style: Motivational, safety-focused
 
 Tools:
@@ -787,7 +787,7 @@ Generated: ./yoga-coach-agent/
 $ /adk-persona-builder --persona spanish_tutor --level "intermediate" --dialect "spain"
 
 Persona: Spanish Tutor (Spain, Intermediate)
-Model: gemini-3.5-flash
+Model: gemini-3.8-flash
 Style: Immersive, encouraging
 
 Features:

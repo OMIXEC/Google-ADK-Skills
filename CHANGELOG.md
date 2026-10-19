@@ -20,6 +20,40 @@ marketplace entry. It is deliberately independent of every ADK version.
 
 ---
 
+## [1.0.1] — 2026-10-19
+
+Model-catalog refresh. Content-only; no skill was renamed or removed.
+
+### Changed
+
+- `adk-model-routing` now reflects the catalog verified on 2026-10-19:
+  `gemini-4-argon` (GA 2026-10-13) as the frontier tier, `gemini-3.8-flash` as
+  the default, `gemini-3.6-flash` as the previous Flash, `gemini-3.5-flash-lite`
+  as the cost tier, and `gemini-3.8-live` /
+  `gemini-3.8-live-extended-thinking` on the Live API.
+- `gemini-3.5-flash` and `gemini-3.7-flash` are documented as redirecting
+  endpoints (to 3.6 and 3.8), not as current models.
+- `adk-bidi-live` and every `references/adk-2x-baseline.md` now name
+  `gemini-3.8-live` instead of the retiring
+  `gemini-3.1-flash-live-preview` (shutdown 2026-11-17).
+- Example code across all skills pins `gemini-3.8-flash` instead of
+  `gemini-3.5-flash`.
+- `references/model-cache.json` regenerated: 54 models, 31 active, 15
+  deprecated, 8 blocked.
+- `COMPATIBILITY.md` replacement table extended with Live, TTS, Image, and Veo
+  shutdowns and the two redirecting IDs.
+- `SOURCES.md` records the models and deprecations pages as first-class sources.
+
+### Fixed
+
+- `fetch_models.py` rewritten. The previous version classified any model
+  mentioned on the deprecations page as deprecated (marking `gemini-3.8-live`
+  deprecated), missed Argon and the 3.8 family entirely, and emitted page slugs
+  as model IDs. It now parses model cards, endpoint tables, and deprecation
+  rows, and exits 2 instead of writing a cache when the page structure changes.
+
+---
+
 ## [1.0.0] — 2026-10-19
 
 The restructure release. The taxonomy changed, so routing tables, subsets, and

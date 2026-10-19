@@ -66,7 +66,7 @@ ADK_STREAMING_MODE=BIDI
 ```yaml
 # agent.yaml
 name: my-agent
-model: gemini-3.5-flash
+model: gemini-3.8-flash
 instruction: |
   You are a helpful assistant.
   Always be concise and accurate.

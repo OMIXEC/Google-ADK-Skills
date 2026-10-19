@@ -38,6 +38,19 @@ Python number.
 | Skill specification referenced by ADK | [`agentskills.io/specification`](https://agentskills.io/specification) | as cited in `skills/models.py` docstrings at `v2.12.0` |
 | Claude Code plugin channel | [Plugins overview](https://code.claude.com/docs/en/plugins.md) and [plugin components](https://code.claude.com/docs/en/plugins/components) | tested on Claude Code `2.1.300` |
 
+## Gemini model catalog
+
+| What | Source | Retrieved |
+|---|---|---|
+| Model IDs, capabilities, context/output limits | [Gemini API models](https://ai.google.dev/gemini-api/docs/models) | 2026-10-19 (page updated 2026-10-13) |
+| Shutdown dates, replacements, redirects | [Gemini API deprecations](https://ai.google.dev/gemini-api/docs/deprecations) | 2026-10-19 (page updated 2026-10-12) |
+| Machine-readable snapshot | `skills/adk-agent-architecture/references/model-cache.json` | regenerated 2026-10-19 by `fetch_models.py` |
+
+The catalog is refreshed, not remembered: `fetch_models.py` parses the model
+cards and endpoint tables on the models page and the per-model tables on the
+deprecations page. `--check-only` fails when a model is added, removed, or
+changes status.
+
 ## Documentation sources used for prose
 
 | Source | Use |

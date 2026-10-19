@@ -811,7 +811,7 @@ def fetch_orders(params: FetchOrdersParams) -> FetchOrdersResult:
 # Agent instructions enforce identity-aware behavior
 order_agent = Agent(
     name="order_fetcher",
-    model="gemini-3.5-flash",
+    model="gemini-3.8-flash",
     instruction="""You fetch orders for authenticated users.
     The user_id is available in session.state['user_context']['user_id'].
     ALWAYS pass user_id to tools — never guess or infer identity.""",

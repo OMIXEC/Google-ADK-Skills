@@ -1,78 +1,88 @@
-# Fallback Methodology (Production)
+# Fallback Methodology
 
-Every production route needs a primary model and a safe fallback path. Design for
-model outages, quota exhaustion, and deprecation — not just the happy path.
+Every production route needs a primary and a fallback. Design for quota,
+outage, and deprecation, not only the happy path.
 
 ## 1. Validate at build time
-
-Reject deprecated/blocked model IDs before an agent starts, so a bad config fails
-fast instead of at first request.
 
 ```python
 HARD_BLOCKED = {
     "gemini-2.0-flash", "gemini-2.0-flash-001",
     "gemini-2.0-flash-lite", "gemini-2.0-flash-lite-001",
-    "gemini-3-pro-preview", "text-embedding-004", "embedding-001",
+    "gemini-3-pro-preview", "gemini-3.1-flash-lite-preview",
+    "gemini-3.1-flash-live-preview", "gemini-3.1-flash-tts-preview",
+    "text-embedding-004", "embedding-001", "gemini-embedding-001",
+    "imagen-4.0-generate", "veo-3.1-generate-preview",
 }
+
 REPLACEMENTS = {
-    "gemini-2.0-flash": "gemini-3.5-flash",
+    "gemini-2.0-flash": "gemini-3.6-flash",
     "gemini-2.0-flash-lite": "gemini-3.1-flash-lite",
     "gemini-3-pro-preview": "gemini-3.1-pro-preview",
+    "gemini-3.1-flash-lite-preview": "gemini-3.1-flash-lite",
+    "gemini-3.1-flash-live-preview": "gemini-3.8-live",
+    "gemini-3.1-flash-tts-preview": "gemini-3.8-flash-tts",
+    "text-embedding-004": "gemini-embedding-2",
 }
 
 def validate_model(model_id: str) -> str:
     if model_id in HARD_BLOCKED:
         raise ValueError(
-            f"{model_id} is blocked. Use {REPLACEMENTS.get(model_id, 'gemini-3.5-flash')}."
+            f"{model_id} is blocked. Use "
+            f"{REPLACEMENTS.get(model_id, 'gemini-3.8-flash')}."
         )
     return model_id
 ```
 
-## 2. Same-provider tier fallback
+Reject redirecting IDs too when the exact model matters:
+`gemini-3.5-flash` → 3.6, `gemini-3.7-flash` → 3.8.
 
-On `429` / quota / model-unavailable, degrade to the next capable Gemini tier.
-Keep an explicit ordered chain per capability, cheapest-capable first, with a
-higher tier as backup only where quality demands it.
+## 2. Same-provider tier fallback
 
 ```python
 FALLBACK_CHAINS = {
-    "reasoning":   ["gemini-3.1-pro-preview", "gemini-3.5-flash"],
-    "general":     ["gemini-3.5-flash", "gemini-3.1-flash-lite"],
-    "high_volume": ["gemini-3.1-flash-lite", "gemini-3.5-flash"],
-    "live":        ["gemini-3.1-flash-live-preview"],
-    "embedding":   ["gemini-embedding-2"],
+    "frontier":  ["gemini-4-argon", "gemini-3.1-pro-preview", "gemini-3.8-flash"],
+    "reasoning": ["gemini-3.1-pro-preview", "gemini-3.8-flash"],
+    "general":   ["gemini-3.8-flash", "gemini-3.6-flash", "gemini-3.5-flash-lite"],
+    "volume":    ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite"],
+    "live":      ["gemini-3.8-live", "gemini-3.8-live-extended-thinking"],
+    "embedding": ["gemini-embedding-2"],
 }
 ```
 
+Two constraints that break naive chains:
+
+- **Thinking levels differ.** A chain cannot send `minimal` to Argon or 3.8
+  Flash; it returns 400. Store `(model, thinking_level)` pairs, not model IDs
+  alone.
+- **Argon is paid-only and shares one token budget** across input, thinking,
+  and output. A fallback into Argon can fail on budget rather than quota.
+
 ## 3. Cross-provider fallback
 
-When Gemini is fully unavailable, route to another provider via LiteLLM. See the
-`adk-litellm` skill for wrapping OpenAI/Anthropic/Bedrock/OpenRouter models as
-ADK models and building provider fallback.
+Route to another provider through LiteLLM when Gemini is unavailable. See
+`adk-litellm`.
 
 ## 4. Resilience contract
 
-Wrap model calls with:
-
-- **Retry with backoff** on transient errors (`429`, `503`, timeouts).
-- **Circuit breaker** per model — after N consecutive failures, skip to the next
-  chain entry for a cooldown window.
-- **Timeout** on every call.
-- **Structured result:** return `ok | degraded | error` with `confidence`,
-  `correlation_id`, and `latency_ms`. Emit `degraded` (not silent success) when a
-  fallback fired, so callers and telemetry can see it.
+- Retry with backoff on `429`, `503`, and timeouts.
+- Circuit breaker per model; after N consecutive failures skip to the next
+  chain entry for a cooldown.
+- Timeout on every call.
+- Return `ok | degraded | error` with `confidence`, `correlation_id`, and
+  `latency_ms`. Emit `degraded` when a fallback fired.
+- A `400` is not transient. Fix the request; retrying repeats the error.
 
 ## 5. Safety never degrades silently
 
-Safety-critical routes must surface degradation explicitly and must not drop or
-silently downgrade a response. Never fall back below a safe reasoning tier for
-safety decisions (see `references/thinking-effort.md` — keep safety at `high`,
-never below `medium`).
+Safety-critical routes keep `high` thinking and must surface degradation. Never
+drop or silently downgrade a safety response. Never fall below `medium` for a
+safety decision.
 
 ## Anti-patterns
 
-- Hardcoding a single model with no fallback.
-- Falling back to a deprecated/blocked model (validate the whole chain).
-- Swallowing a fallback as if it were the primary result (no `degraded` signal).
-- Retrying a hard `400` (e.g. `thinking_level` + `thinking_budget` conflict) —
-  fix the request, don't retry.
+- One hardcoded model with no fallback.
+- Falling back to a blocked or redirecting ID.
+- Sending the same `thinking_level` to every model in a chain.
+- Swallowing a fallback as if it were the primary result.
+- Retrying a `400` caused by `thinking_level` plus `thinking_budget`.
