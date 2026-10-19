@@ -1,6 +1,13 @@
 # Upcoming Enhancements — ADK Skills Curriculum Alignment
 
 > **SDK + restructure: complete.** Bundle targets ADK 2.9.2 → 2.12.0 (`google-adk>=2.9.2,<3`). The SDK is never vendored. See [`MIGRATION.md`](MIGRATION.md). The enhancements below are curriculum/coverage gaps, independent of the version and layout changes.
+>
+> **Status after 1.1.0.** The CRITICAL and HIGH items below have shipped:
+> Model Armor (`adk-deploy-production/references/model-armor.md`), the plugin
+> security pattern (`security-guardrails.md`), the cost/latency callback pair
+> (`observability.md`), and the continuous-learning pattern
+> (`adk-agent-architecture/references/memory-management.md`). Read the sections
+> below as design rationale, not open work.
 
 ## Backend: thinking/effort + model-routing adoption (future plan)
 
