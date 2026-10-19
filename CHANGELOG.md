@@ -68,6 +68,8 @@ the product count moves 26 → 27, not 35.
   claimed `gemini-3.8-flash` was a redirect.
 - `skills.sh.json`, `CLAUDE.md`, `README.md`, `agents/workflow-builder.md`, and
   `agents/workflow-designer.md` route to the new skill.
+- CI now runs on `v*` tags as well as `main`, so a release tag is gated by the
+  same matrix as the branch.
 
 ### Not added
 
