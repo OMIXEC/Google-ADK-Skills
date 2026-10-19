@@ -21,7 +21,7 @@ Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-
 npx skills add OMIXEC/Google-ADK-Skills
 ```
 
-The skills.sh CLI is the primary install path for agent skills. It installs the GitHub skill collection and makes the repo visible on skills.sh after the repository has been seen by the CLI.
+The `skills` CLI ([`vercel-labs/skills`](https://github.com/vercel-labs/skills)) is the primary install path for agent skills. It resolves the collection straight from GitHub: no npm publish and no registry listing are involved.
 
 ### Option 2 — Repo installer (custom targets and advanced options)
 
@@ -71,6 +71,7 @@ Flags:
 --no-agents            Do not install bundled subagent definitions
 --no-commands          Do not install bundled slash commands
 --with-evals           Keep tests/ in the install checkout
+--with-contributing    Also install contributing/ (skills for hacking on adk-python)
 --with-runtime         Create a Python venv and install runtime dependencies
 --shell-integration    Add the adk alias/PATH entry to your shell rc file
 --force                Replace existing non-symlink skill directories
@@ -101,24 +102,14 @@ bash install.sh --target agents-lib --copy
 bash install.sh --target claude --with-runtime --shell-integration
 ```
 
-### Option 3 — package shim
-
-```bash
-npx google-adk-skills
-npx google-adk-skills --interactive
-npx google-adk-skills --target cline --copy
-```
-
-The npx package is a thin wrapper around `install.sh` and passes all flags through to the same installer. The legacy `npx claude-adk-skills` binary remains as a compatibility alias.
-
-### Option 4 — Claude Plugin Marketplace (experimental)
+### Option 3 — Claude plugin (skills + agents + commands + MCP)
 
 ```
 /plugin marketplace add OMIXEC/Google-ADK-Skills
 /plugin install google-adk-skills
 ```
 
-Use `npx skills add OMIXEC/Google-ADK-Skills` as the reliable public path today. The repo installer remains available for custom target paths, selective installs, runtime helpers, and global installs.
+The plugin is the only channel that installs the skills together with the bundled subagents, slash commands, and the context7 MCP server. Use Option 1 when you only want the skills, and Option 2 for non-Claude targets, selective installs, runtime helpers, or global installs.
 
 ### Prerequisites
 

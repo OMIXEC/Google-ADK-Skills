@@ -448,13 +448,10 @@ class TestV23MigrationGuards:
             "(use the PyPI dependency `google-adk` instead):\n" + "\n".join(offenders)
         )
 
-    def test_package_excludes_local_adk_source_mirror(self):
-        """The full upstream ADK checkout is a local mirror, not package payload."""
-        import json
-
-        package_json = REPO_ROOT / "package.json"
-        files = json.loads(package_json.read_text()).get("files", [])
-        assert "adk-python-v2.3" not in files
+    def test_no_vendored_adk_source_mirror(self):
+        """The upstream ADK checkout is never vendored: google-adk is a PyPI dependency."""
+        assert not (REPO_ROOT / "adk-python-v2.3").exists()
+        assert not (REPO_ROOT / "adk-python").exists()
 
 
 # ── Integration: test quick_validate.py compatibility ─────────────────────────
