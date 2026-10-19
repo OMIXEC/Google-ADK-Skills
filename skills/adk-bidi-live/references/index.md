@@ -6,11 +6,11 @@
 
 !!! info
 
-    This is different from server-side streaming or token-level streaming. 
+    This is different from server-side streaming or token-level streaming.
     Token-level streaming is a one-way process where a language model generates a response and sends it back to the user one token at a time. This creates a "typing" effect, giving the impression of an immediate response and reducing the time it takes to see the start of the answer. The user sends their full prompt, the model processes it, and then the model begins to generate and send back the response piece by piece. This section is for bidi-streaming (live).
-    
+
 Bidi-streaming (live) in ADK adds the low-latency bidirectional voice and video interaction
-capability of [Gemini Live API](https://ai.google.dev/gemini-api/docs/live) to
+capability of Gemini Live API to
 AI agents.
 
 With bidi-streaming (live) mode, you can provide end users with the experience of natural,
@@ -41,7 +41,7 @@ text, audio, and video inputs, and they can provide text and audio output.
     In this quickstart, you'll build a simple agent and use streaming in ADK to
     implement low-latency and bidirectional voice and video communication.
 
-    - [Quickstart (Bidi-streaming)](../get-started/streaming/quickstart-streaming.md)
+    - Quickstart (Bidi-streaming)
 
 -   :material-console-line: **Custom Audio Streaming app sample**
 
@@ -58,7 +58,7 @@ text, audio, and video inputs, and they can provide text and audio output.
 
     A series of articles for diving deeper into the Bidi-streaming development with ADK. You can learn basic concepts and use cases, the core API, and end-to-end application design.
 
-    - [Bidi-streaming development guide series: Part 1 - Introduction](dev-guide/part1.md)
+    - Bidi-streaming development guide series: Part 1 - Introduction
 
 -   :material-console-line: **Streaming Tools**
 
@@ -82,6 +82,6 @@ text, audio, and video inputs, and they can provide text and audio output.
 
     This article shows how to use Bidi-streaming (live) in ADK for real-time audio/video streaming. It offers a Python server example using LiveRequestQueue to build custom, interactive AI agents.
 
-    - [Blog post: Google ADK + Vertex AI Live API](https://medium.com/google-cloud/google-adk-vertex-ai-live-api-125238982d5e)
+    - Blog post: Google ADK + Vertex AI Live API
 
 </div>

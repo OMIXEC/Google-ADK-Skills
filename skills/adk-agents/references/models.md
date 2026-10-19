@@ -6,7 +6,7 @@
 The Agent Development Kit (ADK) is designed for flexibility, allowing you to
 integrate various Large Language Models (LLMs) into your agents. While the setup
 for Google Gemini models is covered in the
-[Setup Foundation Models](../get-started/installation.md) guide, this page
+Setup Foundation Models guide, this page
 details how to leverage Gemini effectively and integrate other popular models,
 including those hosted externally or running locally.
 
@@ -34,7 +34,7 @@ This section covers authenticating with Google's Gemini models, either through G
 `model` parameter of `LlmAgent`.
 
 
-!!!tip 
+!!!tip
 
     The `google-genai` library, used internally by ADK for Gemini models, can connect
     through either Google AI Studio or Vertex AI.
@@ -45,8 +45,8 @@ This section covers authenticating with Google's Gemini models, either through G
     models that support the Live API. You can find the **model ID(s)** that
     support the Gemini Live API in the documentation:
 
-    - [Google AI Studio: Gemini Live API](https://ai.google.dev/gemini-api/docs/models#live-api)
-    - [Vertex AI: Gemini Live API](https://cloud.google.com/vertex-ai/generative-ai/docs/live-api)
+    - Google AI Studio: Gemini Live API
+    - Vertex AI: Gemini Live API
 
 ### Google AI Studio
 
@@ -54,7 +54,7 @@ This is the simplest method and is recommended for getting started quickly.
 
 *   **Authentication Method:** API Key
 *   **Setup:**
-    1.  **Get an API key:** Obtain your key from [Google AI Studio](https://aistudio.google.com/apikey).
+    1.  **Get an API key:** Obtain your key from Google AI Studio.
     2.  **Set environment variables:** Create a `.env` file (Python) or `.properties` (Java) in your project's root directory and add the following lines. ADK will automatically load this file.
 
         ```shell
@@ -63,21 +63,21 @@ This is the simplest method and is recommended for getting started quickly.
         ```
 
         (or)
-        
+
         Pass these variables during the model initialization via the `Client` (see example below).
 
 * **Models:** Find all available models on the
-  [Google AI for Developers site](https://ai.google.dev/gemini-api/docs/models).
+  Google AI for Developers site.
 
 ### Google Cloud Vertex AI
 
 For scalable and production-oriented use cases, Vertex AI is the recommended platform. Gemini on Vertex AI supports enterprise-grade features, security, and compliance controls. Based on your development environment and usecase, *choose one of the below methods to authenticate*.
 
-**Pre-requisites:** A Google Cloud Project with [Vertex AI enabled](https://console.cloud.google.com/apis/enableflow;apiid=aiplatform.googleapis.com).
+**Pre-requisites:** A Google Cloud Project with Vertex AI enabled.
 
 ### **Method A: User Credentials (for Local Development)**
 
-1.  **Install the gcloud CLI:** Follow the official [installation instructions](https://cloud.google.com/sdk/docs/install).
+1.  **Install the gcloud CLI:** Follow the official installation instructions.
 2.  **Log in using ADC:** This command opens a browser to authenticate your user account for local development.
     ```bash
     gcloud auth application-default login
@@ -86,8 +86,8 @@ For scalable and production-oriented use cases, Vertex AI is the recommended pla
     ```shell
     export GOOGLE_CLOUD_PROJECT="YOUR_PROJECT_ID"
     export GOOGLE_CLOUD_LOCATION="YOUR_VERTEX_AI_LOCATION" # e.g., us-central1
-    ```     
-    
+    ```
+
     Explicitly tell the library to use Vertex AI:
 
     ```shell
@@ -95,10 +95,10 @@ For scalable and production-oriented use cases, Vertex AI is the recommended pla
     ```
 
 4. **Models:** Find available model IDs in the
-  [Vertex AI documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models).
+  Vertex AI documentation.
 
 ### **Method B: Vertex AI Express Mode**
-[Vertex AI Express Mode](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview) offers a simplified, API-key-based setup for rapid prototyping.
+Vertex AI Express Mode offers a simplified, API-key-based setup for rapid prototyping.
 
 1.  **Sign up for Express Mode** to get your API key.
 2.  **Set environment variables:**
@@ -111,10 +111,10 @@ For scalable and production-oriented use cases, Vertex AI is the recommended pla
 
 For deployed applications, a service account is the standard method.
 
-1.  [**Create a Service Account**](https://cloud.google.com/iam/docs/service-accounts-create#console) and grant it the `Vertex AI User` role.
+1.  **Create a Service Account** and grant it the `Vertex AI User` role.
 2.  **Provide credentials to your application:**
     *   **On Google Cloud:** If you are running the agent in Cloud Run, GKE, VM or other Google Cloud services, the environment can automatically provide the service account credentials. You don't have to create a key file.
-    *   **Elsewhere:** Create a [service account key file](https://cloud.google.com/iam/docs/keys-create-delete#console) and point to it with an environment variable:
+    *   **Elsewhere:** Create a service account key file and point to it with an environment variable:
         ```bash
         export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/keyfile.json"
         ```
@@ -126,7 +126,7 @@ For deployed applications, a service account is the standard method.
 
     ```python
     from google.adk.agents import LlmAgent
-    
+
     # --- Example using a stable Gemini Flash model ---
     agent_gemini_flash = LlmAgent(
         # Use the latest stable Flash model identifier
@@ -135,7 +135,7 @@ For deployed applications, a service account is the standard method.
         instruction="You are a fast and helpful Gemini assistant.",
         # ... other agent parameters
     )
-    
+
     # --- Example using a powerful Gemini Pro model ---
     # Note: Always check the official Gemini documentation for the latest model names,
     # including specific preview versions if needed. Preview models might have
@@ -184,11 +184,11 @@ For deployed applications, a service account is the standard method.
     ```
 
 !!!warning "Secure Your Credentials"
-    Service account credentials or API keys are powerful credentials. Never expose them publicly. Use a secret manager like [Google Secret Manager](https://cloud.google.com/secret-manager) to store and access them securely in production.
+    Service account credentials or API keys are powerful credentials. Never expose them publicly. Use a secret manager like Google Secret Manager to store and access them securely in production.
 
 ## Using Anthropic models
 
-![java_only](https://img.shields.io/badge/Supported_in-Java-orange){ title="This feature is currently available for Java. Python support for direct Anthropic API (non-Vertex) is via LiteLLM."}
+{ title="This feature is currently available for Java. Python support for direct Anthropic API (non-Vertex) is via LiteLLM."}
 
 You can integrate Anthropic's Claude models directly using their API key or from a Vertex AI backend into your Java ADK applications by using the ADK's `Claude` wrapper class.
 
@@ -215,7 +215,7 @@ import com.google.adk.models.Claude;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient; // From Anthropic's SDK
 
 public class DirectAnthropicAgent {
-  
+
   private static final String CLAUDE_MODEL_ID = "claude-3-7-sonnet-latest"; // Or your preferred Claude model
 
   public static LlmAgent createAgent() {
@@ -253,7 +253,7 @@ public class DirectAnthropicAgent {
 
 ## Using Cloud & Proprietary Models via LiteLLM
 
-![python_only](https://img.shields.io/badge/Supported_in-Python-blue)
+
 
 To access a vast range of LLMs from providers like OpenAI, Anthropic (non-Vertex
 AI), Cohere, and many others, ADK offers integration through the LiteLLM
@@ -262,7 +262,7 @@ library.
 **Integration Method:** Instantiate the `LiteLlm` wrapper class and pass it to
 the `model` parameter of `LlmAgent`.
 
-**LiteLLM Overview:** [LiteLLM](https://docs.litellm.ai/) acts as a translation
+**LiteLLM Overview:** LiteLLM acts as a translation
 layer, providing a standardized, OpenAI-compatible interface to over 100+ LLMs.
 
 **Setup:**
@@ -287,7 +287,7 @@ layer, providing a standardized, OpenAI-compatible interface to over 100+ LLMs.
         ```
 
     * *Consult the
-      [LiteLLM Providers Documentation](https://docs.litellm.ai/docs/providers)
+      LiteLLM Providers Documentation
       for the correct environment variable names for other providers.*
 
         **Example:**
@@ -333,7 +333,7 @@ layer, providing a standardized, OpenAI-compatible interface to over 100+ LLMs.
 
 ## Using Open & Local Models via LiteLLM
 
-![python_only](https://img.shields.io/badge/Supported_in-Python-blue)
+
 
 For maximum control, cost savings, privacy, or offline use cases, you can run
 open-source models locally or self-host them and integrate them using LiteLLM.
@@ -343,13 +343,13 @@ point to your local model server.
 
 ### Ollama Integration
 
-[Ollama](https://ollama.com/) allows you to easily run open-source models
+Ollama allows you to easily run open-source models
 locally.
 
 #### Model choice
 
 If your agent is relying on tools, please make sure that you select a model with
-tool support from [Ollama website](https://ollama.com/search?c=tools).
+tool support from Ollama website.
 
 For reliable results, we recommend using a decent-sized model with tool support.
 
@@ -494,14 +494,14 @@ Look for a line like the following:
 Request Sent from LiteLLM:
 curl -X POST \
 http://localhost:11434/api/chat \
--d '{'model': 'mistral-small3.1', 'messages': [{'role': 'system', 'content': ...
+-d '{'model': 'mistral-small3.1', 'messages': {'role': 'system', 'content': ...
 ```
 
 ### Self-Hosted Endpoint (e.g., vLLM)
 
-![python_only](https://img.shields.io/badge/Supported_in-Python-blue)
 
-Tools such as [vLLM](https://github.com/vllm-project/vllm) allow you to host
+
+Tools such as [vLLM allow you to host
 models efficiently and often expose an OpenAI-compatible API endpoint.
 
 **Setup:**
@@ -593,10 +593,10 @@ Ensure your environment is configured for Vertex AI:
 
 ### Model Garden Deployments
 
-![python_only](https://img.shields.io/badge/Currently_supported_in-Python-blue){ title="This feature is currently available for Python. Java support is planned/ coming soon."}
+{ title="This feature is currently available for Python. Java support is planned/ coming soon."}
 
 You can deploy various open and proprietary models from the
-[Vertex AI Model Garden](https://console.cloud.google.com/vertex-ai/model-garden)
+Vertex AI Model Garden
 to an endpoint.
 
 **Example:**
@@ -621,7 +621,7 @@ agent_llama3_vertex = LlmAgent(
 
 ### Fine-tuned Model Endpoints
 
-![python_only](https://img.shields.io/badge/Currently_supported_in-Python-blue){ title="This feature is currently available for Python. Java support is planned/ coming soon."}
+{ title="This feature is currently available for Python. Java support is planned/ coming soon."}
 
 Deploying your fine-tuned models (whether based on Gemini or other architectures
 supported by Vertex AI) results in an endpoint that can be used directly.
@@ -653,37 +653,37 @@ Vertex AI.
 
     **Integration Method:** Uses the direct model string (e.g.,
     `"claude-3-sonnet@20240229"`), *but requires manual registration* within ADK.
-    
+
     **Why Registration?** ADK's registry automatically recognizes `gemini-*` strings
     and standard Vertex AI endpoint strings (`projects/.../endpoints/...`) and
     routes them via the `google-genai` library. For other model types used directly
     via Vertex AI (like Claude), you must explicitly tell the ADK registry which
     specific wrapper class (`Claude` in this case) knows how to handle that model
     identifier string with the Vertex AI backend.
-    
+
     **Setup:**
-    
+
     1. **Vertex AI Environment:** Ensure the consolidated Vertex AI setup (ADC, Env
        Vars, `GOOGLE_GENAI_USE_VERTEXAI=TRUE`) is complete.
-    
+
     2. **Install Provider Library:** Install the necessary client library configured
        for Vertex AI.
-    
+
         ```shell
         pip install "anthropic[vertex]"
         ```
-    
+
     3. **Register Model Class:** Add this code near the start of your application,
        *before* creating an agent using the Claude model string:
-    
+
         ```python
         # Required for using Claude model strings directly via Vertex AI with LlmAgent
         from google.adk.models.anthropic_llm import Claude
         from google.adk.models.registry import LLMRegistry
-    
+
         LLMRegistry.register(Claude)
         ```
-    
+
        **Example:**
 
        ```python
@@ -691,15 +691,15 @@ Vertex AI.
        from google.adk.models.anthropic_llm import Claude # Import needed for registration
        from google.adk.models.registry import LLMRegistry # Import needed for registration
        from google.genai import types
-        
+
        # --- Register Claude class (do this once at startup) ---
        LLMRegistry.register(Claude)
-        
+
        # --- Example Agent using Claude 3 Sonnet on Vertex AI ---
-        
+
        # Standard model name for Claude 3 Sonnet on Vertex AI
        claude_model_vertexai = "claude-3-sonnet@20240229"
-        
+
        agent_claude_vertexai = LlmAgent(
            model=claude_model_vertexai, # Pass the direct string after registration
            name="claude_vertexai_agent",
@@ -712,21 +712,21 @@ Vertex AI.
 === "Java"
 
     **Integration Method:** Directly instantiate the provider-specific model class (e.g., `com.google.adk.models.Claude`) and configure it with a Vertex AI backend.
-    
+
     **Why Direct Instantiation?** The Java ADK's `LlmRegistry` primarily handles Gemini models by default. For third-party models like Claude on Vertex AI, you directly provide an instance of the ADK's wrapper class (e.g., `Claude`) to the `LlmAgent`. This wrapper class is responsible for interacting with the model via its specific client library, configured for Vertex AI.
-    
+
     **Setup:**
-    
+
     1.  **Vertex AI Environment:**
         *   Ensure your Google Cloud project and region are correctly set up.
-        *   **Application Default Credentials (ADC):** Make sure ADC is configured correctly in your environment. This is typically done by running `gcloud auth application-default login`. The Java client libraries will use these credentials to authenticate with Vertex AI. Follow the [Google Cloud Java documentation on ADC](https://cloud.google.com/java/docs/reference/google-auth-library/latest/com.google.auth.oauth2.GoogleCredentials#com_google_auth_oauth2_GoogleCredentials_getApplicationDefault__) for detailed setup.
-    
+        *   **Application Default Credentials (ADC):** Make sure ADC is configured correctly in your environment. This is typically done by running `gcloud auth application-default login`. The Java client libraries will use these credentials to authenticate with Vertex AI. Follow the Google Cloud Java documentation on ADC for detailed setup.
+
     2.  **Provider Library Dependencies:**
         *   **Third-Party Client Libraries (Often Transitive):** The ADK core library often includes the necessary client libraries for common third-party models on Vertex AI (like Anthropic's required classes) as **transitive dependencies**. This means you might not need to explicitly add a separate dependency for the Anthropic Vertex SDK in your `pom.xml` or `build.gradle`.
 
     3.  **Instantiate and Configure the Model:**
         When creating your `LlmAgent`, instantiate the `Claude` class (or the equivalent for another provider) and configure its `VertexBackend`.
-    
+
     **Example:**
 
     ```java
@@ -764,7 +764,7 @@ Vertex AI.
                 // .generateContentConfig(...) // Optional: Add generation config if needed
                 // ... other agent parameters
                 .build();
-            
+
             return agentClaudeVertexAi;
         }
 

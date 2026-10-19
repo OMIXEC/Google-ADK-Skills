@@ -1,6 +1,7 @@
 ---
 name: adk-litellm
 description: ADK LiteLLM integration expert covering 100+ LLM providers (OpenAI, Anthropic, Bedrock, OpenRouter), model switching, and cost optimization through provider flexibility. Use when integrating non-Google models, implementing model fallbacks, or optimizing costs across providers.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-litellm - ADK LiteLLM Integration Expert
@@ -16,7 +17,7 @@ available, call `resolve-library-id "litellm"` then `get-library-docs` for the
 latest provider/model docs. Otherwise use the bundled references below. context7
 is optional enrichment; the bundled references are always sufficient.
 
-1. Read `../../docs/python-adk-2.md` for current ADK 2.x model/tool constraints.
+1. Read `references/adk-2x-baseline.md` for current ADK 2.x model/tool constraints.
 2. Read LiteLLM documentation at `references/` folder:
    - `references/README.md` - LiteLLM crash course tutorial
    - `references/models.md` - multi-provider model guide

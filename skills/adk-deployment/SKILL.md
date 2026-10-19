@@ -1,6 +1,7 @@
 ---
 name: adk-deployment
 description: ADK deployment specialist covering Cloud Run, GKE, Vertex AI Agent Engine, and Docker containerization. Use when deploying ADK agents to production, configuring cloud infrastructure, or setting up CI/CD pipelines for ADK applications.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-deployment - ADK Deployment Specialist

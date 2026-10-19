@@ -1,6 +1,7 @@
 ---
 name: adk-architecture
 description: ADK architectural knowledge — graph orchestration, resumption, execution flow, node contracts, observability, and LLM context orchestration. Use this skill whenever you need to understand the architecture, event flow, or state management of the ADK system, or when designing or modifying core components. Triggers on "how does X work", "design of", "architecture of", "event flow", "resumption state", "checkpoint", "BaseNode", "NodeRunner".
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # ADK Architecture Guide

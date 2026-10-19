@@ -2,11 +2,12 @@
 name: adk-setup
 description: Set up a local development environment for the ADK Python project. Use when the user wants to get started developing, set up their environment, install dependencies, or prepare for contributing.
 disable-model-invocation: true
+compatibility: google-adk>=2.9.2,<3
 ---
 
 Set up the local development environment for ADK Python 2.x.
 
-Before selecting versions or commands, read `../../docs/python-adk-2.md`.
+Before selecting versions or commands, read `references/adk-2x-baseline.md`.
 
 ## Prerequisites
 

@@ -1,6 +1,7 @@
 ---
 name: adk-debug
 description: Use when debugging ADK agents, inspecting sessions, testing agent behavior, troubleshooting tool calls, event flow issues, or diagnosing LLM/model problems.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # Debugging ADK Agents

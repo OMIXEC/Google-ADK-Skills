@@ -5,6 +5,7 @@ description: >-
   machines, conditional edges, and LLM-driven routing, using ADK tools as nodes.
   Use when a request mentions LangGraph, a state-machine/graph workflow, complex
   branching orchestration, or ADK↔LangGraph interop.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-langgraph — LangGraph Orchestration for ADK

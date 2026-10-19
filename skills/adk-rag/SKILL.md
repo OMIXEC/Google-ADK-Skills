@@ -6,6 +6,7 @@ description: >-
   or Vertex AI RAG (managed corpora). Use when a request mentions RAG, knowledge
   base, vector search, embeddings, document ingestion, or grounding an agent in
   a corpus.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-rag — Retrieval-Augmented Generation for ADK

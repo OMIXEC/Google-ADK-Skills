@@ -39,7 +39,7 @@ uv pip install google-adk
 
 ### Google AI Studio (recommended for getting started)
 
-Obtain an API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+Obtain an API key from Google AI Studio.
 
 Create a `.env` file in the agent directory:
 

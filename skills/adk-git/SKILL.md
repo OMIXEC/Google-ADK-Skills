@@ -1,6 +1,7 @@
 ---
 name: adk-git
 description: Use for any git operation (commit, push, pull, rebase, branch, PR, cherry-pick, etc.). Provides commit message format and conventions.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # Git Operations for adk-python

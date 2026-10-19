@@ -5,6 +5,7 @@ description: >-
   each with optimized instructions, recommended tools, and interaction style.
   Use when a request asks for a ready-made character/role agent (e.g. tutor,
   coach, analyst, support rep) rather than a bespoke build.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-persona — Pre-Built Persona Templates for ADK

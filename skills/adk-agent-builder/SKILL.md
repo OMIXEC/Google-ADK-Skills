@@ -1,13 +1,14 @@
 ---
 name: adk-agent-builder
 description: Central hub for building, testing, and iterating on ADK agents. Trigger this skill when the user wants to create a new agent, configure modes (task, single-turn), or build graph-based workflows.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # ADK Agent Builder
 
 This file serves as a directory of specialized reference guides for developing agents with ADK. To avoid context pollution, read only the relevant reference file based on your current task.
 
-Before choosing import paths, package versions, graph APIs, or examples, read `../../docs/python-adk-2.md`.
+Before choosing import paths, package versions, graph APIs, or examples, read `references/adk-2x-baseline.md`.
 
 ## Core Concepts Directory
 

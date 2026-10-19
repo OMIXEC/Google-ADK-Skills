@@ -159,29 +159,29 @@ from google.adk.agents import BaseAgent
 
 class CustomOrchestrator(BaseAgent):
     """Custom agent with programmatic control flow."""
-    
+
     def __init__(self, name: str, workers: list):
         super().__init__(name=name)
         self.workers = workers
-    
+
     async def _run_async_impl(self, ctx):
         # Custom pre-processing
         validated = await self._validate_input(ctx.session.state.get("query"))
         if not validated["ok"]:
             return {"status": "rejected", "reason": validated["reason"]}
-        
+
         # Dynamic worker selection based on input
         worker = self._select_worker(validated["category"])
-        
+
         # Custom retry logic
         for attempt in range(3):
             result = await worker.run(ctx)
             if result["status"] == "ok":
                 break
-        
+
         # Custom post-processing
         return self._format_output(result)
-    
+
     def _select_worker(self, category: str):
         for w in self.workers:
             if w.handles(category):

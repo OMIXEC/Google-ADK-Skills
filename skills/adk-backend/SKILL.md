@@ -1,6 +1,7 @@
 ---
 name: adk-backend
 description: ADK backend architecture expert covering runtime event loops, session management, state handling, and server implementation patterns. Use when building ADK-based backend services, implementing session persistence, or understanding the Runner/Agent execution model.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-backend - ADK Backend Architecture Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in Google's Agent Development Kit (ADK) b
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for the current ADK 2.x baseline and migration cautions.
+1. Read `references/adk-2x-baseline.md` for the current ADK 2.x baseline and migration cautions.
 2. Read runtime architecture at `references/runtime-architecture.md` (copied from adk-docs)
 3. Read session management at `../adk-memory/references/` (session.md, state.md, memory.md)
 4. For code samples, reference `../adk-runtime/references/`

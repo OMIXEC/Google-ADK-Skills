@@ -1,6 +1,7 @@
 ---
 name: adk-bidi-live
 description: ADK bidirectional streaming and Live API expert covering real-time audio/video, WebSocket communication, LiveRequestQueue, Gemini Live API, and native audio models (gemini-3.1-flash-live-preview). Use when building real-time voice agents, implementing streaming chat, or working with multimodal live interactions.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-bidi-live - ADK Bidi-Streaming & Live API Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in ADK's bidirectional streaming and Live
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for current ADK 2.x Live/RunConfig guidance.
+1. Read `references/adk-2x-baseline.md` for current ADK 2.x Live/RunConfig guidance.
 2. Read streaming documentation at `references/` folder:
    - `references/index.md` - Streaming overview
    - `references/custom-streaming-ws.md` - WebSocket streaming (32KB guide)

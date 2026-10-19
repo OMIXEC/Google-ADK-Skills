@@ -7,6 +7,7 @@ description: >-
   vector). Use when choosing a session/memory backend, wiring a database
   SessionService or MemoryService, generating embeddings, or building a
   vector store for retrieval on an ADK agent.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-embeddings — Memory & Embeddings Across Databases

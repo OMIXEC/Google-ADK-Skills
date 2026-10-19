@@ -549,7 +549,7 @@ SQL_INJECTION_PAYLOADS = [
 
 XSS_PAYLOADS = [
     "<script>alert('xss')</script>",
-    "<img src=x onerror=alert('xss')>",
+    "",
     "javascript:alert('xss')",
     "<svg onload=alert('xss')>",
 ]

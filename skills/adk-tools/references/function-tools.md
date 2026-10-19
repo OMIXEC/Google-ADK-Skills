@@ -115,31 +115,31 @@ A tool can write data to a `temp:` variable, and a subsequent tool can read it. 
 ??? "Example"
 
     === "Python"
-    
+
         This tool is a python function which obtains the Stock price of a given Stock ticker/ symbol.
-    
+
         <u>Note</u>: You need to `pip install yfinance` library before using this tool.
-    
+
         ```py
         --8<-- "examples/python/snippets/tools/function-tools/func_tool.py"
         ```
-    
+
         The return value from this tool will be wrapped into a dictionary.
-    
+
         ```json
         {"result": "$123"}
         ```
-    
+
     === "Java"
-    
+
         This tool retrieves the mocked value of a stock price.
-    
+
         ```java
         --8<-- "examples/java/snippets/src/main/java/tools/StockPriceAgent.java:full_code"
         ```
-    
+
         The return value from this tool will be wrapped into a Map<String, Object>.
-    
+
         ```json
         For input `GOOG`: {"symbol": "GOOG", "price": "1.0"}
         ```
@@ -148,11 +148,11 @@ A tool can write data to a `temp:` variable, and a subsequent tool can read it. 
 
 While you have considerable flexibility in defining your function, remember that simplicity enhances usability for the LLM. Consider these guidelines:
 
-* **Fewer Parameters are Better:** Minimize the number of parameters to reduce complexity.  
-* **Simple Data Types:** Favor primitive data types like `str` and `int` over custom classes whenever possible.  
+* **Fewer Parameters are Better:** Minimize the number of parameters to reduce complexity.
+* **Simple Data Types:** Favor primitive data types like `str` and `int` over custom classes whenever possible.
 * **Meaningful Names:** The function's name and parameter names significantly influence how the LLM interprets and utilizes the tool. Choose names that clearly reflect the function's purpose and the meaning of its inputs. Avoid generic names like `do_stuff()` or `beAgent()`.
 * **Build for Parallel Execution:** Improve function calling performance when multiple tools are run by building for asynchronous operation. For information on enabling parallel execution for tools, see
-[Increase tool performance with parallel execution](/adk-docs/tools/performance/).
+Increase tool performance with parallel execution.
 
 ## Long Running Function Tools {#long-run-tool}
 
@@ -170,7 +170,7 @@ When using a `LongRunningFunctionTool`, your function can initiate the long-runn
     Depending on the type of tool you are building, designing for asychronous
     operation may be a better solution than creating a long running tool. For
     more information, see
-    [Increase tool performance with parallel execution](/adk-docs/tools/performance/).
+    Increase tool performance with parallel execution.
 
 ### How it Works
 
@@ -202,16 +202,16 @@ Define your tool function and wrap it using the `LongRunningFunctionTool` class:
     import com.google.adk.tools.LongRunningFunctionTool;
     import java.util.HashMap;
     import java.util.Map;
-    
+
     public class ExampleLongRunningFunction {
-    
+
       // Define your Long Running function.
       // Ask for approval for the reimbursement.
       public static Map<String, Object> askForApproval(String purpose, double amount) {
         // Simulate creating a ticket and sending a notification
         System.out.println(
             "Simulating ticket creation for purpose: " + purpose + ", amount: " + amount);
-    
+
         // Send a notification to the approver with the link of the ticket
         Map<String, Object> result = new HashMap<>();
         result.put("status", "pending");
@@ -221,12 +221,12 @@ Define your tool function and wrap it using the `LongRunningFunctionTool` class:
         result.put("ticket-id", "approval-ticket-1");
         return result;
       }
-    
+
       public static void main(String[] args) throws NoSuchMethodException {
         // Pass the method to LongRunningFunctionTool.create
         LongRunningFunctionTool approveTool =
             LongRunningFunctionTool.create(ExampleLongRunningFunction.class, "askForApproval");
-    
+
         // Include the tool in the agent
         LlmAgent approverAgent =
             LlmAgent.builder()
@@ -307,7 +307,7 @@ This powerful feature allows you to leverage the capabilities of other agents wi
 
 It's important to distinguish an Agent-as-a-Tool from a Sub-Agent.
 
-* **Agent-as-a-Tool:** When Agent A calls Agent B as a tool (using Agent-as-a-Tool), Agent B's answer is **passed back** to Agent A, which then summarizes the answer and generates a response to the user. Agent A retains control and continues to handle future user input.  
+* **Agent-as-a-Tool:** When Agent A calls Agent B as a tool (using Agent-as-a-Tool), Agent B's answer is **passed back** to Agent A, which then summarizes the answer and generates a response to the user. Agent A retains control and continues to handle future user input.
 
 * **Sub-agent:** When Agent A calls Agent B as a sub-agent, the responsibility of answering the user is completely **transferred to Agent B**. Agent A is effectively out of the loop. All subsequent user input will be answered by Agent B.
 
@@ -340,7 +340,7 @@ The `AgentTool` class provides the following attributes for customizing its beha
         ```py
         --8<-- "examples/python/snippets/tools/function-tools/summarizer.py"
         ```
-  
+
     === "Java"
 
         ```java
@@ -349,9 +349,9 @@ The `AgentTool` class provides the following attributes for customizing its beha
 
 ### How it works
 
-1. When the `main_agent` receives the long text, its instruction tells it to use the 'summarize' tool for long texts.  
-2. The framework recognizes 'summarize' as an `AgentTool` that wraps the `summary_agent`.  
-3. Behind the scenes, the `main_agent` will call the `summary_agent` with the long text as input.  
-4. The `summary_agent` will process the text according to its instruction and generate a summary.  
-5. **The response from the `summary_agent` is then passed back to the `main_agent`.**  
+1. When the `main_agent` receives the long text, its instruction tells it to use the 'summarize' tool for long texts.
+2. The framework recognizes 'summarize' as an `AgentTool` that wraps the `summary_agent`.
+3. Behind the scenes, the `main_agent` will call the `summary_agent` with the long text as input.
+4. The `summary_agent` will process the text according to its instruction and generate a summary.
+5. **The response from the `summary_agent` is then passed back to the `main_agent`.**
 6. The `main_agent` can then take the summary and formulate its final response to the user (e.g., "Here's a summary of the text: ...")

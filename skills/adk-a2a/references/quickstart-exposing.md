@@ -9,7 +9,7 @@ This sample demonstrates how you can easily expose an ADK agent so that it can b
 There are two main ways to expose an ADK agent via A2A.
 
 * **by using the `to_a2a(root_agent)` function**: use this function if you just want to convert an existing agent to work with A2A, and be able to expose it via a server through `uvicorn`, instead of `adk deploy api_server`. This means that you have tighter control over what you want to expose via `uvicorn` when you want to productionize your agent. Furthermore, the `to_a2a()` function auto-generates an agent card based on your agent code.
-* **by creating your own agent card (`agent.json`) and hosting it using `adk api_server --a2a`**: There are two main benefits of using this approach. First, `adk api_server --a2a` works with `adk web`, making it easy to use, debug, and test your agent. Second, with `adk api_server`, you can specify a parent folder with multiple, separate agents. Those agents that have an agent card (`agent.json`), will automatically be usable via A2A by other agents through the same server. However, you will need to create your own agent cards. To create an agent card, you can follow the [A2A Python tutorial](https://a2a-protocol.org/latest/tutorials/python/1-introduction/).
+* **by creating your own agent card (`agent.json`) and hosting it using `adk api_server --a2a`**: There are two main benefits of using this approach. First, `adk api_server --a2a` works with `adk web`, making it easy to use, debug, and test your agent. Second, with `adk api_server`, you can specify a parent folder with multiple, separate agents. Those agents that have an agent card (`agent.json`), will automatically be usable via A2A by other agents through the same server. However, you will need to create your own agent cards. To create an agent card, you can follow the A2A Python tutorial.
 
 This quickstart will focus on `to_a2a()`, as it is the easiest way to expose your agent and will also autogenerate the agent card behind-the-scenes. If you'd like to use the `adk api_server` approach, you can see it being used in the [A2A Quickstart (Consuming) documentation](quickstart-consuming.md).
 
@@ -47,7 +47,7 @@ You can take an existing agent built using ADK and make it A2A-compatible by sim
 root_agent = Agent(
     model='gemini-3.5-flash',
     name='hello_world_agent',
-    
+
     <...your agent code...>
 )
 ```
@@ -61,7 +61,7 @@ from google.adk.a2a.utils.agent_to_a2a import to_a2a
 a2a_app = to_a2a(root_agent, port=8001)
 ```
 
-The `to_a2a()` function will even auto-generate an agent card in-memory behind-the-scenes by [extracting skills, capabilities, and metadata from the ADK agent](https://github.com/google/adk-python/blob/main/src/google/adk/a2a/utils/agent_card_builder.py), so that the well-known agent card is made available when the agent endpoint is served using `uvicorn`.
+The `to_a2a()` function will even auto-generate an agent card in-memory behind-the-scenes by extracting skills, capabilities, and metadata from the ADK agent, so that the well-known agent card is made available when the agent endpoint is served using `uvicorn`.
 
 You can also provide your own agent card by using the `agent_card` parameter. The value can be an `AgentCard` object or a path to an agent card JSON file.
 
@@ -103,7 +103,7 @@ First, make sure you have the necessary dependencies installed:
 pip install google-adk[a2a]
 ```
 
-You can clone and navigate to the [**a2a_root** sample](https://github.com/google/adk-python/tree/main/contributing/samples/a2a_root) here:
+You can clone and navigate to the **a2a_root** sample here:
 
 ```bash
 git clone https://github.com/google/adk-python.git
@@ -114,7 +114,7 @@ As you'll see, the folder structure is as follows:
 ```text
 a2a_root/
 ├── remote_a2a/
-│   └── hello_world/    
+│   └── hello_world/
 │       ├── __init__.py
 │       └── agent.py    # Remote Hello World Agent
 ├── README.md
@@ -159,7 +159,7 @@ INFO:     Uvicorn running on http://localhost:8001 (Press CTRL+C to quit)
 
 You can check that your agent is up and running by visiting the agent card that was auto-generated earlier as part of your `to_a2a()` function in `a2a_root/remote_a2a/hello_world/agent.py`:
 
-[http://localhost:8001/.well-known/agent-card.json](http://localhost:8001/.well-known/agent-card.json)
+http://localhost:8001/.well-known/agent-card.json
 
 You should see the contents of the agent card, which should look like:
 
@@ -176,7 +176,7 @@ Now that your remote agent is running, you can launch the dev UI and select "a2a
 adk web contributing/samples/
 ```
 
-To open the adk web server, go to: [http://localhost:8000](http://localhost:8000).
+To open the adk web server, go to: http://localhost:8000.
 
 ## Example Interactions
 

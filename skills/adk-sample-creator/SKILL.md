@@ -1,6 +1,7 @@
 ---
 name: adk-sample-creator
 description: Author new samples for the ADK Python repository. Use this skill when the user wants to create a new sample demonstrating a feature or agent pattern (e.g., dynamic nodes, standalone agents, fan-out/fan-in) or when adding examples to subdirectories under `contributing/`.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # ADK Sample Creator

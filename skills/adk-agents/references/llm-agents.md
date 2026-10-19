@@ -5,7 +5,7 @@ acting as the "thinking" part of your application. It leverages the power of a
 Large Language Model (LLM) for reasoning, understanding natural language, making
 decisions, generating responses, and interacting with tools.
 
-Unlike deterministic [Workflow Agents](workflow-agents/index.md) that follow
+Unlike deterministic Workflow Agents that follow
 predefined execution paths, `LlmAgent` behavior is non-deterministic. It uses
 the LLM to interpret instructions and context, deciding dynamically how to
 proceed, which tools to use (if any), or whether to transfer control to another
@@ -160,7 +160,7 @@ on the conversation and its instructions.
       # Replace with actual logic (e.g., API call, database lookup)
       capitals = {"france": "Paris", "japan": "Tokyo", "canada": "Ottawa"}
       return capitals.get(country.lower(), f"Sorry, I don't know the capital of {country}.")
-    
+
     # Add the tool to the agent
     capital_agent = LlmAgent(
         model="gemini-3.5-flash",
@@ -174,7 +174,7 @@ on the conversation and its instructions.
 === "Java"
 
     ```java
-    
+
     // Define a tool function
     // Retrieves the capital city of a given country.
     public static Map<String, Object> getCapitalCity(
@@ -185,13 +185,13 @@ on the conversation and its instructions.
       countryCapitals.put("canada", "Ottawa");
       countryCapitals.put("france", "Paris");
       countryCapitals.put("japan", "Tokyo");
-    
+
       String result =
               countryCapitals.getOrDefault(
                       country.toLowerCase(), "Sorry, I couldn't find the capital for " + country + ".");
       return Map.of("result", result); // Tools must return a Map
     }
-    
+
     // Add the tool to the agent
     FunctionTool capitalTool = FunctionTool.create(experiment.getClass(), "getCapitalCity");
     LlmAgent capitalAgent =
@@ -204,7 +204,7 @@ on the conversation and its instructions.
             .build();
     ```
 
-Learn more about Tools in the [Tools](../tools/index.md) section.
+Learn more about Tools in the Tools section.
 
 ## Advanced Configuration & Control
 
@@ -214,7 +214,7 @@ Beyond the core parameters, `LlmAgent` offers several options for finer control:
 
 You can adjust how the underlying LLM generates responses using `generate_content_config`.
 
-* **`generate_content_config` (Optional):** Pass an instance of [`google.genai.types.GenerateContentConfig`](https://googleapis.github.io/python-genai/genai.html#genai.types.GenerateContentConfig) to control parameters like `temperature` (randomness), `max_output_tokens` (response length), `top_p`, `top_k`, and safety settings.
+* **`generate_content_config` (Optional):** Pass an instance of `google.genai.types.GenerateContentConfig` to control parameters like `temperature` (randomness), `max_output_tokens` (response length), `top_p`, `top_k`, and safety settings.
 
 === "Python"
 
@@ -269,10 +269,10 @@ For scenarios requiring structured data exchange with an `LLM Agent`, the ADK pr
 
     ```python
     from pydantic import BaseModel, Field
-    
+
     class CapitalOutput(BaseModel):
         capital: str = Field(description="The capital of the country.")
-    
+
     structured_capital_agent = LlmAgent(
         # ... name, model, description
         instruction="""You are a Capital Information Agent. Given a country, respond ONLY with a JSON object containing the capital. Format: {"capital": "capital_name"}""",
@@ -299,7 +299,7 @@ For scenarios requiring structured data exchange with an `LLM Agent`, the ADK pr
                         .description("The capital city of the country.")
                         .build()))
             .build();
-    
+
     LlmAgent structuredCapitalAgent =
         LlmAgent.builder()
             // ... name, model, description
@@ -332,7 +332,7 @@ Control whether the agent receives the prior conversation history.
 
     ```java
     import com.google.adk.agents.LlmAgent.IncludeContents;
-    
+
     LlmAgent statelessAgent =
         LlmAgent.builder()
             // ... other params
@@ -342,11 +342,11 @@ Control whether the agent receives the prior conversation history.
 
 ### Planner
 
-![python_only](https://img.shields.io/badge/Currently_supported_in-Python-blue){ title="This feature is currently available for Python. Java support is planned/ coming soon."}
+{ title="This feature is currently available for Python. Java support is planned/ coming soon."}
 
 **`planner` (Optional):** Assign a `BasePlanner` instance to enable multi-step reasoning and planning before execution. There are two main planners:
 
-* **`BuiltInPlanner`:** Leverages the model's built-in planning capabilities (e.g., Gemini's thinking feature). See [Gemini Thinking](https://ai.google.dev/gemini-api/docs/thinking) for details and examples.
+* **`BuiltInPlanner`:** Leverages the model's built-in planning capabilities (e.g., Gemini's thinking feature). See Gemini Thinking for details and examples.
 
     On Gemini 3.x, prefer the `thinking_level` parameter (`minimal` / `low` / `medium` (default) / `high`) to guide reasoning effort; the older token-based `thinking_budget` is superseded. The `include_thoughts` parameter controls whether the model should include its raw thoughts and internal reasoning process in the response.
 
@@ -366,7 +366,7 @@ Control whether the agent receives the prior conversation history.
         # ... your tools here
     )
     ```
-    
+
 * **`PlanReActPlanner`:** This planner instructs the model to follow a specific structure in its output: first create a plan, then execute actions (like calling tools), and provide reasoning for its steps. *It's particularly useful for models that don't have a built-in "thinking" feature*.
 
     ```python
@@ -399,9 +399,9 @@ Control whether the agent receives the prior conversation history.
 
 ### Code Execution
 
-![python_only](https://img.shields.io/badge/Currently_supported_in-Python-blue){ title="This feature is currently available for Python. Java support is planned/ coming soon."}
+{ title="This feature is currently available for Python. Java support is planned/ coming soon."}
 
-* **`code_executor` (Optional):** Provide a `BaseCodeExecutor` instance to allow the agent to execute code blocks found in the LLM's response. ([See Tools/Built-in tools](../tools/built-in-tools.md)).
+* **`code_executor` (Optional):** Provide a `BaseCodeExecutor` instance to allow the agent to execute code blocks found in the LLM's response. (See Tools/Built-in tools).
 
 Example for using built-in-planner:
 ```python
@@ -532,13 +532,13 @@ call_agent("If it's raining in New York right now, what is the current temperatu
     Here's the complete basic `capital_agent`:
 
     === "Python"
-    
+
         ```python
         --8<-- "examples/python/snippets/agents/llm-agent/capital_agent.py"
         ```
-    
+
     === "Java"
-    
+
         ```java
         --8<-- "examples/java/snippets/src/main/java/agents/LlmAgentExample.java:full_code"
         ```
@@ -549,5 +549,5 @@ _(This example demonstrates the core concepts. More complex agents might incorpo
 
 While this page covers the core configuration of `LlmAgent`, several related concepts provide more advanced control and are detailed elsewhere:
 
-* **Callbacks:** Intercepting execution points (before/after model calls, before/after tool calls) using `before_model_callback`, `after_model_callback`, etc. See [Callbacks](../callbacks/types-of-callbacks.md).
+* **Callbacks:** Intercepting execution points (before/after model calls, before/after tool calls) using `before_model_callback`, `after_model_callback`, etc. See Callbacks.
 * **Multi-Agent Control:** Advanced strategies for agent interaction, including planning (`planner`), controlling agent transfer (`disallow_transfer_to_parent`, `disallow_transfer_to_peers`), and system-wide instructions (`global_instruction`). See [Multi-Agents](multi-agents.md).

@@ -1,6 +1,7 @@
 ---
 name: adk-a2a
 description: ADK Agent-to-Agent (A2A) protocol expert covering remote agent communication, agent cards, HTTP-based delegation, and distributed agent systems. Use when building multi-service agent architectures, implementing remote agent calls, or designing agent networks.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-a2a - ADK Agent-to-Agent Protocol Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in ADK's Agent-to-Agent (A2A) protocol fo
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for current ADK 2.x Task API and A2A cautions.
+1. Read `references/adk-2x-baseline.md` for current ADK 2.x Task API and A2A cautions.
 2. Read A2A documentation at `references/` folder:
    - `references/index.md` - A2A overview
    - `references/intro.md` - A2A protocol introduction (12KB)

@@ -51,7 +51,7 @@ source ../.venv/bin/activate
 ```
 
 2. Set up your OpenRouter API key:
-   - Create an account at [OpenRouter](https://openrouter.ai/) if you don't have one
+   - Create an account at OpenRouter if you don't have one
    - Generate an API key at https://openrouter.ai/keys
    - Rename `.env.example` to `.env` in the openrouter_dad_joke_agent folder
    - Add your OpenRouter API key to the `OPENROUTER_API_KEY` variable in the `.env` file
@@ -121,8 +121,8 @@ model = LiteLlm(
 
 ## Additional Resources
 
-- [Google ADK LiteLLM Integration Documentation](https://google.github.io/adk-docs/tutorials/agent-team/#step-2-going-multi-model-with-litellm-optional)
-- [LiteLLM Documentation](https://docs.litellm.ai/docs/)
-- [LiteLLM Supported Providers](https://docs.litellm.ai/docs/providers)
-- [OpenRouter Documentation](https://openrouter.ai/docs)
-- [Anthropic Claude Models Overview](https://docs.anthropic.com/en/docs/about-claude/models/all-models)
+- Google ADK LiteLLM Integration Documentation
+- LiteLLM Documentation
+- LiteLLM Supported Providers
+- OpenRouter Documentation
+- Anthropic Claude Models Overview

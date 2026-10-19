@@ -1,6 +1,6 @@
 # Custom Audio Streaming app (SSE) {#custom-streaming}
 
-This article overviews the server and client code for a custom asynchronous web app built with ADK Streaming and [FastAPI](https://fastapi.tiangolo.com/), enabling real-time, bidirectional audio and text communication with Server-Sent Events (SSE). The key features are:
+This article overviews the server and client code for a custom asynchronous web app built with ADK Streaming and FastAPI, enabling real-time, bidirectional audio and text communication with Server-Sent Events (SSE). The key features are:
 
 **Server-Side (Python/FastAPI)**:
 - FastAPI + ADK integration
@@ -74,7 +74,7 @@ adk-streaming/
 To run the sample app, choose a platform from either Google AI Studio or Google Cloud Vertex AI:
 
 === "Gemini - Google AI Studio"
-    1. Get an API key from [Google AI Studio](https://aistudio.google.com/apikey).
+    1. Get an API key from Google AI Studio.
     2. Open the **`.env`** file located inside (`app/`) and copy-paste the following code.
 
         ```env title=".env"
@@ -86,15 +86,15 @@ To run the sample app, choose a platform from either Google AI Studio or Google 
 
 === "Gemini - Google Cloud Vertex AI"
     1. You need an existing
-       [Google Cloud](https://cloud.google.com/?e=48754805&hl=en) account and a
+       Google Cloud account and a
        project.
         * Set up a
-          [Google Cloud project](https://cloud.google.com/vertex-ai/generative-ai/docs/start/quickstarts/quickstart-multimodal#setup-gcp)
+          Google Cloud project
         * Set up the
-          [gcloud CLI](https://cloud.google.com/vertex-ai/generative-ai/docs/start/quickstarts/quickstart-multimodal#setup-local)
+          gcloud CLI
         * Authenticate to Google Cloud, from the terminal by running
           `gcloud auth login`.
-        * [Enable the Vertex AI API](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com).
+        * Enable the Vertex AI API.
     2. Open the **`.env`** file located inside (`app/`). Copy-paste
        the following code and update the project ID and location.
 
@@ -117,23 +117,23 @@ To run the sample app, choose a platform from either Google AI Studio or Google 
 uvicorn main:app --reload
 ```
 
-3\. **Access the app with the text mode:** Once the app starts, the terminal will display a local URL (e.g., [http://localhost:8000](http://localhost:8000)). Click this link to open the UI in your browser.
+3\. **Access the app with the text mode:** Once the app starts, the terminal will display a local URL (e.g., http://localhost:8000). Click this link to open the UI in your browser.
 
 Now you should see the UI like this:
 
-![ADK Streaming app](../assets/adk-streaming-text.png)
+
 
 Try asking a question `What time is it now?`. The agent will use Google Search to respond to your queries. You would notice that the UI shows the agent's response as streaming text. You can also send messages to the agent at any time, even while the agent is still responding. This demonstrates the bidirectional communication capability of ADK Streaming.
 
 4\. **Access the app with the audio mode:** Now click the `Start Audio` button. The app reconnects with the server in an audio mode, and the UI will show the following dialog for the first time:
 
-![ADK Streaming app](../assets/adk-streaming-audio-dialog.png)
+
 
 Click `Allow while visiting the site`, then you will see the microphone icon will be shown at the top of the browser:
 
-![ADK Streaming app](../assets/adk-streaming-mic.png)
 
-Now you can talk to the agent with voice. Ask questions like `What time is it now?` with voice and you will hear the agent responding in voice too. As Streaming for ADK supports [multiple languages](https://ai.google.dev/gemini-api/docs/live#supported-languages), it can also respond to question in the supported languages.
+
+Now you can talk to the agent with voice. Ask questions like `What time is it now?` with voice and you will hear the agent responding in voice too. As Streaming for ADK supports multiple languages, it can also respond to question in the supported languages.
 
 5\. **Check console logs**
 
@@ -156,7 +156,7 @@ These console logs are important in case you develop your own streaming applicat
 6\. **Troubleshooting tips**
 
 - **When your browser can't connect to the server via SSH proxy:** SSH proxy used in various cloud services may not work with SSE. Please try without SSH proxy, such as using a local laptop, or try the [WebSocket](custom-streaming-ws.md) version.
-- **When the Live model doesn't work:** If you see errors on the app server console about `gemini-3.1-flash-live-preview` availability, check the [List Models Documentation](https://ai.google.dev/api/models#method:-models.list) for a current Live-capable model (must support `bidiGenerateContent`) and update the model on `app/google_search_agent/agent.py` at line 6.
+- **When the Live model doesn't work:** If you see errors on the app server console about `gemini-3.1-flash-live-preview` availability, check the List Models Documentation for a current Live-capable model (must support `bidiGenerateContent`) and update the model on `app/google_search_agent/agent.py` at line 6.
 
 ## 4. Agent definition
 
@@ -176,9 +176,9 @@ root_agent = Agent(
 )
 ```
 
-Notice how easily you integrated [grounding with Google Search](https://ai.google.dev/gemini-api/docs/grounding?lang=python#configure-search) capabilities.  The `Agent` class and the `google_search` tool handle the complex interactions with the LLM and grounding with the search API, allowing you to focus on the agent's *purpose* and *behavior*.
+Notice how easily you integrated grounding with Google Search capabilities.  The `Agent` class and the `google_search` tool handle the complex interactions with the LLM and grounding with the search API, allowing you to focus on the agent's *purpose* and *behavior*.
 
-![intro_components.png](../assets/quickstart-streaming-tool.png)
+
 
 
 The server and client architecture enables real-time, bidirectional communication between web clients and AI agents with proper session isolation and resource management.
@@ -238,7 +238,7 @@ async def start_agent_session(user_id, is_audio=False):
     # Set response modality
     modality = "AUDIO" if is_audio else "TEXT"
     run_config = RunConfig(response_modalities=[modality])
-    
+
     # Optional: Enable session resumption for improved reliability
     # run_config = RunConfig(
     #     response_modalities=[modality],
@@ -386,7 +386,7 @@ async def sse_endpoint(user_id: int, is_audio: str = "false"):
 
 - **StreamingResponse** - Returns `StreamingResponse` with:
   - `event_generator()` async function that wraps `agent_to_client_sse()`
-  - MIME type: `text/event-stream` 
+  - MIME type: `text/event-stream`
   - CORS headers for cross-origin access
   - Cache-control headers to prevent caching
 
@@ -641,7 +641,7 @@ async function sendMessage(message) {
       },
       body: JSON.stringify(message)
     });
-    
+
     if (!response.ok) {
       console.error('Failed to send message:', response.statusText);
     }

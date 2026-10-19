@@ -6,6 +6,7 @@ description: >-
   knowledge sources, then emit a configured agent. Use when a request needs a
   bespoke specialist (e.g. a tax-law advisor, a marine-biology tutor) with no
   matching persona template.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-domain-expert — Custom Domain Expert Generator

@@ -1,8 +1,8 @@
 # Vertex AI Express Mode: Using Vertex AI Sessions and Memory for Free
 
 If you are interested in using either the `VertexAiSessionService` or `VertexAiMemoryBankService` but you don't have a Google Cloud Project, you can sign up for Vertex AI Express Mode and get access
-for free and try out these services! You can sign up with an eligible ***gmail*** account [here](https://console.cloud.google.com/expressmode). For more details about Vertex AI Express mode, see the [overview page](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview).
-Once you sign up, get an [API key](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview#api-keys) and you can get started using your local ADK agent with Vertex AI Session and Memory services!
+for free and try out these services! You can sign up with an eligible ***gmail*** account here. For more details about Vertex AI Express mode, see the overview page.
+Once you sign up, get an API key and you can get started using your local ADK agent with Vertex AI Session and Memory services!
 
 !!! info Vertex AI Express mode limitations
 
@@ -29,7 +29,7 @@ Next, we can create our Agent Engine instance. You can use the Gen AI SDK.
         ```
 
     2. Set Vertex AI to be True, then use a `POST` request to create the Agent Engine
-        
+
         ```py
         # Create Agent Engine with Gen AI SDK
         client = genai.Client(vertexai=True)._api_client
@@ -52,7 +52,7 @@ Next, we can create our Agent Engine instance. You can use the Gen AI SDK.
 
 ## Managing Sessions with a `VertexAiSessionService`
 
-[`VertexAiSessionService`](session.md###sessionservice-implementations) is compatible with Vertex AI Express mode API Keys. We can 
+[`VertexAiSessionService`](session.md###sessionservice-implementations) is compatible with Vertex AI Express mode API Keys. We can
 instead initialize the session object without any project or location.
 
 ```py
@@ -80,7 +80,7 @@ session_service = VertexAiSessionService(agent_engine_id=APP_ID)
 
 ## Managing Memories with a `VertexAiMemoryBankService`
 
-[`VertexAiMemoryBankService`](memory.md###memoryservice-implementations) is compatible with Vertex AI Express mode API Keys. We can 
+[`VertexAiMemoryBankService`](memory.md###memoryservice-implementations) is compatible with Vertex AI Express mode API Keys. We can
 instead initialize the memory object without any project or location.
 
 ```py
@@ -109,4 +109,4 @@ memory_service = VertexAiMemoryBankService(agent_engine_id=APP_ID)
 
 In this sample, we create a weather agent that utilizes both `VertexAiSessionService` and `VertexAiMemoryBankService` for context management, allowing our agent to recall user preferences and conversations!
 
-**[Weather Agent with Session and Memory using Vertex AI Express Mode](https://github.com/google/adk-docs/blob/main/examples/python/notebooks/express-mode-weather-agent.ipynb)**
+**Weather Agent with Session and Memory using Vertex AI Express Mode**

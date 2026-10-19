@@ -1,6 +1,7 @@
 ---
 name: adk-tools
 description: ADK tools expert covering custom function tools, Google built-in tools (Search, Code Execution), OpenAPI integrations, and tool composition. Use when creating custom tools, integrating external APIs, or configuring built-in Google tools.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-tools - ADK Tools Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in ADK tool creation and integration.
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for current ADK 2.x tool and MCP guidance.
+1. Read `references/adk-2x-baseline.md` for current ADK 2.x tool and MCP guidance.
 2. Read tools documentation at `references/` folder:
    - `references/index.md` - Tools overview
    - `references/function-tools.md` - Custom function tools

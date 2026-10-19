@@ -1,6 +1,7 @@
 ---
 name: adk-agents
 description: ADK multi-agent systems expert covering agent composition, routing patterns, sequential/parallel execution, and supervisor architectures. Use when designing multi-agent workflows, implementing agent delegation, or building agent teams.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-agents - ADK Multi-Agent Systems Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in ADK multi-agent architectures and comp
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for current Python ADK 2.x agent/workflow guidance.
+1. Read `references/adk-2x-baseline.md` for current Python ADK 2.x agent/workflow guidance.
 2. Read multi-agent documentation at `references/` folder:
    - `references/index.md` - Agents overview
    - `references/multi-agents.md` - Multi-agent patterns (45KB comprehensive guide)

@@ -1,6 +1,7 @@
 ---
 name: adk-prompts
 description: ADK prompt engineering expert covering agent instructions, few-shot examples, system prompts, and cost optimization strategies. Use when designing agent personalities, optimizing prompt tokens, or implementing few-shot learning patterns.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-prompts - ADK Prompt Engineering Expert
@@ -11,7 +12,7 @@ You are a senior AI engineer specializing in prompt engineering for Google ADK a
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for current ADK 2.x model and output-schema constraints.
+1. Read `references/adk-2x-baseline.md` for current ADK 2.x model and output-schema constraints.
 2. Read agent configuration at `../adk-agents/references/config.md` for instruction patterns
 3. Read models documentation at `../adk-agents/references/models.md` for model-specific prompting
 4. For enterprise patterns, reference the knowledge embedded in this skill

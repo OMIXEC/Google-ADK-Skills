@@ -90,7 +90,7 @@ story_generator = LlmAgent(
     instruction="""Write a short story about a cat, focusing on the theme: {topic}."""
 )
 
-# Assuming session.state['topic'] is set to "friendship", the LLM 
+# Assuming session.state['topic'] is set to "friendship", the LLM
 # will receive the following instruction:
 # "Write a short story about a cat, focusing on the theme: friendship."
 ```
@@ -298,7 +298,7 @@ These context objects are specifically designed to manage state changes within t
 
 This method abstracts away the manual creation of `EventActions` and `state_delta` for most common state update scenarios within callbacks and tools, making your code cleaner and less error-prone.
 
-For more comprehensive details on context objects, refer to the [Context documentation](../context/index.md).
+For more comprehensive details on context objects, refer to the Context documentation.
 
 === "Python"
 

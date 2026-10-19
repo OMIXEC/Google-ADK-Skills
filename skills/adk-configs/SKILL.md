@@ -1,6 +1,7 @@
 ---
 name: adk-configs
 description: ADK configuration expert covering YAML agent definitions, environment variables, agent cards, and deployment configs. Use when setting up ADK projects, managing environment-specific settings, or defining agents declaratively.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-configs - ADK Configuration Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in ADK configuration patterns and project
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for current ADK 2.x dependency and API defaults.
+1. Read `references/adk-2x-baseline.md` for current ADK 2.x dependency and API defaults.
 2. Read agent configuration at `../adk-agents/references/config.md`
 3. Read A2A agent cards at `../adk-a2a/references/` for agent.json patterns
 4. The configuration patterns are embedded in this skill

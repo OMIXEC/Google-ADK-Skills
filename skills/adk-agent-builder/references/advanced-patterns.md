@@ -46,7 +46,7 @@ The inner workflow receives the predecessor's output as its START input and its 
 
 Schedule nodes at runtime using `ctx.run_node()`.
 
-See the dedicated [Dynamic Node Scheduling Reference](file:///Users/deanchen/Desktop/adk-workflow/.agents/skills/adk-workflow/references/dynamic-nodes.md) for detailed rules, examples, and best practices.
+See the dedicated Dynamic Node Scheduling Reference for detailed rules, examples, and best practices.
 
 ## Retry Configuration
 

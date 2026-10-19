@@ -1,6 +1,7 @@
 ---
 name: adk-mcp
 description: ADK Model Context Protocol (MCP) integration expert covering McpToolset, MCP servers, tool discovery, and database toolboxes. Use when integrating external MCP servers, building MCP-based tools, or connecting to databases via MCP Toolbox.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-mcp - ADK MCP Integration Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in ADK's Model Context Protocol (MCP) int
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for current ADK 2.x MCP guidance.
+1. Read `references/adk-2x-baseline.md` for current ADK 2.x MCP guidance.
 2. Read MCP documentation at `references/` folder:
    - `references/index.md` - MCP overview
    - `references/mcp-tools.md` - McpToolset comprehensive guide

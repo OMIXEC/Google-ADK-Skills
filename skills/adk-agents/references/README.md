@@ -153,7 +153,7 @@ root_agent = Agent(
     model="gemini-3.5-flash",
     description="Root Agent",
     tools=[
-        agent_tool.AgentTool(agent=search_agent), 
+        agent_tool.AgentTool(agent=search_agent),
         agent_tool.AgentTool(agent=coding_agent)
     ],
 )
@@ -224,5 +224,5 @@ You can exit the conversation or stop the server by pressing `Ctrl+C` in your te
 
 ## Additional Resources
 
-- [ADK Multi-Agent Systems Documentation](https://google.github.io/adk-docs/agents/multi-agent-systems/)
-- [Agent Tools Documentation](https://google.github.io/adk-docs/tools/function-tools/#3-agent-as-a-tool)
+- ADK Multi-Agent Systems Documentation
+- Agent Tools Documentation

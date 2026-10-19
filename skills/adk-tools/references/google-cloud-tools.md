@@ -1,6 +1,6 @@
 # Google Cloud Tools
 
-![python_only](https://img.shields.io/badge/Currently_supported_in-Python-blue){ title="This feature is currently available for Python. Java support is planned/ coming soon."}
+{ title="This feature is currently available for Python. Java support is planned/ coming soon."}
 
 Google Cloud tools make it easier to connect your agents to Google Cloud’s
 products and services. With just a few lines of code you can use these tools to
@@ -13,7 +13,7 @@ connect your agents with:
 * **Databases** such as Spanner, AlloyDB, Postgres and more using the MCP Toolbox for
   databases.
 
-![Google Cloud Tools](../assets/google_cloud_tools.svg)
+
 
 ## Apigee API Hub Tools
 
@@ -24,10 +24,10 @@ APIs.
 
 **Prerequisites**
 
-1. [Install ADK](../get-started/installation.md)
+1. Install ADK
 2. Install the
-   [Google Cloud CLI](https://cloud.google.com/sdk/docs/install?db=bigtable-docs#installation_instructions).
-3. [Apigee API hub](https://cloud.google.com/apigee/docs/apihub/what-is-api-hub)
+   Google Cloud CLI.
+3. Apigee API hub
     instance with documented (i.e. OpenAPI spec) APIs
 4. Set up your project structure and create required files
 
@@ -130,7 +130,7 @@ you only need to follow a subset of these steps.
     adk web
     ```
 
-   Then go to [http://localhost:8000](http://localhost:8000) to try your agent from the Web UI.
+   Then go to http://localhost:8000 to try your agent from the Web UI.
 
 ---
 
@@ -148,7 +148,7 @@ by providing application integration workflows as tools to your ADK agents.
 Federated search within Application Integration lets you use ADK agents to query
 multiple enterprise applications and data sources simultaneously.
 
-[:fontawesome-brands-youtube:{.youtube-red-icon} See how ADK Federated Search in Application Integration works in this video walkthrough](https://www.youtube.com/watch?v=JdlWOQe5RgU){: target="_blank" rel="noopener noreferrer"}
+:fontawesome-brands-youtube:{.youtube-red-icon} See how ADK Federated Search in Application Integration works in this video walkthrough{: target="_blank" rel="noopener noreferrer"}
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/JdlWOQe5RgU?si=bFY_-jJ6Oliy5UMG" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -157,12 +157,12 @@ multiple enterprise applications and data sources simultaneously.
 #### 1. Install ADK
 
 Install Agent Development Kit following the steps in the
-[installation guide](../get-started/installation.md).
+installation guide.
 
 #### 2. Install CLI
 
 Install the
-[Google Cloud CLI](https://cloud.google.com/sdk/docs/install#installation_instructions).
+Google Cloud CLI.
 To use the tool with default credentials, run the following commands:
 
 ```shell
@@ -176,16 +176,16 @@ Replace `<project-id>` with the unique ID of your Google Cloud project.
 #### 3. Provision Application Integration workflow and publish Connection Tool
 
 Use an existing
-[Application Integration](https://cloud.google.com/application-integration/docs/overview)
+Application Integration
 workflow or
-[Integrations Connector](https://cloud.google.com/integration-connectors/docs/overview)
+Integrations Connector
 connection you want to use with your agent. You can also create a new
-[Application Integration workflow](https://cloud.google.com/application-integration/docs/setup-application-integration)
+Application Integration workflow
 or a
-[connection](https://cloud.google.com/integration-connectors/docs/connectors/neo4j/configure#configure-the-connector).
+connection.
 
 Import and publish the
-[Connection Tool](https://console.cloud.google.com/integrations/templates/connection-tool/locations/global)
+Connection Tool
 from the template library.
 
 **Note**: To use a connector from Integration Connectors, you need to provision
@@ -239,24 +239,24 @@ Workflows):
 ### Use Integration Connectors
 
 Connect your agent to enterprise applications using
-[Integration Connectors](https://cloud.google.com/integration-connectors/docs/overview).
+Integration Connectors.
 
 #### Before you begin
 
-**Note:** The *ExecuteConnection* integration is typically created automatically when you provision Application Integration in a given region. If the *ExecuteConnection* doesn't exist in the [list of integrations](https://console.cloud.google.com/integrations/list), you must follow these steps to create it:
+**Note:** The *ExecuteConnection* integration is typically created automatically when you provision Application Integration in a given region. If the *ExecuteConnection* doesn't exist in the list of integrations, you must follow these steps to create it:
 
-1. To use a connector from Integration Connectors, click **QUICK SETUP** and [provision](https://console.cloud.google.com/integrations)
+1. To use a connector from Integration Connectors, click **QUICK SETUP** and provision
    Application Integration in the same region as your connection.
 
-   ![Google Cloud Tools](../assets/application-integration-overview.png)
 
 
 
-2. Go to the [Connection Tool](https://console.cloud.google.com/integrations/templates/connection-tool/locations/us-central1)
+
+2. Go to the Connection Tool
    template in the template library and click **USE TEMPLATE**.
 
 
-    ![Google Cloud Tools](../assets/use-connection-tool-template.png)
+
 
 3. Enter the Integration Name as *ExecuteConnection* (it is mandatory to use this exact integration name only).
    Then, select the region to match your connection region and click **CREATE**.
@@ -264,7 +264,7 @@ Connect your agent to enterprise applications using
 4. Click **PUBLISH** to publish the integration in the <i>Application Integration</i> editor.
 
 
-    ![Google Cloud Tools](../assets/publish-integration.png)
+
 
 
 #### Create an Application Integration Toolset
@@ -290,8 +290,8 @@ To create an Application Integration Toolset for Integration Connectors, follow 
 
     **Note:**
 
-    * You can provide a service account to be used instead of default credentials by generating a [Service Account Key](https://cloud.google.com/iam/docs/keys-create-delete#creating), and providing the right [Application Integration and Integration Connector IAM roles](#prerequisites) to the service account.
-    * To find the list of supported entities and actions for a connection, use the Connectors APIs: [listActions](https://cloud.google.com/integration-connectors/docs/reference/rest/v1/projects.locations.connections.connectionSchemaMetadata/listActions) or [listEntityTypes](https://cloud.google.com/integration-connectors/docs/reference/rest/v1/projects.locations.connections.connectionSchemaMetadata/listEntityTypes).
+    * You can provide a service account to be used instead of default credentials by generating a Service Account Key, and providing the right [Application Integration and Integration Connector IAM roles](#prerequisites) to the service account.
+    * To find the list of supported entities and actions for a connection, use the Connectors APIs: listActions or listEntityTypes.
 
 
     `ApplicationIntegrationToolset` supports `auth_scheme` and `auth_credential` for **dynamic OAuth2 authentication** for Integration Connectors. To use it, create a tool similar to this in the `tools.py` file:
@@ -372,14 +372,14 @@ To create an Application Integration Toolset for Integration Connectors, follow 
     adk web
     ```
 
-After completing the above steps, go to [http://localhost:8000](http://localhost:8000), and choose
+After completing the above steps, go to http://localhost:8000, and choose
    `my\_agent` agent (which is the same as the agent folder name).
 
 
 ### Use Application Integration Workflows
 
 Use an existing
-[Application Integration](https://cloud.google.com/application-integration/docs/overview)
+Application Integration
 workflow as a tool for your agent or create a new one.
 
 
@@ -401,7 +401,7 @@ workflow as a tool for your agent or create a new one.
           )
       ```
 
-      **Note:** You can provide a service account to be used instead of using default credentials. To do this, generate a [Service Account Key](https://cloud.google.com/iam/docs/keys-create-delete#creating) and provide the correct
+      **Note:** You can provide a service account to be used instead of using default credentials. To do this, generate a Service Account Key and provide the correct
          [Application Integration and Integration Connector IAM roles](#prerequisites) to the service account. For more details about the IAM roles, refer to the [Prerequisites](#prerequisites) section.
 
 === "Java"
@@ -445,7 +445,7 @@ workflow as a tool for your agent or create a new one.
           }
       ```
 
-      **Note:** You can provide a service account to be used instead of using default credentials. To do this, generate a [Service Account Key](https://cloud.google.com/iam/docs/keys-create-delete#creating) and provide the correct [Application Integration and Integration Connector IAM roles](#prerequisites) to the service account. For more details about the IAM roles, refer to the [Prerequisites](#prerequisites) section.
+      **Note:** You can provide a service account to be used instead of using default credentials. To do this, generate a Service Account Key and provide the correct [Application Integration and Integration Connector IAM roles](#prerequisites) to the service account. For more details about the IAM roles, refer to the [Prerequisites](#prerequisites) section.
 
 #### 2. Add the tool to your agent
 
@@ -522,7 +522,7 @@ workflow as a tool for your agent or create a new one.
           # make sure to run `adk web` from your project_root_folder
           adk web
       ```
-    After completing the above steps, go to [http://localhost:8000](http://localhost:8000), and choose the `my_agent` agent (which is the same as the agent folder name).
+    After completing the above steps, go to http://localhost:8000, and choose the `my_agent` agent (which is the same as the agent folder name).
 
 === "Java"
 
@@ -537,13 +537,13 @@ workflow as a tool for your agent or create a new one.
               -Dexec.classpathScope="compile"
       ```
 
-    After completing the above steps, go to [http://localhost:8000](http://localhost:8000), and choose the `my_agent` agent (which is the same as the agent folder name).
+    After completing the above steps, go to http://localhost:8000, and choose the `my_agent` agent (which is the same as the agent folder name).
 
 ---
 
 ## Toolbox Tools for Databases
 
-[MCP Toolbox for Databases](https://github.com/googleapis/genai-toolbox) is an
+MCP Toolbox for Databases is an
 open source MCP server for databases. It was designed with enterprise-grade and
 production-quality in mind. It enables you to develop tools easier, faster, and
 more securely by handling the complexities such as connection pooling,
@@ -551,12 +551,12 @@ authentication, and more.
 
 Google’s Agent Development Kit (ADK) has built in support for Toolbox. For more
 information on
-[getting started](https://googleapis.github.io/genai-toolbox/getting-started) or
-[configuring](https://googleapis.github.io/genai-toolbox/getting-started/configure/)
+getting started or
+configuring
 Toolbox, see the
-[documentation](https://googleapis.github.io/genai-toolbox/getting-started/introduction/).
+documentation.
 
-![GenAI Toolbox](../assets/mcp_db_toolbox.png)
+
 
 ### Configure and deploy
 
@@ -564,8 +564,8 @@ Toolbox is an open source server that you deploy and manage yourself. For more
 instructions on deploying and configuring, see the official Toolbox
 documentation:
 
-* [Installing the Server](https://googleapis.github.io/genai-toolbox/getting-started/introduction/#installing-the-server)
-* [Configuring Toolbox](https://googleapis.github.io/genai-toolbox/getting-started/configure/)
+* Installing the Server
+* Configuring Toolbox
 
 ### Install client SDK
 
@@ -604,6 +604,6 @@ root_agent = Agent(
 Toolbox has a variety of features to make developing Gen AI tools for databases.
 For more information, read more about the following features:
 
-* [Authenticated Parameters](https://googleapis.github.io/genai-toolbox/resources/tools/#authenticated-parameters): bind tool inputs to values from OIDC tokens automatically, making it easy to run sensitive queries without potentially leaking data
-* [Authorized Invocations:](https://googleapis.github.io/genai-toolbox/resources/tools/#authorized-invocations)  restrict access to use a tool based on the users Auth token
-* [OpenTelemetry](https://googleapis.github.io/genai-toolbox/how-to/export_telemetry/): get metrics and tracing from Toolbox with OpenTelemetry
+* Authenticated Parameters: bind tool inputs to values from OIDC tokens automatically, making it easy to run sensitive queries without potentially leaking data
+* Authorized Invocations:  restrict access to use a tool based on the users Auth token
+* OpenTelemetry: get metrics and tracing from Toolbox with OpenTelemetry

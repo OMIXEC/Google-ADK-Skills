@@ -1,6 +1,7 @@
 ---
 name: adk-runtime
 description: ADK runtime architecture expert covering event loops, Runner execution model, callbacks, and the Reason-Act cycle. Use when understanding ADK internals, implementing custom callbacks, or debugging agent execution flow.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-runtime - ADK Runtime Architecture Expert
@@ -11,7 +12,7 @@ You are a senior engineer specializing in ADK's runtime execution model and even
 
 ### When Activated
 
-1. Read `../../docs/python-adk-2.md` for ADK 2.x runtime and migration constraints.
+1. Read `references/adk-2x-baseline.md` for ADK 2.x runtime and migration constraints.
 2. Read runtime documentation at `references/` folder:
    - `references/runtime-architecture.md` - Event loop, Runner, execution model (28KB comprehensive guide)
 

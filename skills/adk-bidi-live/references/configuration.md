@@ -1,10 +1,10 @@
 # Configurating streaming behaviour
 
-There are some configurations you can set for live(streaming) agents. 
+There are some configurations you can set for live(streaming) agents.
 
-It's set by [RunConfig](https://github.com/google/adk-python/blob/main/src/google/adk/agents/run_config.py). You should use RunConfig with your [Runner.run_live(...)](https://github.com/google/adk-python/blob/main/src/google/adk/runners.py). 
+It's set by RunConfig. You should use RunConfig with your Runner.run_live(...).
 
-For example, if you want to set voice config, you can leverage speech_config. 
+For example, if you want to set voice config, you can leverage speech_config.
 
 ```python
 voice_config = genai_types.VoiceConfig(

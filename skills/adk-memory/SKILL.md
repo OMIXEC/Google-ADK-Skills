@@ -1,6 +1,7 @@
 ---
 name: adk-memory
 description: ADK memory and state management expert covering session state, long-term memory, persistence backends, and cross-session recall. Use when implementing conversation memory, persisting agent state, or building knowledge-retrieval systems.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-memory - ADK Memory & State Expert

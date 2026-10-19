@@ -17,9 +17,9 @@ This guide covers two primary integration patterns:
 
 Before you begin, ensure you have the following set up:
 
-* **Set up ADK:** Follow the standard ADK [setup instructions](../get-started/quickstart.md/#venv-install) in the quickstart.
+* **Set up ADK:** Follow the standard ADK setup instructions in the quickstart.
 * **Install/update Python/Java:** MCP requires Python version of 3.9 or higher for Python or Java 17 or higher.
-* **Setup Node.js and npx:** **(Python only)** Many community MCP servers are distributed as Node.js packages and run using `npx`. Install Node.js (which includes npx) if you haven't already. For details, see [https://nodejs.org/en](https://nodejs.org/en).
+* **Setup Node.js and npx:** **(Python only)** Many community MCP servers are distributed as Node.js packages and run using `npx`. Install Node.js (which includes npx) if you haven't already. For details, see https://nodejs.org/en.
 * **Verify Installations:** **(Python only)** Confirm `adk` and `npx` are in your PATH within the activated virtual environment:
 
 ```shell
@@ -134,7 +134,7 @@ Once the ADK Web UI loads in your browser:
 
 You should see the agent interacting with the MCP file system server, and the server's responses (file listings, file content) relayed through the agent. The `adk web` console (terminal where you ran the command) might also show logs from the `npx` process if it outputs to stderr.
 
-<img src="../../assets/adk-tool-mcp-filesystem-adk-web-demo.png" alt="MCP with ADK Web - FileSystem Example">
+
 
 
 
@@ -249,11 +249,11 @@ This example demonstrates connecting to the Google Maps MCP server.
 
 #### Step 1: Get API Key and Enable APIs
 
-1.  **Google Maps API Key:** Follow the directions at [Use API keys](https://developers.google.com/maps/documentation/javascript/get-api-key#create-api-keys) to obtain a Google Maps API Key.
+1.  **Google Maps API Key:** Follow the directions at Use API keys to obtain a Google Maps API Key.
 2.  **Enable APIs:** In your Google Cloud project, ensure the following APIs are enabled:
     *   Directions API
     *   Routes API
-    For instructions, see the [Getting started with Google Maps Platform](https://developers.google.com/maps/get-started#enable-api-sdk) documentation.
+    For instructions, see the Getting started with Google Maps Platform documentation.
 
 #### Step 2: Define your Agent with `McpToolset` for Google Maps
 
@@ -341,7 +341,7 @@ from . import agent
 
 You should see the agent use the Google Maps MCP tools to provide directions or location-based information.
 
-<img src="../../assets/adk-tool-mcp-maps-adk-web-demo.png" alt="MCP with ADK Web - Google Maps Example">
+
 
 
 For Java, refer to the following sample to define an agent that initializes the `McpToolset`:
@@ -669,7 +669,7 @@ The ADK agent (`web_reader_mcp_client_agent`) will use `McpToolset` to start and
 
 This example demonstrates how ADK tools can be encapsulated within an MCP server, making them accessible to a broader range of MCP-compliant clients, not just ADK agents.
 
-Refer to the [documentation](https://modelcontextprotocol.io/quickstart/server#core-mcp-concepts), to try it out with Claude Desktop.
+Refer to the documentation, to try it out with Claude Desktop.
 
 ## Using MCP Tools in your own Agent out of `adk web`
 
@@ -978,9 +978,9 @@ def create_mcp_server():
 def main(port: int = 8080, json_response: bool = False):
     """Main server function."""
     logging.basicConfig(level=logging.INFO)
-    
+
     app = create_mcp_server()
-    
+
     # Create session manager with stateless mode for scalability
     session_manager = StreamableHTTPSessionManager(
         app=app,
@@ -1051,7 +1051,7 @@ spec:
         env:
         - name: MCP_SERVER_URL
           value: "http://localhost:8081"
-      
+
       # MCP server sidecar
       - name: mcp-server
         image: your-mcp-server:latest
@@ -1066,7 +1066,7 @@ spec:
 - **Cons:** Process overhead, not suitable for high-scale deployments
 - **Best for:** Development, single-tenant deployments, simple MCP servers
 
-#### SSE/HTTP Connections  
+#### SSE/HTTP Connections
 - **Pros:** Network-based, scalable, can handle multiple clients
 - **Cons:** Requires network infrastructure, authentication complexity
 - **Best for:** Production deployments, multi-tenant systems, external MCP services
@@ -1175,7 +1175,7 @@ McpToolset(
    ```python
    # Test remote MCP connectivity
    import aiohttp
-   
+
    async def test_mcp_connection():
        async with aiohttp.ClientSession() as session:
            async with session.get('https://your-mcp-server.com/health') as resp:
@@ -1189,6 +1189,6 @@ McpToolset(
 
 ## Further Resources
 
-* [Model Context Protocol Documentation](https://modelcontextprotocol.io/ )
-* [MCP Specification](https://modelcontextprotocol.io/specification/)
-* [MCP Python SDK & Examples](https://github.com/modelcontextprotocol/)
+* Model Context Protocol Documentation
+* MCP Specification
+* MCP Python SDK & Examples

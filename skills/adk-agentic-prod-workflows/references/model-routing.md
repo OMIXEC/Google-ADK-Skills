@@ -453,13 +453,13 @@ voice_agent = Agent(
 ALWAYS use specific stable versions:
   ✅ gemini-2.5-flash
   ✅ gemini-2.5-pro
-  
+
 PREFER latest alias with auto-update pipeline:
   ⚠️ gemini-flash-latest  (auto-swaps — have monitoring)
-  
+
 AVOID preview models in production without migration plan:
   ⚠️ gemini-3.1-pro-preview  (2-week deprecation notice)
-  
+
 NEVER use experimental models in production:
   ❌ lyria-realtime-exp
 ```

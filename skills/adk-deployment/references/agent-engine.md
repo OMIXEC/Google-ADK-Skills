@@ -1,8 +1,8 @@
 # Deploy to Vertex AI Agent Engine
 
-![python_only](https://img.shields.io/badge/Currently_supported_in-Python-blue){ title="Vertex AI Agent Engine currently supports only Python."}
+{ title="Vertex AI Agent Engine currently supports only Python."}
 
-[Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview)
+Agent Engine
 is a fully managed Google Cloud service enabling developers to deploy, manage,
 and scale AI agents in production. Agent Engine handles the infrastructure to
 scale agents in production so you can focus on creating intelligent and
@@ -14,7 +14,7 @@ deploying an agent to Agent Engine.
 ## Accelerated deployment
 
 This section describes how to perform a deployment using the
-[Agent Starter Pack](https://github.com/GoogleCloudPlatform/agent-starter-pack)
+Agent Starter Pack
 (ASP) and the ADK command line interface (CLI) tool. This approach uses the ASP
 tool to apply a project template to your existing project, add deployment
 artifacts, and prepare your agent project for deployment. These instructions
@@ -34,9 +34,9 @@ for deploying your ADK project, as follows:
 For information on testing a deployed agent, see [Test deployed agent](#test-deployment).
 For more information on using Agent Starter Pack and its command line tools,
 see the
-[CLI reference](https://googlecloudplatform.github.io/agent-starter-pack/cli/enhance.html)
+CLI reference
 and
-[Development guide](https://googlecloudplatform.github.io/agent-starter-pack/guide/development-guide.html).
+Development guide.
 
 
 ### Prerequisites {#prerequisites-ad}
@@ -45,22 +45,22 @@ You need the following resources configured to use this deployment path:
 
 -   **Google Cloud account**, with administrator access to:
 -   **Google Cloud Project**: An empty Google Cloud project with
-    [billing enabled](https://cloud.google.com/billing/docs/how-to/modify-project).
+    billing enabled.
     For information on creating projects, see
-    [Creating and managing projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects).
+    Creating and managing projects.
 -   **Python Environment**: A Python version between 3.9 and 3.13.
 -   **UV Tool:** Manage Python development environment and running ASP
-    tools. For installation details, see 
-    [Install UV](https://docs.astral.sh/uv/getting-started/installation/).
+    tools. For installation details, see
+    Install UV.
 -   **Google Cloud CLI tool**: The gcloud command line interface. For
     installation details, see
-    [Google Cloud Command Line Interface](https://cloud.google.com/sdk/docs/install).
+    Google Cloud Command Line Interface.
 -   **Make tool**: Build automation tool. This tool is part of most
-    Unix-based systems, for installation details, see the 
-    [Make tool](https://www.gnu.org/software/make/) documentation.
+    Unix-based systems, for installation details, see the
+    Make tool documentation.
 -   **Terraform**: Infrastructure and services deployment on Google Cloud.
-    For installation details, see 
-    [Install Terraform](https://developer.hashicorp.com/terraform/install).
+    For installation details, see
+    Install Terraform.
 
 ### Prepare your ADK project {#prepare-ad}
 
@@ -71,9 +71,9 @@ project and then adds files to your project for deployment purposes.
 These instructions assume you have an existing ADK project that you are modifying
 for deployment. If you do not have an ADK project, or want to use a test
 project, complete the Python
-[Quickstart](/adk-docs/get-started/quickstart/) guide,
+Quickstart guide,
 which creates a
-[multi_tool_agent](https://github.com/google/adk-docs/tree/main/examples/python/snippets/get-started/multi_tool_agent)
+multi_tool_agent
 project. The following instructions use the `multi_tool_agent` project as an
 example.
 
@@ -94,9 +94,9 @@ To prepare your ADK project for deployment to Agent Engine:
     ```
 
 1.  Follow the instructions from the ASP tool. In general, you can accept
-    the default answers to all questions. However for the **GCP region**, 
-    option, make sure you select one of the 
-    [supported regions for Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview#supported-regions).
+    the default answers to all questions. However for the **GCP region**,
+    option, make sure you select one of the
+    supported regions for Agent Engine.
 
 When you successfully complete this process, the tool shows the following message:
 
@@ -181,7 +181,7 @@ deployed agent, see the next section.
 
 Once this process completes successfully, you should be able to interact with
 the agent running on Google Cloud Agent Engine. For details on testing the
-deployed agent, see 
+deployed agent, see
 [Test deployed agent](#test-deployment).
 
 ### Changes to your ADK project {#adk-asp-changes}
@@ -189,7 +189,7 @@ deployed agent, see
 The ASP tools add more files to your project for deployment. The procedure
 below backs up your existing project files before modifying them. This guide
 uses the
-[multi_tool_agent](https://github.com/google/adk-docs/tree/main/examples/python/snippets/get-started/multi_tool_agent)
+multi_tool_agent
 project as a reference example. The original project has the following file
 structure to start with:
 
@@ -220,7 +220,7 @@ multi-tool-agent/
 
 See the README.md file in your updated ADK project folder for more information.
 For more information on using Agent Starter Pack, see the
-[Development guide](https://googlecloudplatform.github.io/agent-starter-pack/guide/development-guide.html).
+Development guide.
 
 ## Standard deployment
 
@@ -236,20 +236,20 @@ have an ADK project, see the instructions for creating a test project in
 
 Before starting deployment procedure, ensure you have the following:
 
-1.  **Google Cloud Project**: A Google Cloud project with the [Vertex AI API enabled](https://console.cloud.google.com/flows/enableapi?apiid=aiplatform.googleapis.com).
+1.  **Google Cloud Project**: A Google Cloud project with the Vertex AI API enabled.
 
 2.  **Authenticated gcloud CLI**: You need to be authenticated with Google Cloud. Run the following command in your terminal:
     ```shell
     gcloud auth application-default login
     ```
 
-3.  **Google Cloud Storage (GCS) Bucket**: Agent Engine requires a GCS bucket to stage your agent's code and dependencies for deployment. If you don't have a bucket, create one by following the instructions [here](https://cloud.google.com/storage/docs/creating-buckets).
+3.  **Google Cloud Storage (GCS) Bucket**: Agent Engine requires a GCS bucket to stage your agent's code and dependencies for deployment. If you don't have a bucket, create one by following the instructions here.
 
 4.  **Python Environment**: A Python version between 3.9 and 3.13.
 
 5.  **Install Vertex AI SDK**
 
-    Agent Engine is part of the Vertex AI SDK for Python. For more information, you can review the [Agent Engine quickstart documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/quickstart).
+    Agent Engine is part of the Vertex AI SDK for Python. For more information, you can review the Agent Engine quickstart documentation.
 
     ```shell
     pip install google-cloud-aiplatform[adk,agent_engines]>=1.111
@@ -260,9 +260,9 @@ Before starting deployment procedure, ensure you have the following:
 These instructions assume you have an existing ADK project that you are modifying
 for deployment. If you do not have an ADK project, or want to use a test
 project, complete the Python
-[Quickstart](/adk-docs/get-started/quickstart/) guide,
+Quickstart guide,
 which creates a
-[multi_tool_agent](https://github.com/google/adk-docs/tree/main/examples/python/snippets/get-started/multi_tool_agent)
+multi_tool_agent
 project. The following instructions use the `multi_tool_agent` project as an
 example.
 
@@ -390,13 +390,13 @@ This process packages your code, builds it into a container, and deploys it to t
     ```
 
     Find the names of your available storage buckets in the
-    [Cloud Storage Bucket](https://pantheon.corp.google.com/storage/browser)
+    Cloud Storage Bucket
     section of your deployment project in the Google Cloud Console.
-    For more details on using the `adk deploy` command, see the 
-    [ADK CLI reference](/adk-docs/api-reference/cli/cli.html#adk-deploy).
+    For more details on using the `adk deploy` command, see the
+    ADK CLI reference.
 
     !!! tip
-        Make sure your main ADK agent definition (`root_agent`) is 
+        Make sure your main ADK agent definition (`root_agent`) is
         discoverable when deploying your ADK project.
 
 === "Python"
@@ -409,7 +409,7 @@ This process packages your code, builds it into a container, and deploys it to t
     remote_app = agent_engines.create(
         agent_engine=app,
         requirements=[
-            "google-cloud-aiplatform[adk,agent_engines]"   
+            "google-cloud-aiplatform[adk,agent_engines]"
         ]
     )
 
@@ -421,9 +421,9 @@ This process packages your code, builds it into a container, and deploys it to t
 
 #### Monitoring and verification
 
-*   You can monitor the deployment status in the [Agent Engine UI](https://console.cloud.google.com/vertex-ai/agents/agent-engines) in the Google Cloud Console.
+*   You can monitor the deployment status in the Agent Engine UI in the Google Cloud Console.
 *   The `remote_app.resource_name` is the unique identifier for your deployed agent. You will need it to interact with the agent. You can also get this from the response returned by the ADK CLI command.
-*   For additional details, you can visit the Agent Engine documentation [deploying an agent](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/deploy) and [managing deployed agents](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/overview).
+*   For additional details, you can visit the Agent Engine documentation deploying an agent and managing deployed agents.
 
 ## Test deployed agent {#test-deployment}
 
@@ -434,24 +434,24 @@ with the agent using REST calls or the Vertex AI SDK for Python.
 To view your deployed agent in the Cloud Console:
 
 -   Navigate to the Agent Engine page in the Google Cloud Console:
-    [https://console.cloud.google.com/vertex-ai/agents/agent-engines](https://console.cloud.google.com/vertex-ai/agents/agent-engines)
+    https://console.cloud.google.com/vertex-ai/agents/agent-engines
 
-This page lists all deployed agents in your currently selected Google Cloud 
+This page lists all deployed agents in your currently selected Google Cloud
 project. If you do not see your agent listed, make sure you have your
 target project selected in Google Cloud Console. For more information on
 selecting an exising Google Cloud project, see
-[Creating and managing projects](https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects).
+Creating and managing projects.
 
 ### Find Google Cloud project information
 
 You need the address and resource identification for your project (`PROJECT_ID`,
 `LOCATION`, `RESOURCE_ID`) to be able to test your deployment. You can use Cloud
-Console or the `gcloud` command line tool to find this information. 
+Console or the `gcloud` command line tool to find this information.
 
 To find your project information with Google Cloud Console:
 
 1.  In the Google Cloud Console, navigate to the Agent Engine page:
-    [https://console.cloud.google.com/vertex-ai/agents/agent-engines](https://console.cloud.google.com/vertex-ai/agents/agent-engines)
+    https://console.cloud.google.com/vertex-ai/agents/agent-engines
 
 1.  At the top of the page, select **API URLs**, and then copy the **Query
     URL** string for your deployed agent, which should be in this format:
@@ -460,7 +460,7 @@ To find your project information with Google Cloud Console:
 
 To find your project information with `gloud`:
 
-1.  In your development environment, make sure you are authenticated to 
+1.  In your development environment, make sure you are authenticated to
     Google Cloud and run the following command to list your project:
 
     ```shell
@@ -502,7 +502,7 @@ To send a REST call get a response from deployed agent:
     ```
 
 If your deployment was successful, this request responds with a list of valid
-requests and expected data formats. 
+requests and expected data formats.
 
 !!! tip "Access for agent connections"
     This connection test requires the calling user has a valid access token for the
@@ -565,9 +565,9 @@ To test interaction with the deployed agent via REST:
 This request should generate a response from your deployed agent code in JSON
 format. For more information about interacting with a deployed ADK agent in
 Agent Engine using REST calls, see
-[Manage deployed agents](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/overview#console)
+Manage deployed agents
 and
-[Use a Agent Development Kit agent](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/use/adk)
+Use a Agent Development Kit agent
 in the Agent Engine documentation.
 
 ### Test using Python
@@ -623,9 +623,9 @@ Expected output for `async_stream_query` (remote):
 
 For more information about interacting with a deployed ADK agent in
 Agent Engine, see
-[Manage deployed agents](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/manage/overview)
+Manage deployed agents
 and
-[Use a Agent Development Kit agent](https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/use/adk)
+Use a Agent Development Kit agent
 in the Agent Engine documentation.
 
 #### Sending Multimodal Queries
@@ -653,7 +653,7 @@ async for event in remote_app.async_stream_query(
     print(event)
 ```
 
-!!!note 
+!!!note
     While the underlying communication with the model may involve Base64
     encoding for images, the recommended and supported method for sending image
     data to an agent deployed on Agent Engine is by providing a GCS URI.
@@ -683,5 +683,5 @@ remote_app.delete(force=True)
 The `force=True` parameter also deletes any child resources that were generated
 from the deployed agent, such as sessions. You can also delete your deployed
 agent via the
-[Agent Engine UI](https://console.cloud.google.com/vertex-ai/agents/agent-engines)
+Agent Engine UI
 on Google Cloud.

@@ -1,6 +1,6 @@
 # Deploy to Google Kubernetes Engine (GKE)
 
-[GKE](https://cloud.google.com/gke) is the Google Cloud managed Kubernetes service. It allows you to deploy and manage containerized applications using Kubernetes.
+GKE is the Google Cloud managed Kubernetes service. It allows you to deploy and manage containerized applications using Kubernetes.
 
 To deploy your agent you will need to have a Kubernetes cluster running on GKE. You can create a cluster using the Google Cloud Console or the `gcloud` command line tool.
 
@@ -8,7 +8,7 @@ In this example we will deploy a simple agent to GKE. The agent will be a FastAP
 
 ## Environment variables
 
-Set your environment variables as described in the [Setup and Installation](../get-started/installation.md) guide. You also need to install the `kubectl` command line tool. You can find instructions to do so in the [Google Kubernetes Engine Documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl).
+Set your environment variables as described in the Setup and Installation guide. You also need to install the `kubectl` command line tool. You can find instructions to do so in the Google Kubernetes Engine Documentation.
 
 ```bash
 export GOOGLE_CLOUD_PROJECT=your-project-id # Your GCP project ID
@@ -88,7 +88,7 @@ You can deploy your agent to GKE either **manually using Kubernetes manifests** 
 
 You can create a GKE cluster using the `gcloud` command line tool. This example creates an Autopilot cluster named `adk-cluster` in the `us-central1` region.
 
-> If creating a GKE Standard cluster, make sure [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity) is enabled. Workload Identity is enabled by default in an AutoPilot cluster.
+> If creating a GKE Standard cluster, make sure Workload Identity is enabled. Workload Identity is enabled by default in an AutoPilot cluster.
 
 ```bash
 gcloud container clusters create-auto adk-cluster \
@@ -106,7 +106,7 @@ gcloud container clusters get-credentials adk-cluster \
 
 ### Create Your Agent
 
-We will reference the `capital_agent` example defined on the [LLM agents](../agents/llm-agents.md) page.
+We will reference the `capital_agent` example defined on the LLM agents page.
 
 To proceed, organize your project files as follows:
 
@@ -129,7 +129,7 @@ Create the following files (`main.py`, `requirements.txt`, `Dockerfile`, `capita
 1. This is the Capital Agent example inside the `capital_agent` directory
 
     ```python title="capital_agent/agent.py"
-    from google.adk.agents import LlmAgent 
+    from google.adk.agents import LlmAgent
 
     # Define a tool function
     def get_capital_city(country: str) -> str:
@@ -150,7 +150,7 @@ Create the following files (`main.py`, `requirements.txt`, `Dockerfile`, `capita
     # ADK will discover the root_agent instance
     root_agent = capital_agent
     ```
-    
+
     Mark your directory as a python package
 
     ```python title="capital_agent/__init__.py"
@@ -325,7 +325,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: adk-agent
-spec:       
+spec:
   type: LoadBalancer
   ports:
     - port: 80
@@ -375,7 +375,7 @@ Before you begin, ensure you have the following set up:
 
 1. **A running GKE cluster:** You need an active Kubernetes cluster on Google Cloud.
 
-2. **Required CLIs:** 
+2. **Required CLIs:**
     * **`gcloud` CLI:** The Google Cloud CLI must be installed, authenticated, and configured to use your target project. Run `gcloud auth login` and `gcloud config set project [YOUR_PROJECT_ID]`.
     * **kubectl:** The Kubernetes CLI must be installed to deploy the application to your cluster.
 
@@ -409,7 +409,7 @@ adk deploy gke [OPTIONS] AGENT_PATH
 | Argument    | Description | Required |
 | -------- | ------- | ------  |
 | AGENT_PATH  | The local file path to your agent's root directory.    |Yes |
-| --project | The Google Cloud Project ID where your GKE cluster is located.     | Yes | 
+| --project | The Google Cloud Project ID where your GKE cluster is located.     | Yes |
 | --cluster_name   | The name of your GKE cluster.    | Yes |
 | --region    | The Google Cloud region of your cluster (e.g., us-central1).    | Yes |
 | --with_ui   | Deploys both the agent's back-end API and a companion front-end user interface.    | No |
@@ -464,7 +464,7 @@ adk-default-service-name   LoadBalancer   34.118.228.70   34.63.153.253   80:325
 ```
 
 We can navigate to the external IP and interact with the agent via UI
-![alt text](../assets/agent-gke-deployment.png)
+
 
 ## Testing your agent
 
@@ -560,7 +560,7 @@ This usually means that the Kubernetes service account does not have the necessa
 
 ### 404 or Not Found response
 
-This usually means there is an error in your request. Check the application logs to diagnose the problem. 
+This usually means there is an error in your request. Check the application logs to diagnose the problem.
 
 ```bash
 

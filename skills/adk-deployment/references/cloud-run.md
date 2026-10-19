@@ -1,13 +1,13 @@
 # Deploy to Cloud Run
 
-[Cloud Run](https://cloud.google.com/run)
+Cloud Run
 is a fully managed platform that enables you to run your code directly on top of Google's scalable infrastructure.
 
 To deploy your agent, you can use either the `adk deploy cloud_run` command _(recommended for Python)_, or with `gcloud run deploy` command through Cloud Run.
 
 ## Agent sample
 
-For each of the commands, we will reference a the `Capital Agent` sample defined on the [LLM agent](../agents/llm-agents.md) page. We will assume it's in a directory (eg: `capital_agent`).
+For each of the commands, we will reference a the `Capital Agent` sample defined on the LLM agent page. We will assume it's in a directory (eg: `capital_agent`).
 
 To proceed, confirm that your agent code is configured as follows:
 
@@ -24,11 +24,11 @@ To proceed, confirm that your agent code is configured as follows:
     2. Your agent variable is global and follows the format `public static final BaseAgent ROOT_AGENT`.
     3. Your agent definition is present in a static class method.
 
-    Refer to the following section for more details. You can also find a [sample app](https://github.com/google/adk-docs/tree/main/examples/java/cloud-run) in the Github repo.
+    Refer to the following section for more details. You can also find a sample app in the Github repo.
 
 ## Environment variables
 
-Set your environment variables as described in the [Setup and Installation](../get-started/installation.md) guide.
+Set your environment variables as described in the Setup and Installation guide.
 
 ```bash
 export GOOGLE_CLOUD_PROJECT=your-project-id
@@ -143,7 +143,7 @@ unless you specify it as deployment setting, such as the `--with_ui` option for
 
     ### gcloud CLI for Python
 
-    Alternatively, you can deploy using the standard `gcloud run deploy` command with a `Dockerfile`. This method requires more manual setup compared to the `adk` command but offers flexibility, particularly if you want to embed your agent within a custom [FastAPI](https://fastapi.tiangolo.com/) application.
+    Alternatively, you can deploy using the standard `gcloud run deploy` command with a `Dockerfile`. This method requires more manual setup compared to the `adk` command but offers flexibility, particularly if you want to embed your agent within a custom FastAPI application.
 
     Ensure you have authenticated with Google Cloud (`gcloud auth login` and `gcloud config set project <your-project-id>`).
 
@@ -273,7 +273,7 @@ unless you specify it as deployment setting, such as the `--with_ui` option for
 
     `gcloud` will build the Docker image, push it to Google Artifact Registry, and deploy it to Cloud Run. Upon completion, it will output the URL of your deployed service.
 
-    For a full list of deployment options, see the [`gcloud run deploy` reference documentation](https://cloud.google.com/sdk/gcloud/reference/run/deploy).
+    For a full list of deployment options, see the `gcloud run deploy` reference documentation.
 
 === "Java - gcloud CLI"
 
@@ -281,7 +281,7 @@ unless you specify it as deployment setting, such as the `--with_ui` option for
 
     You can deploy Java Agents using the standard `gcloud run deploy` command and a `Dockerfile`. This is the current recommended way to deploy Java Agents to Google Cloud Run.
 
-    Ensure you are [authenticated](https://cloud.google.com/docs/authentication/gcloud) with Google Cloud.
+    Ensure you are authenticated with Google Cloud.
     Specifically, run the commands `gcloud auth login` and `gcloud config set project <your-project-id>` from your terminal.
 
     #### Project Structure
@@ -304,14 +304,14 @@ unless you specify it as deployment setting, such as the `--with_ui` option for
 
     #### Code files
 
-    1. This is our Agent definition. This is the same code as present in [LLM agent](../agents/llm-agents.md) with two caveats:
+    1. This is our Agent definition. This is the same code as present in LLM agent with two caveats:
 
            * The Agent is now initialized as a **global public static final variable**.
 
            * The definition of the agent can be exposed in a static method or inlined during declaration.
 
-        See the code for the `CapitalAgent` example in the 
-        [examples](https://github.com/google/adk-docs/blob/main/examples/java/cloud-run/src/main/java/agents/capitalagent/CapitalAgent.java) 
+        See the code for the `CapitalAgent` example in the
+        examples
         repository.
 
     2. Add the following dependencies and plugin to the pom.xml file.
@@ -370,7 +370,7 @@ unless you specify it as deployment setting, such as the `--with_ui` option for
 
     `gcloud` will build the Docker image, push it to Google Artifact Registry, and deploy it to Cloud Run. Upon completion, it will output the URL of your deployed service.
 
-    For a full list of deployment options, see the [`gcloud run deploy` reference documentation](https://cloud.google.com/sdk/gcloud/reference/run/deploy).
+    For a full list of deployment options, see the `gcloud run deploy` reference documentation.
 
 ## Testing your agent
 
@@ -399,7 +399,7 @@ Once your agent is deployed to Cloud Run, you can interact with it via the deplo
     1. Select your agent from the dropdown menu.
     2. Type a message and verify that you receive an expected response from your agent.
 
-    If you experience any unexpected behavior, check the [Cloud Run](https://console.cloud.google.com/run) console logs.
+    If you experience any unexpected behavior, check the Cloud Run console logs.
 
 === "API Testing (curl)"
 

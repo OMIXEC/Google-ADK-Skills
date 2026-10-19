@@ -5,6 +5,7 @@ description: >-
   execution using the OODA loop (Observe, Orient, Decide, Act) and explicit
   planning. Use when a request asks for an agent that runs without per-step human
   follow-up, plans its own steps, or pursues a goal autonomously.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-autonomous-agent — Self-Reasoning Autonomous Agents

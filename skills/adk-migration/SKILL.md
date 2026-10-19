@@ -7,6 +7,7 @@ description: >-
   updates, and session/state incompatibility. Use when upgrading an ADK 1.x
   codebase to 2.3, auditing code for deprecated 1.x APIs, or resolving 2.3
   import/attribute errors.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-migration — ADK 1.x → 2.3

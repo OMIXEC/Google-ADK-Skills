@@ -1,6 +1,7 @@
 ---
 name: adk-style
 description: ADK development style guide for routine nits — Python idioms, codebase conventions, imports, typing, Pydantic patterns, formatting, logging, and file organization. Use this skill whenever writing code, tests, or reviewing PRs for the ADK project to ensure compliance with styling and coding conventions. Triggers on "code style", "how should I format", "naming convention", "lint", "nit", "imports", "typing", "Pydantic patterns", "testing rules".
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # ADK Style Guide

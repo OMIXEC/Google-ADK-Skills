@@ -9,6 +9,7 @@ description: >-
   params, and primary→fallback chains. Use when selecting a model, tuning
   thinking/effort, routing by task complexity/cost, or designing model fallback
   for an ADK agent.
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # adk-model-routing — Model Selection, Thinking/Effort & Fallback

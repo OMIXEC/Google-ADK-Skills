@@ -19,7 +19,7 @@ an ADK Tool in the following ways:
     The Tool Confirmation feature is experimental and has some
     [known limitations](#known-limitations).
     We welcome your
-    [feedback](https://github.com/google/adk-python/issues/new?template=feature_request.md&labels=tool%20confirmation)!
+    feedback!
 
 You can configure how a request is communicated to a user, and the system can
 also use [remote responses](#remote-response) sent via the ADK
@@ -27,17 +27,17 @@ server's REST API. When using the confirmation feature with the ADK web user
 interface, the agent workflow displays a dialog box to the user to request
 input, as shown in Figure 1:
 
-![Screenshot of default user interface for tool confirmation](/adk-docs/assets/confirmation-ui.png)
+
 
 **Figure 1.** Example confirmation response request dialog box using an
 advanced, tool response implementation.
 
 The following sections describe how to use this feature for the confirmation
 scenarios. For a complete code sample, see the
-[human_tool_confirmation](https://github.com/google/adk-python/blob/fc90ce968f114f84b14829f8117797a4c256d710/contributing/samples/human_tool_confirmation/agent.py)
+human_tool_confirmation
 example. There are additional ways to incorporate human input into your agent
 workflow, for more details, see the
-[Human-in-the-loop](/adk-docs/agents/multi-agents/#human-in-the-loop-pattern)
+Human-in-the-loop
 agent pattern.
 
 ## Boolean confirmation {#boolean-confirmation}
@@ -63,7 +63,7 @@ root_agent = Agent(
 This implementation method requires minimal code, but is limited to simple
 approvals from the user or confirming system. For a complete example of this
 approach, see the
-[human_tool_confirmation](https://github.com/google/adk-python/blob/fc90ce968f114f84b14829f8117797a4c256d710/contributing/samples/human_tool_confirmation/agent.py)
+human_tool_confirmation
 code sample.
 
 ### Require confirmation function
@@ -94,7 +94,7 @@ root_agent = Agent(
 ```
 
 For a complete example of this implementation, see the
-[human_tool_confirmation](https://github.com/google/adk-python/blob/fc90ce968f114f84b14829f8117797a4c256d710/contributing/samples/human_tool_confirmation/agent.py)
+human_tool_confirmation
 code sample.
 
 ## Advanced confirmation {#advanced-confirmation}
@@ -156,7 +156,7 @@ def request_time_off(days: int, tool_context: ToolContext):
 ```
 
 For a complete example of this approach, see the
-[human_tool_confirmation](https://github.com/google/adk-python/blob/fc90ce968f114f84b14829f8117797a4c256d710/contributing/samples/human_tool_confirmation/agent.py)
+human_tool_confirmation
 code sample. Keep in mind that the agent workflow tool execution pauses while a
 confirmation is obtained. After confirmation is received, you can access the
 confirmation response in the `tool_confirmation.payload` object and then proceed
@@ -211,12 +211,12 @@ requirements:
 
 The tool confirmation feature has the following limitations:
 
--   [DatabaseSessionService](/adk-docs/api-reference/python/google-adk.html#google.adk.sessions.DatabaseSessionService)
+-   DatabaseSessionService
     is not supported by this feature.
--   [VertexAiSessionService](/adk-docs/api-reference/python/google-adk.html#google.adk.sessions.VertexAiSessionService)
+-   VertexAiSessionService
     is not supported by this feature.
 
 ## Next steps
 
-For more information on building ADK tools for agent workflows, see [Function
-tools](/adk-docs/tools/function-tools/).
+For more information on building ADK tools for agent workflows, see Function
+tools.

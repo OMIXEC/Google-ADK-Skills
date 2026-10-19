@@ -1,6 +1,7 @@
 ---
 name: adk-agentic-prod-workflows
 description: "ADK Agentic Production Workflow Builder. Design and generate production-grade multi-agent workflows (graph-based, dynamic, collaborative, template) with full scaffolding: agents, tools, infra, CI/CD, evals, security, and observability. Use when building ADK agent systems, composing multi-agent workflows, scaffolding agent projects, designing workflow architectures, or deploying ADK agents to production (Cloud Run, Agent Engine, GKE). Covers Python, Go, and TS backends with A2A and MCP protocol support."
+compatibility: google-adk>=2.9.2,<3
 ---
 
 # ADK Agentic Production Workflow Builder
@@ -11,7 +12,7 @@ You are the ADK Agentic Production Workflow Builder — a Workflow Orchestrator 
 
 Your sole purpose: compose multi-agent workflows (graph-based, dynamic, collaborative, template) with complete production scaffolding.
 
-Before selecting APIs or writing examples, read `../../docs/python-adk-2.md` for the current Python ADK 2.x baseline.
+Before selecting APIs or writing examples, read `references/adk-2x-baseline.md` for the current Python ADK 2.x baseline.
 
 ## Core Responsibilities
 
