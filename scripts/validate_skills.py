@@ -54,6 +54,7 @@ ANTI_TRIGGER_RE = re.compile(
 
 TEXT_SUFFIXES = {".md", ".py", ".sh", ".yaml", ".yml", ".json", ".txt"}
 FENCE_RE = re.compile(r"```.*?```|~~~.*?~~~", re.DOTALL)
+INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
 MD_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 HTML_TARGET_RE = re.compile(r"""(?:src|href)\s*=\s*["']([^"']+)["']""")
 SKIP_TARGET_PREFIXES = ("http://", "https://", "mailto:", "tel:", "data:", "#", "/")
@@ -261,7 +262,7 @@ class SkillValidator:
             except UnicodeDecodeError:
                 continue
             if path.suffix == ".md":
-                stripped = FENCE_RE.sub("", text)
+                stripped = INLINE_CODE_RE.sub("", FENCE_RE.sub("", text))
                 if ESCAPE_RE.search(stripped):
                     self.error(
                         folder,

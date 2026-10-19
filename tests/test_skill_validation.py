@@ -26,10 +26,6 @@ KNOWN_SKILLS = {
     "adk-agentic-prod-workflows",
     "adk-architecture",
     "adk-debug",
-    "adk-git",
-    "adk-sample-creator",
-    "adk-setup",
-    "adk-style",
     # Promoted doc-grounded skills
     "adk-a2a",
     "adk-agents",

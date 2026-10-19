@@ -139,6 +139,7 @@ SKIP_DEPS=false
 FORCE=false
 GIT_REF="main"
 WITH_EVALS=false
+WITH_CONTRIBUTING=false
 WITH_RUNTIME=false
 SHELL_INTEGRATION=false
 INTERACTIVE=false
@@ -304,6 +305,7 @@ show_help() {
     echo "  --no-agents        Do not install bundled subagent definitions"
     echo "  --no-commands      Do not install bundled slash commands"
     echo "  --with-evals       Keep eval/test assets in the install checkout"
+    echo "  --with-contributing Install the contributing/ skills (hacking on adk-python)"
     echo "  --with-runtime     Create a Python venv and install runtime dependencies"
     echo "  --shell-integration Add adk alias/PATH entry to your shell rc file"
     echo "  --skip-deps        Compatibility alias for the default no-runtime install"
@@ -352,6 +354,8 @@ while [[ $# -gt 0 ]]; do
             SKIP_DEPS=true; shift ;;
         --with-evals)
             WITH_EVALS=true; shift ;;
+        --with-contributing)
+            WITH_CONTRIBUTING=true; shift ;;
         --with-runtime)
             WITH_RUNTIME=true; SKIP_DEPS=false; shift ;;
         --shell-integration)
@@ -709,7 +713,14 @@ install_skills_for_ide() {
     mkdir -p "$skills_target"
 
     local skill_count=0
-    for skill_dir in "$INSTALL_DIR/skills/"*/; do
+    local -a skill_roots=("$INSTALL_DIR/skills")
+    if [[ "$WITH_CONTRIBUTING" == true && -d "$INSTALL_DIR/contributing" ]]; then
+        skill_roots+=("$INSTALL_DIR/contributing")
+        log_info "Including contributing/ skills (--with-contributing)"
+    fi
+    local skill_root
+    for skill_root in "${skill_roots[@]}"; do
+    for skill_dir in "$skill_root/"*/; do
         local skill_name
         skill_name=$(basename "$skill_dir")
 
@@ -748,6 +759,7 @@ install_skills_for_ide() {
         fi
         ((skill_count+=1))
         [[ "$VERBOSE" == true ]] && log_info "  $skill_name"
+    done
     done
 
     log_info "Linked $skill_count skills for $ide"

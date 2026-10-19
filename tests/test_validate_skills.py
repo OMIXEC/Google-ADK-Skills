@@ -215,3 +215,8 @@ def test_main_strict_promotes_warnings(tmp_path):
 
 def test_main_missing_path_is_usage_error(tmp_path):
     assert validate_skills.main([str(tmp_path / "absent")]) == 2
+
+
+def test_inline_code_links_are_ignored(tmp_path):
+    write_skill(tmp_path, "adk-good", body="Use `[Title](path/index.md)` as the shape.\n")
+    assert validate(tmp_path) == []
