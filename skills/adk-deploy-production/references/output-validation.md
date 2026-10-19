@@ -369,7 +369,13 @@ def sanitize_output(text: str) -> str:
     text = re.sub(r'\b\d{3}-\d{2}-\d{4}\b', '[SSN_REDACTED]', text)
 
     # Strip markdown code blocks if they contain sensitive commands
-    text = re.sub(r'```(?:bash|sh|shell)\n.*?rm -rf.*?\n```', '[CODE_REDACTED]', text, flags=re.DOTALL)
+    # \x60 is a backtick; spelling it this way keeps the Markdown fence intact.
+    text = re.sub(
+        r'\x60{3}(?:bash|sh|shell)\n.*?rm -rf.*?\n\x60{3}',
+        '[CODE_REDACTED]',
+        text,
+        flags=re.DOTALL,
+    )
 
     return text
 

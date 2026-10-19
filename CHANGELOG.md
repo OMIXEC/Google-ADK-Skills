@@ -20,6 +20,41 @@ marketplace entry. It is deliberately independent of every ADK version.
 
 ---
 
+## [1.1.1] — 2026-10-19
+
+Content corrections found after the 1.1.0 sweep. No skill added, renamed, or
+removed.
+
+### Fixed
+
+- **Nested code fences.** `database-integration.md` embedded ` ```sql ` blocks
+  inside a ` ```python ` block, which closed the outer fence early and broke
+  every following section. The SQL is now indented inside the docstring. The
+  same defect in `output-validation.md` came from a regex that contained a
+  literal triple-backtick; the pattern now spells the backtick as `\x60`.
+- `auth-providers.md` called `OneLogin_Saml2_Auth(..., ...)`, which is not
+  valid Python.
+- `adk-memory` used a bare `...` as a positional argument to `Runner`. It now
+  shows the real `Runner(app_name=..., agent=..., session_service=...)` call.
+- `adk-tools/references/authentication.md` returned the JavaScript boolean
+  `true` from a Python tool, and labelled mid-function continuation fragments
+  as runnable Python. Those fragments are now `text`.
+- `adk-agent-builder` tool examples ended with `Agent(..., ...)`, a positional
+  ellipsis after keyword arguments. The placeholders are gone.
+- `SkillToolset` in `adk-skills-authoring` and `ctx.run_node` in
+  `adk-agent-builder` showed signature listings labelled `python`; they are
+  now `text`.
+- `adk-a2a` quickstart used `<...your agent code...>` inside a call. It is a
+  comment now.
+- `adk-style` and `adk-agent-personas` had code fences with no valid body or a
+  Python fence around prose. Both are corrected.
+
+Every top-level `python` block in `skills/` and `contributing/` now parses with
+`ast.parse`. Indented continuation fragments are excluded from that check and
+are labelled `text` when they cannot stand alone.
+
+---
+
 ## [1.1.0] — 2026-10-19
 
 Adds one skill and closes the deferred-name backlog. The other eight names from

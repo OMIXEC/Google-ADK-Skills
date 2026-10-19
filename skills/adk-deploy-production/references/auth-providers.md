@@ -291,7 +291,7 @@ import jwt, time, os
 
 def saml_to_jwt(saml_response: str, idp_config: dict) -> str:
     """Validate SAML assertion and issue internal JWT."""
-    auth = OneLogin_Saml2_Auth(request_data={"SAMLResponse": saml_response}, ...)
+    auth = OneLogin_Saml2_Auth(request_data={"SAMLResponse": saml_response})
     auth.process_response()
     attributes = auth.get_attributes()
 

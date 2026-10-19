@@ -16,14 +16,14 @@ it is harmless, and not worth a cleanup pass.
 
 ```python
 # Good — describes what the caller observes
-def test_empty_queue_returns_none():
-def test_retry_stops_after_max_attempts():
-def test_missing_key_raises_key_error():
+def test_empty_queue_returns_none(): ...
+def test_retry_stops_after_max_attempts(): ...
+def test_missing_key_raises_key_error(): ...
 
 # Bad — describes implementation details
-def test_deque_popleft_called():
-def test_retry_counter_incremented():
-def test_dict_getitem_raises():
+def test_deque_popleft_called(): ...
+def test_retry_counter_incremented(): ...
+def test_dict_getitem_raises(): ...
 ```
 
 ### 2. Docstring: one-line summary, then setup/act/assert
@@ -255,7 +255,7 @@ def _make_service():
 
 # --- Tests (one behavior per test) ---
 
-def test_<behavior_description>():
+def test_behavior_description():
     """<One sentence: what the system does from the outside.>"""
     # Given a service with default config
     service = _make_service()

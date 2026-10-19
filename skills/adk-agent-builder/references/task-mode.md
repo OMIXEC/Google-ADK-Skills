@@ -112,7 +112,6 @@ agent = Agent(
     mode='task',
     input_schema=TaskInput,    # validates the delegation call
     output_schema=TaskOutput,  # validates the finish_task call
-    ...
 )
 ```
 

@@ -65,12 +65,11 @@ class DBConfig(BaseModel):
 """
 RLS is the first line of defense. Queries also filter by user_id explicitly.
 
-Migration snippet:
-```sql
-ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
-CREATE POLICY user_isolation ON orders
-    USING (user_id = current_setting('app.user_id'));
-```
+Migration snippet (SQL):
+
+    ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+    CREATE POLICY user_isolation ON orders
+        USING (user_id = current_setting('app.user_id'));
 """
 
 import psycopg2
@@ -146,10 +145,10 @@ MySQL has no native RLS. Use application-level isolation:
 - OR use views with definer context
 
 For MySQL 8+ with `SET @app_user_id` session variables:
-```sql
-CREATE VIEW user_orders AS
-    SELECT * FROM orders WHERE user_id = @app_user_id;
-```
+
+    CREATE VIEW user_orders AS
+        SELECT * FROM orders WHERE user_id = @app_user_id;
+
 """
 
 import mysql.connector
@@ -205,15 +204,15 @@ Spanner uses IAM for access control + application-level row filtering.
 Recommended: wrap queries in helper that auto-appends tenant/user filters.
 
 Schema:
-```sql
-CREATE TABLE orders (
-    order_id STRING(36) NOT NULL,
-    user_id STRING(128) NOT NULL,
-    tenant_id STRING(128) NOT NULL,
-    ...
-) PRIMARY KEY (user_id, order_id),
-  INTERLEAVE IN PARENT users ON DELETE CASCADE;
-```
+
+    CREATE TABLE orders (
+        order_id STRING(36) NOT NULL,
+        user_id STRING(128) NOT NULL,
+        tenant_id STRING(128) NOT NULL,
+        ...
+    ) PRIMARY KEY (user_id, order_id),
+      INTERLEAVE IN PARENT users ON DELETE CASCADE;
+
 """
 
 from google.cloud import spanner
@@ -263,21 +262,20 @@ Oracle uses Virtual Private Database (VPD) for row-level security:
 - Create policy function that appends WHERE user_id = SYS_CONTEXT('USERENV', 'CLIENT_IDENTIFIER')
 - Set CLIENT_IDENTIFIER at session start for each user
 
-```sql
-CREATE OR REPLACE FUNCTION user_data_policy(schema IN VARCHAR2, obj IN VARCHAR2)
-RETURN VARCHAR2 IS
-BEGIN
-    RETURN 'user_id = SYS_CONTEXT(''USERENV'', ''CLIENT_IDENTIFIER'')';
-END;
+    CREATE OR REPLACE FUNCTION user_data_policy(schema IN VARCHAR2, obj IN VARCHAR2)
+    RETURN VARCHAR2 IS
+    BEGIN
+        RETURN 'user_id = SYS_CONTEXT(''USERENV'', ''CLIENT_IDENTIFIER'')';
+    END;
 
-BEGIN
-    DBMS_RLS.ADD_POLICY('app_schema', 'orders', 'user_policy',
-        'app_schema', 'user_data_policy', 'SELECT,INSERT,UPDATE,DELETE');
-END;
-```
+    BEGIN
+        DBMS_RLS.ADD_POLICY('app_schema', 'orders', 'user_policy',
+            'app_schema', 'user_data_policy', 'SELECT,INSERT,UPDATE,DELETE');
+    END;
 
 In the application:
-```python
+"""
+
 import oracledb
 
 class OracleAccess:

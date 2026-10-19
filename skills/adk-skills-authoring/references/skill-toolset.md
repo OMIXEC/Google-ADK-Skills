@@ -5,7 +5,7 @@ Verified against `google/adk-python@v2.12.0`
 
 ## Constructor
 
-```python
+```text
 SkillToolset(
     skills: list[Skill] | None = None,
     *,

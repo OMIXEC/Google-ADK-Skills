@@ -106,7 +106,7 @@ Non-Gemini models go through LiteLLM, with the provider as a prefix:
 ```python
 from google.adk.models.lite_llm import LiteLlm
 
-root_agent = Agent(model=LiteLlm(model='openai/gpt-4o'), ...)
+root_agent = Agent(model=LiteLlm(model='openai/gpt-4o'))
 ```
 
 ## Common failures

@@ -106,7 +106,6 @@ remote_agent = RemoteA2aAgent(
 root_agent = LlmAgent(
     name="math_assistant",
     sub_agents=[remote_agent],
-    ...
 )
 ```
 

@@ -23,7 +23,7 @@ def get_weather(city: str, unit: str = 'celsius') -> str:
   return f'Sunny, 22 degrees {unit} in {city}'
 
 
-root_agent = Agent(tools=[get_weather], ...)
+root_agent = Agent(tools=[get_weather])
 ```
 
 Sync and async both work.
@@ -75,7 +75,7 @@ def approve_expense(amount: float) -> dict:
   return {'status': 'pending', 'id': 'exp-123'}
 
 
-root_agent = Agent(tools=[LongRunningFunctionTool(approve_expense)], ...)
+root_agent = Agent(tools=[LongRunningFunctionTool(approve_expense)])
 ```
 
 ## Workflows and `@node` functions as tools
@@ -101,7 +101,7 @@ def generate_report(project: str, ctx: Context) -> str:
   return f'Report for {project}: Ready'
 
 
-root_agent = Agent(tools=[generate_report], ...)
+root_agent = Agent(tools=[generate_report])
 ```
 
 ## MCP servers
@@ -123,7 +123,6 @@ root_agent = Agent(
             tool_filter=['read_file', 'list_directory'],
         )
     ],
-    ...
 )
 ```
 
@@ -139,7 +138,7 @@ from ADK. Use `McpToolset`; the all-caps `MCPToolset` still resolves but warns.
 from google.adk.tools.openapi_tool import OpenAPIToolset
 
 toolset = OpenAPIToolset(spec_str=open('openapi.yaml').read(), spec_str_type='yaml')
-root_agent = Agent(tools=[toolset], ...)
+root_agent = Agent(tools=[toolset])
 ```
 
 `spec_str_type` is `'json'` (the default) or `'yaml'`. Pass `spec_dict=` instead
@@ -170,7 +169,7 @@ The code executor is its own agent field, not a tool.
 ```python
 from google.adk.code_executors.built_in_code_executor import BuiltInCodeExecutor
 
-root_agent = Agent(code_executor=BuiltInCodeExecutor(), ...)
+root_agent = Agent(code_executor=BuiltInCodeExecutor())
 ```
 
 ## Custom `BaseTool`

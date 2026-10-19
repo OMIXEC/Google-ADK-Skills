@@ -413,7 +413,7 @@ Regulatory:
 
 ### Strict (Medical, Legal, Financial)
 
-```python
+```text
 # Mandatory disclaimers and checks
 - Professional qualification disclaimer
 - "Not a substitute for professional advice"
@@ -426,7 +426,7 @@ Regulatory:
 
 ### Standard (Technical, General Knowledge)
 
-```python
+```text
 # Balanced safety and usability
 - Accurate information standard
 - Acknowledge limitations
@@ -437,7 +437,7 @@ Regulatory:
 
 ### Minimal (Creative, Educational)
 
-```python
+```text
 # Light guidance
 - Responsible use expectations
 - No harmful content

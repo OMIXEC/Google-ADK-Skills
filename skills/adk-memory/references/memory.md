@@ -186,9 +186,13 @@ memory_service = VertexAiMemoryBankService(
     agent_engine_id=agent_engine_id
 )
 
-runner = adk.Runner(
-    ...
-    memory_service=memory_service
+from google.adk.runners import Runner
+
+runner = Runner(
+    app_name="my_app",
+    agent=root_agent,
+    session_service=session_service,
+    memory_service=memory_service,
 )
 ```
 

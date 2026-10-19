@@ -323,7 +323,7 @@ if auth_request_function_call_id and auth_config:
       * Set `response` to the *serialized* (e.g., `.model_dump()`) updated `AuthConfig` object.
 * Call `runner.run_async` **again** for the same session, passing this `FunctionResponse` content as the `new_message`.
 
-```py
+```text
 # (Continuing after user interaction)
 
     # Simulate getting the callback URL (e.g., from user paste or web handler)
@@ -398,7 +398,7 @@ Your function signature *must* include `tool_context: ToolContext`. ADK automati
 from google.adk.tools import FunctionTool, ToolContext
 from typing import Dict
 
-def my_authenticated_tool_function(param1: str, ..., tool_context: ToolContext) -> dict:
+def my_authenticated_tool_function(param1: str, param2: str, tool_context: ToolContext) -> dict:
     # ... your logic ...
     pass
 
@@ -452,7 +452,7 @@ else:
 * If Step 1 didn't yield valid credentials, check if the client just completed the interactive flow by calling `exchanged_credential = tool_context.get_auth_response()`.
 * This returns the updated `exchanged_credential` object sent back by the client (containing the callback URL in `auth_response_uri`).
 
-```py
+```text
 # Use auth_scheme and auth_credential configured in the tool.
 # exchanged_credential: AuthCredential | None
 
@@ -480,14 +480,14 @@ if exchanged_credential:
 
 If no valid credentials (Step 1.) and no auth response (Step 2.) are found, the tool needs to start the OAuth flow. Define the AuthScheme and initial AuthCredential and call `tool_context.request_credential()`. Return a response indicating authorization is needed.
 
-```py
+```text
 # Use auth_scheme and auth_credential configured in the tool.
 
   tool_context.request_credential(AuthConfig(
     auth_scheme=auth_scheme,
     raw_auth_credential=auth_credential,
   ))
-  return {'pending': true, 'message': 'Awaiting user authentication.'}
+  return {'pending': True, 'message': 'Awaiting user authentication.'}
 
 # By setting request_credential, ADK detects a pending authentication event. It pauses execution and ask end user to login.
 ```
@@ -535,7 +535,7 @@ except Exception as e:
 * After a successful API call, process the result into a dictionary format that is useful for the LLM.
 * **Crucially, include a**  along with the data.
 
-```py
+```text
 # Inside your tool function, after successful API call
     processed_result = [...] # Process api_result for the LLM
     return {"status": "success", "data": processed_result}

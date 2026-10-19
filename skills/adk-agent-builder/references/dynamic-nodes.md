@@ -47,7 +47,7 @@ root_agent = Workflow(name='root_agent', edges=[('START', orchestrate)])
 
 ## `ctx.run_node` arguments
 
-```python
+```text
 await ctx.run_node(
     node,                     # a function, Agent, BaseTool, or BaseNode
     node_input=None,

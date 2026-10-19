@@ -106,7 +106,7 @@ illustrative fragments, and snippets that need external setup. The report shows
 <!-- verify-snippets: ignore -->
 ```python
 # pseudo-code — not runnable as-is
-my_agent = Agent(model="gemini-ultra-hypothetical", ...)
+my_agent = Agent(model="gemini-ultra-hypothetical")
 ```
 ````
 

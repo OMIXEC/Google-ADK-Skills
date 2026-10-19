@@ -48,7 +48,7 @@ root_agent = Agent(
     model='gemini-3.8-flash',
     name='hello_world_agent',
 
-    <...your agent code...>
+    # ... your agent code ...
 )
 ```
 
