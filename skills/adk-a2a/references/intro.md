@@ -70,14 +70,14 @@ works:
 1. **Making an Agent Accessible (Exposing):** You start with an existing ADK
     agent that you want other agents to be able to interact with. The ADK
     provides a simple way to "expose" this agent, turning it into an
-    **A2AServer**. This server acts as a public interface, allowing other agents
-    to send requests to your agent over a network. Think of it like setting up a
-    web server for your agent.
+    **A2A server** with `to_a2a`. That returns a Starlette app that acts as a
+    public interface, allowing other agents to send requests to your agent over
+    a network. Think of it like setting up a web server for your agent.
 
 2. **Connecting to an Accessible Agent (Consuming):** In a separate agent
     (which could be running on the same machine or a different one), you'll use
     a special ADK component called `RemoteA2aAgent`. This `RemoteA2aAgent` acts
-    as a client that knows how to communicate with the **A2AServer** you
+    as a client that knows how to communicate with the **A2A server** you
     exposed earlier. It handles all the complexities of network communication,
     authentication, and data formatting behind the scenes.
 
@@ -105,7 +105,7 @@ to expose it so that other remote agents can interact with your agent.
 ```
 
 **After Exposing:**
-Your agent code is integrated with an `A2AServer` (an ADK component), making it
+Your agent code is wrapped by `to_a2a`, which returns an A2A server app, making it
 accessible over a network to other remote agents.
 
 ```text

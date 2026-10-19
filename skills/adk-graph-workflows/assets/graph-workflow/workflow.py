@@ -40,11 +40,22 @@ root_agent = build_workflow()
 
 if __name__ == "__main__":
     import asyncio
-    from google.adk.runners import InProcessRunner
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
 
     async def main():
-        runner = InProcessRunner(agent=root_agent)
-        result = await runner.run(query="Process order #12345")
-        print(f"Result: {result}")
+        runner = InMemoryRunner(agent=root_agent, app_name="root-agent")
+        session = await runner.session_service.create_session(
+            app_name="root-agent", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text="Process order #12345")])
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if part.text:
+                        print(part.text)
 
     asyncio.run(main())

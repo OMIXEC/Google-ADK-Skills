@@ -194,21 +194,32 @@ async def get_user_context(request: Request) -> UserContext:
 
 
 # ADK workflow entrypoint with identity
-from google.adk.runners import InProcessRunner
+from google.adk.runners import InMemoryRunner
+from google.genai import types
 
 async def run_workflow_with_identity(
     workflow_agent,
     query: str,
     user_ctx: UserContext,
-) -> dict:
+) -> str:
     """Run ADK workflow with identity context injected."""
-    runner = InProcessRunner(agent=workflow_agent)
-    result = await runner.run(
-        query=query,
+    runner = InMemoryRunner(agent=workflow_agent, app_name="workflow")
+    session = await runner.session_service.create_session(
+        app_name="workflow",
+        user_id=user_ctx.user_id,
         # UserContext passed via session state — accessed by all nodes
-        session_state={"user_context": user_ctx.model_dump()},
+        state={"user_context": user_ctx.model_dump()},
     )
-    return result
+    message = types.Content(role="user", parts=[types.Part(text=query)])
+    chunks: list[str] = []
+    async for event in runner.run_async(
+        user_id=user_ctx.user_id,
+        session_id=session.id,
+        new_message=message,
+    ):
+        if event.content and event.content.parts:
+            chunks.extend(part.text for part in event.content.parts if part.text)
+    return "".join(chunks)
 ```
 
 ### Go (Echo / chi / net/http)

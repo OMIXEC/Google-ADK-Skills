@@ -298,7 +298,21 @@ def run_eval(test_case: dict) -> dict:
     """Run a single evaluation case. Override for your workflow."""
     # TODO: Import and run your actual workflow
     # from app.workflow import graph_agent
-    # result = await runner.run(query=test_case["input"])
+    # from google.adk.runners import InMemoryRunner
+    # from google.genai import types
+    #
+    # runner = InMemoryRunner(agent=graph_agent, app_name="workflow")
+    # session = await runner.session_service.create_session(
+    #     app_name="workflow", user_id="eval"
+    # )
+    # message = types.Content(
+    #     role="user", parts=[types.Part(text=test_case["input"])]
+    # )
+    # events = [
+    #     e async for e in runner.run_async(
+    #         user_id="eval", session_id=session.id, new_message=message
+    #     )
+    # ]
 
     start = time.monotonic()
     try:

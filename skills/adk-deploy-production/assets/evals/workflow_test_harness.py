@@ -98,9 +98,18 @@ async def run_workflow(query: str, params: dict | None = None) -> dict:
 
     In production, replace with actual ADK runner call:
         from app.workflow import graph_agent
-        from google.adk.runners import InProcessRunner
-        runner = InProcessRunner(agent=graph_agent)
-        return await runner.run(query=query)
+        from google.adk.runners import InMemoryRunner
+        from google.genai import types
+
+        runner = InMemoryRunner(agent=graph_agent, app_name="workflow")
+        session = await runner.session_service.create_session(
+            app_name="workflow", user_id="eval"
+        )
+        message = types.Content(role="user", parts=[types.Part(text=query)])
+        async for event in runner.run_async(
+            user_id="eval", session_id=session.id, new_message=message
+        ):
+            ...
     """
     # Placeholder — replace with real workflow invocation
     start = time.monotonic()

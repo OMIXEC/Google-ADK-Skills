@@ -76,7 +76,8 @@ toolset = McpToolset(
 
 `McpToolset` is the class (`MCPToolset` is a deprecated alias). Passing
 `StdioServerParameters` directly to `connection_params` is deprecated — wrap it in
-`StdioConnectionParams`. SSE/HTTP use `SseConnectionParams`.
+`StdioConnectionParams`. SSE/HTTP use `SseConnectionParams` or
+`StreamableHTTPConnectionParams`.
 
 ## Built-in code execution
 
@@ -103,7 +104,7 @@ from google.adk.memory import VertexAiMemoryBankService
 
 ```python
 # 1.x casing
-from google.adk.agents import RemoteA2AAgent
+from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 # 2.3
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 from google.adk.a2a.utils.agent_to_a2a import to_a2a   # expose an agent
@@ -124,7 +125,7 @@ adk deploy agent_engine ...
 
 ```python
 # wrong / 1.x
-from google.adk.workflow._workflow_class import Workflow
+from google.adk.workflow import Workflow
 # 2.3
 from google.adk import Workflow
 from google.adk.workflow import node, Edge, JoinNode, START

@@ -25,6 +25,7 @@ references below, and the specialized skills on demand:
 | MCP tool integration | `adk-mcp` |
 | SessionService / memory | `adk-memory` |
 | Model selection + anti-deprecation | `adk-litellm` |
+| Latency, quota, caching, cost per turn | `adk-performance-scaling` |
 
 ## Process (strict order)
 1. **Validate models first** — load `adk-litellm`; reject deprecated/blocked models
@@ -38,7 +39,7 @@ references below, and the specialized skills on demand:
 {project-name}/
 ├── app/{__init__.py,workflow.py,agents/,tools/}
 ├── tests/{test_agents,test_workflow}.py
-├── evals/{eval_config.yaml,test_harness.py}
+├── evals/{<name>.test.json,test_config.json}
 ├── deployment/{Dockerfile,terraform/}
 ├── .env.example
 ├── requirements.txt

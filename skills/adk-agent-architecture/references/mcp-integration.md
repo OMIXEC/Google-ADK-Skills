@@ -253,7 +253,7 @@ agent = LlmAgent(
 ### Python — SSE transport (remote MCP server)
 
 ```python
-from google.adk.tools.mcp_tool import McpToolset, SseServerParams
+from google.adk.tools.mcp_tool import McpToolset, SseConnectionParams
 
 agent = LlmAgent(
     model="gemini-3.8-flash",
@@ -261,7 +261,7 @@ agent = LlmAgent(
     instruction="Use remote tools to help users.",
     tools=[
         McpToolset(
-            connection_params=SseServerParams(
+            connection_params=SseConnectionParams(
                 url="https://mcp-server.example.com/sse",
                 headers={"Authorization": f"Bearer {os.getenv('MCP_TOKEN')}"},
             ),

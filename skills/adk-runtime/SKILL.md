@@ -61,7 +61,7 @@ Callback APIs changed across ADK releases. Before copying callback code, verify 
 ### RunConfig Options
 
 ```python
-from google.adk.runners import RunConfig, StreamingMode
+from google.adk.agents.run_config import RunConfig, StreamingMode
 
 run_config = RunConfig(
     streaming_mode=StreamingMode.BIDI,  # or NONE, SSE

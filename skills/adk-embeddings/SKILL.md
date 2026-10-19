@@ -36,7 +36,7 @@ Both attach to the `Runner`. Pick a backend per layer.
 | Backend | Class | Import |
 |---------|-------|--------|
 | In-memory (dev) | `InMemorySessionService` | `google.adk.sessions` |
-| SQLite (local file) | `SqliteSessionService` | `google.adk.sessions` |
+| SQLite (local file) | `SqliteSessionService` | `google.adk.sessions.sqlite_session_service` |
 | **Postgres / Cloud SQL / MySQL** | `DatabaseSessionService(db_url=...)` | `google.adk.sessions` |
 | **Firestore** | `FirestoreSessionService` | `google.adk.integrations.firestore` |
 | Vertex managed | `VertexAiSessionService` | `google.adk.sessions` |

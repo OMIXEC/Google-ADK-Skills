@@ -24,7 +24,7 @@ Need to extend agent behavior beyond built-in types?
   └─→ CustomAgent (subclass BaseAgent)
 
 Need to call an agent in another process/language?
-  └─→ RemoteA2AAgent
+  └─→ RemoteA2aAgent
 ```
 
 ---
@@ -440,7 +440,7 @@ class MyCustomAgent(BaseAgent):
 | Iterate until quality is good enough | `LoopAgent` |
 | Route to different handlers based on input | `Workflow` (graph) |
 | Compose multiple agent types in custom way | `CustomAgent` |
-| Call an agent in another service/language | `RemoteA2AAgent` |
+| Call an agent in another service/language | `RemoteA2aAgent` |
 | Search + generate with grounding | `LlmAgent` with `include_grounding=True` |
 | Execute generated code safely | `LlmAgent` with `code_executor` |
 | Enforce structured output | `LlmAgent` with `output_schema` |

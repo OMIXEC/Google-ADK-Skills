@@ -1,6 +1,6 @@
 {
   "name": "google-adk-skills",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Skills and subagents for building production Google ADK (Agent Development Kit) agents \u2014 multi-agent workflows, LiteLLM/LangGraph, RAG, deployment, and CI/CD.",
   "author": {
     "name": "OMIXEC"

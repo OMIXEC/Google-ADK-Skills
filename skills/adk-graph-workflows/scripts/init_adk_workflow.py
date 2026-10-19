@@ -148,12 +148,23 @@ root_agent = Workflow(
 
     entrypoint = """if __name__ == "__main__":
     import asyncio
-    from google.adk.runners import InProcessRunner
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
 
     async def main():
-        runner = InProcessRunner(agent=root_agent)
-        result = await runner.run(query="Test query")
-        print(f"Result: {result}")
+        runner = InMemoryRunner(agent=root_agent, app_name="root-agent")
+        session = await runner.session_service.create_session(
+            app_name="root-agent", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text="Test query")])
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if part.text:
+                        print(part.text)
 
     asyncio.run(main())"""
 
@@ -233,10 +244,21 @@ transform_agent = Agent(
         return {{"status": "ok", "data": self.state["transformed"]}}
 
     async def _run_agent(self, agent, query: str) -> dict:
-        from google.adk.runners import InProcessRunner
-        runner = InProcessRunner(agent=agent)
-        result = await runner.run(query=query)
-        return result"""
+        from google.adk.runners import InMemoryRunner
+        from google.genai import types
+
+        runner = InMemoryRunner(agent=agent, app_name="dynamic-workflow")
+        session = await runner.session_service.create_session(
+            app_name="dynamic-workflow", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text=query)])
+        text = ""
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                text += "".join(p.text for p in event.content.parts if p.text)
+        return {{"ok": bool(text), "data": text}}"""
 
     entrypoint = """if __name__ == "__main__":
     import asyncio
@@ -336,12 +358,23 @@ __all__ = ["coordinator", "researcher", "coder", "reviewer"]"""
 
     entrypoint = """if __name__ == "__main__":
     import asyncio
-    from google.adk.runners import InProcessRunner
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
 
     async def main():
-        runner = InProcessRunner(agent=coordinator)
-        result = await runner.run(query="Build a REST API for user management")
-        print(f"Result: {result}")
+        runner = InMemoryRunner(agent=coordinator, app_name="coordinator")
+        session = await runner.session_service.create_session(
+            app_name="coordinator", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text="Build a REST API for user management")])
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if part.text:
+                        print(part.text)
 
     asyncio.run(main())"""
 
@@ -404,12 +437,23 @@ agent_three = Agent(
 
     entrypoint = """if __name__ == "__main__":
     import asyncio
-    from google.adk.runners import InProcessRunner
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
 
     async def main():
-        runner = InProcessRunner(agent=pipeline)
-        result = await runner.run(query="Execute the pipeline")
-        print(f"Result: {result}")
+        runner = InMemoryRunner(agent=pipeline, app_name="pipeline")
+        session = await runner.session_service.create_session(
+            app_name="pipeline", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text="Execute the pipeline")])
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if part.text:
+                        print(part.text)
 
     asyncio.run(main())"""
 
@@ -465,12 +509,23 @@ worker_c = Agent(
 
     entrypoint = """if __name__ == "__main__":
     import asyncio
-    from google.adk.runners import InProcessRunner
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
 
     async def main():
-        runner = InProcessRunner(agent=fan_out)
-        result = await runner.run(query="Process all data chunks in parallel")
-        print(f"Result: {result}")
+        runner = InMemoryRunner(agent=fan_out, app_name="fan-out")
+        session = await runner.session_service.create_session(
+            app_name="fan-out", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text="Process all data chunks in parallel")])
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if part.text:
+                        print(part.text)
 
     asyncio.run(main())"""
 
@@ -548,12 +603,23 @@ reviewer = Agent(
 
     entrypoint = """if __name__ == "__main__":
     import asyncio
-    from google.adk.runners import InProcessRunner
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
 
     async def main():
-        runner = InProcessRunner(agent=refinement_loop)
-        result = await runner.run(query="Generate and refine a report on Q4 metrics")
-        print(f"Result: {result}")
+        runner = InMemoryRunner(agent=refinement_loop, app_name="refinement-loop")
+        session = await runner.session_service.create_session(
+            app_name="refinement-loop", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text="Generate and refine a report on Q4 metrics")])
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if part.text:
+                        print(part.text)
 
     asyncio.run(main())"""
 
@@ -1436,7 +1502,7 @@ import os
 from google.adk.sessions import InMemorySessionService
 
 # Development: in-memory sessions (not persistent across restarts)
-# Production: FirestoreSessionService or SpannerSessionService
+# Production: FirestoreSessionService or DatabaseSessionService
 SESSION_SERVICE = InMemorySessionService()
 
 # Memory hierarchy:

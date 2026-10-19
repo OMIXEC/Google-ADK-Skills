@@ -17,11 +17,22 @@ fan_out = ParallelAgent(
 
 if __name__ == "__main__":
     import asyncio
-    from google.adk.runners import InProcessRunner
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
 
     async def main():
-        runner = InProcessRunner(agent=fan_out)
-        result = await runner.run(query="Process all data chunks in parallel")
-        print(f"Result: {result}")
+        runner = InMemoryRunner(agent=fan_out, app_name="fan-out")
+        session = await runner.session_service.create_session(
+            app_name="fan-out", user_id="local"
+        )
+        message = types.Content(role="user", parts=[types.Part(text="Process all data chunks in parallel")])
+        async for event in runner.run_async(
+            user_id="local", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                for part in event.content.parts:
+                    if part.text:
+                        print(part.text)
 
     asyncio.run(main())

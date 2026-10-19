@@ -42,7 +42,7 @@ jobs:
         run: pytest tests/ -v --junitxml=test-results.xml
 
       - name: Eval tests
-        run: python evals/test_harness.py
+        run: adk eval app/ evals/ --config_file_path evals/test_config.json
         env:
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
 
@@ -100,8 +100,8 @@ steps:
 
   - name: python:3.11
     id: eval
-    entrypoint: python
-    args: ["evals/test_harness.py"]
+    entrypoint: adk
+    args: ["eval", "app/", "evals/", "--config_file_path", "evals/test_config.json"]
     env:
       - "GOOGLE_API_KEY=$_GOOGLE_API_KEY"
 
@@ -239,7 +239,7 @@ stages:
             displayName: Unit tests
             env:
               GOOGLE_API_KEY: $(GOOGLE_API_KEY)
-          - script: python evals/test_harness.py
+          - script: adk eval app/ evals/ --config_file_path evals/test_config.json
             displayName: Eval tests
             env:
               GOOGLE_API_KEY: $(GOOGLE_API_KEY)
@@ -309,7 +309,7 @@ eval_tests:
   extends: .test_base
   stage: eval
   script:
-    - python evals/test_harness.py
+    - adk eval app/ evals/ --config_file_path evals/test_config.json
   variables:
     GOOGLE_API_KEY: $GOOGLE_API_KEY
 

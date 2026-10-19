@@ -26,7 +26,7 @@ Read `references/adk-2x-baseline.md` for the version floor and Python matrix.
 | Install | `uv sync` or `uv pip install -r requirements.txt` |
 | Lint | `ruff check .` |
 | Unit test | `pytest tests/ -v` |
-| Eval gate | `python evals/test_harness.py` |
+| Eval gate | `adk eval app/ evals/ --config_file_path evals/test_config.json` |
 | Package | `python scripts/package_workflow.py --source app/ --name <name> --target <target>` |
 | Build | `docker build -t <name> .` |
 | Deploy | Target-specific command from `references/deployment-matrix.md` |
@@ -86,9 +86,15 @@ Test the whole flow, not just the agents:
 | Security | Prompt injection, SQLi, XSS, tenant isolation |
 | Performance | Latency, concurrency, memory |
 
-`assets/evals/` carries the harness and config; `assets/cicd/` carries the
-GitHub Actions and Cloud Build pipelines. `references/testing-strategies.md`
-holds the full patterns.
+`assets/evals/` carries an optional deterministic assertion harness for suites
+that sit outside the model metrics; prefer ADK's native `adk eval` for quality
+gates. `assets/cicd/` carries the GitHub Actions and Cloud Build pipelines.
+`references/testing-strategies.md` holds the full patterns, including the
+native eval set format, the criteria file, and the pytest gate.
+
+This skill owns the production questions that used to be separate tickets:
+evaluation, testing strategy, observability, and safety guardrails. Tuning the
+system for latency, quota, or cost belongs to `adk-performance-scaling`.
 
 ## References
 
@@ -112,3 +118,6 @@ holds the full patterns.
 
 - Workflow shape belongs to `adk-graph-workflows`.
 - Agent internals belong to `adk-agent-architecture`.
+- Latency, quota, caching, and cost tuning belong to
+  `adk-performance-scaling`.
+- The provider's own deploy command syntax belongs to `adk-deployment`.

@@ -6,7 +6,7 @@ No graph DSL — Python drives the execution order.
 
 from google.adk import Agent
 from google.adk.tools import FunctionTool
-from google.adk.runners import InProcessRunner
+from google.adk.runners import InMemoryRunner
 from pydantic import BaseModel, Field
 import structlog
 import uuid
@@ -39,7 +39,8 @@ class DynamicWorkflow:
     """
 
     def __init__(self):
-        self.runner = InProcessRunner(agent=None)  # Agent set per call
+        # A runner is created per agent call: InMemoryRunner binds one agent.
+        pass
 
     async def run(self, query: str) -> dict:
         correlation_id = f"wf_{uuid.uuid4().hex[:12]}"
@@ -92,10 +93,22 @@ class DynamicWorkflow:
     async def _run_agent(self, agent: Agent, query: str, state: WorkflowState) -> dict:
         node_start = time.monotonic()
         try:
-            result = await self.runner.run(agent=agent, query=query)
+            from google.genai import types
+
+            runner = InMemoryRunner(agent=agent, app_name="dynamic-workflow")
+            session = await runner.session_service.create_session(
+                app_name="dynamic-workflow", user_id="local"
+            )
+            message = types.Content(role="user", parts=[types.Part(text=query)])
+            text = ""
+            async for event in runner.run_async(
+                user_id="local", session_id=session.id, new_message=message
+            ):
+                if event.content and event.content.parts:
+                    text += "".join(p.text for p in event.content.parts if p.text)
             elapsed = (time.monotonic() - node_start) * 1000
             logger.info("node_complete", node=agent.name, latency_ms=elapsed, correlation_id=state.correlation_id)
-            return result
+            return {"ok": bool(text), "data": text}
         except Exception as e:
             elapsed = (time.monotonic() - node_start) * 1000
             logger.error("node_error", node=agent.name, error=str(e), latency_ms=elapsed, correlation_id=state.correlation_id)

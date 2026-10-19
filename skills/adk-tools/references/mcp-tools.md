@@ -79,7 +79,7 @@ root_agent = LlmAgent(
     tools=[
         McpToolset(
             connection_params=StdioConnectionParams(
-                server_params = StdioServerParameters(
+                server_params = StdioConnectionParams(
                     command='npx',
                     args=[
                         "-y",  # Argument for npx to auto-confirm install
@@ -287,7 +287,7 @@ root_agent = LlmAgent(
     tools=[
         McpToolset(
             connection_params=StdioConnectionParams(
-                server_params = StdioServerParameters(
+                server_params = StdioConnectionParams(
                     command='npx',
                     args=[
                         "-y",
@@ -627,7 +627,7 @@ root_agent = LlmAgent(
     tools=[
         McpToolset(
             connection_params=StdioConnectionParams(
-                server_params = StdioServerParameters(
+                server_params = StdioConnectionParams(
                     command='python3', # Command to run your MCP server script
                     args=[PATH_TO_YOUR_MCP_SERVER_SCRIPT], # Argument is the path to the script
                 )
@@ -716,7 +716,7 @@ async def get_agent_async():
   toolset = McpToolset(
       # Use StdioConnectionParams for local process communication
       connection_params=StdioConnectionParams(
-          server_params = StdioServerParameters(
+          server_params = StdioConnectionParams(
             command='npx', # Command to run the server
             args=["-y",    # Arguments for the command
                 "@modelcontextprotocol/server-filesystem",

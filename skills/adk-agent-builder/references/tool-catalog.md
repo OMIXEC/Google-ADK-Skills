@@ -130,7 +130,7 @@ root_agent = Agent(
 Connection classes: `StdioConnectionParams`, `SseConnectionParams`,
 `StreamableHTTPConnectionParams`.
 
-Needs `pip install mcp`. `StdioServerParameters` comes from that package, not
+Needs `pip install mcp`. `StdioConnectionParams` comes from that package, not
 from ADK. Use `McpToolset`; the all-caps `MCPToolset` still resolves but warns.
 
 ## OpenAPI specs

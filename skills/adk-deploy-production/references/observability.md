@@ -1,5 +1,30 @@
 # Observability for ADK Workflows
 
+## ADK-native telemetry
+
+ADK instruments itself with OpenTelemetry. Spans follow the GenAI semantic
+conventions: `invoke_agent`, `invoke_workflow`, and `invoke_node`, plus
+`gen_ai.invoke_agent.duration`, `gen_ai.client.token.usage`, and
+`gen_ai.client.operation.duration` metrics.
+
+```python
+from google.adk.telemetry.setup import maybe_set_otel_providers
+
+# Adds OTLP exporters from the standard OTEL_* environment variables.
+# A provider that is already set globally is left alone.
+maybe_set_otel_providers()
+```
+
+| Environment variable | Effect |
+|---|---|
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | One endpoint for traces, metrics, and logs |
+| `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` / `_METRICS_` / `_LOGS_` | Per-signal override |
+| `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` | Include prompts and responses in spans; off by default |
+| `ADK_TELEMETRY_IGNORE_RUN_CONFIG` | Ignore per-run config when naming spans |
+
+Leave prompt capture off in production unless you have a retention policy for
+the content it copies into your tracing backend.
+
 ## Three Pillars
 
 ### 1. Structured Logging

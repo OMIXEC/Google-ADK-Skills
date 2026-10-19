@@ -19,6 +19,7 @@ the proposal; you do not write code.
 | Multi-agent composition patterns | `adk-agents` |
 | Autonomous loops and LangGraph | `adk-agent-orchestration` |
 | Model selection / cost trade-offs | `adk-litellm` |
+| Latency, throughput, and cost budgets | `adk-performance-scaling` |
 
 Load with the **Skill** tool, read `references/`, then propose.
 
@@ -28,11 +29,11 @@ Load with the **Skill** tool, read `references/`, then propose.
 
 | Condition | Workflow Type |
 |-----------|--------------|
-| Linear pipeline, fixed order | SequentialAgent |
-| Independent concurrent tasks | ParallelAgent |
+| Linear pipeline, fixed order | SequentialAgent (deprecated; prefer Workflow) |
+| Independent concurrent tasks | ParallelAgent (deprecated; prefer Workflow) |
 | Complex DAG, branching/merging | Workflow (graph) |
 | Coordinator + specialized workers sharing state | Collaborative |
-| Iterative refinement with quality gate | LoopAgent |
+| Iterative refinement with quality gate | LoopAgent (deprecated; prefer Workflow) |
 | Programmatic runtime composition | Dynamic |
 | Custom orchestration logic | CustomAgent (BaseAgent) |
 

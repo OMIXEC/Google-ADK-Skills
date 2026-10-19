@@ -204,12 +204,14 @@ Location: `src/google/adk/utils/_debug_output.py`
 ```python
 from google.adk import Agent, Runner
 from google.adk.sessions import InMemorySessionService
+from google.genai import types
 
 agent = Agent(name="test", model="gemini-3.8-flash", instruction="...")
 runner = Runner(app_name="test", agent=agent, session_service=InMemorySessionService())
 
 session = runner.session_service.create_session_sync(app_name="test", user_id="u")
-for event in runner.run(user_id="u", session_id=session.id, new_message="hello"):
+message = types.Content(role="user", parts=[types.Part(text="hello")])
+for event in runner.run(user_id="u", session_id=session.id, new_message=message):
     print(f"{event.author}: {event.content}")
     if event.actions.transfer_to_agent:
         print(f"  -> transfer to {event.actions.transfer_to_agent}")

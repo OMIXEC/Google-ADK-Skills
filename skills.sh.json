@@ -53,7 +53,8 @@
         "adk-deployment",
         "adk-debug",
         "adk-migration",
-        "adk-architecture"
+        "adk-architecture",
+        "adk-performance-scaling"
       ]
     },
     {

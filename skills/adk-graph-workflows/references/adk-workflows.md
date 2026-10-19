@@ -15,7 +15,13 @@ Need shared state + delegation? → Collaborative
 
 ## 1. Template Workflows
 
-Fixed execution patterns with no LLM-based routing. Deterministic and predictable.
+Fixed execution patterns with no LLM-based routing. Deterministic and
+predictable.
+
+> **Deprecated in 2.12.** `SequentialAgent`, `ParallelAgent`, and `LoopAgent`
+> still run but emit a `DeprecationWarning`. `Workflow` cannot yet be used as an
+> `LlmAgent` sub-agent, so keep templates where that constraint applies; port
+> everything else to `Workflow`.
 
 ### SequentialAgent
 
@@ -49,14 +55,25 @@ Use for: multi-source search, independent validation checks, fan-out processing.
 
 ```python
 from google.adk.agents import LoopAgent
+from google.adk.tools import exit_loop
 
+# The reviewer calls exit_loop when the quality gate passes.
+# LoopAgent itself only has max_iterations; it has no predicate argument.
 workflow = LoopAgent(
     name="refinement_loop",
-    sub_agents=[writer_agent, reviewer_agent],
+    sub_agents=[
+        writer_agent,
+        Agent(
+            name="reviewer",
+            model="gemini-3.8-flash",
+            instruction="Review the draft. Call exit_loop when it passes.",
+            tools=[exit_loop],
+        ),
+    ],
     max_iterations=5,
-    stop_condition=lambda ctx: ctx.get("quality_score", 0) >= 0.9
 )
-# Writer → Reviewer repeats until quality gate passes
+# Writer → Reviewer repeats until the reviewer calls exit_loop,
+# or until max_iterations is reached.
 ```
 
 Use for: iterative refinement, code review cycles, quality-gated pipelines.
@@ -247,9 +264,27 @@ import functions_framework
 def workflow_trigger(request):
     """Triggered by Cloud Scheduler via Pub/Sub push."""
     import asyncio
-    runner = InProcessRunner(agent=workflow_agent)
-    result = asyncio.run(runner.run(query="Execute scheduled workflow"))
-    return {"status": "ok", "result": result}
+
+    from google.adk.runners import InMemoryRunner
+    from google.genai import types
+
+    async def invoke() -> str:
+        runner = InMemoryRunner(agent=workflow_agent, app_name="workflow")
+        session = await runner.session_service.create_session(
+            app_name="workflow", user_id="scheduler"
+        )
+        message = types.Content(
+            role="user", parts=[types.Part(text="Execute scheduled workflow")]
+        )
+        chunks: list[str] = []
+        async for event in runner.run_async(
+            user_id="scheduler", session_id=session.id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                chunks.extend(part.text for part in event.content.parts if part.text)
+        return "".join(chunks)
+
+    return {"status": "ok", "result": asyncio.run(invoke())}
 ```
 
 **Schedule options:**
@@ -349,62 +384,88 @@ deploy_agent = LlmAgent(
 
 ```python
 """checkpoint_utils.py — Save/restore state for HITL workflows."""
-from google.adk.sessions import SessionService
+from google.adk.events import Event
+from google.adk.events.event_actions import EventActions
+from google.adk.runners import Runner
+from google.adk.sessions import BaseSessionService
 
 
 async def save_approval_checkpoint(
-    session_service: SessionService,
+    session_service: BaseSessionService,
+    app_name: str,
+    user_id: str,
     session_id: str,
     approval_id: str,
 ) -> dict:
     """Save session checkpoint while awaiting human approval.
 
-    The session persists in SessionService. This is a marker that
+    The session persists in the session service. This is a marker that
     identifies the session as awaiting external input.
     """
-    session = await session_service.get_session(session_id)
+    session = await session_service.get_session(
+        app_name=app_name, user_id=user_id, session_id=session_id
+    )
     checkpoint = {
         "session_id": session_id,
         "approval_id": approval_id,
         "state_snapshot": dict(session.state),
         "status": "awaiting_approval",
-        "checkpointed_at": datetime.utcnow().isoformat(),
     }
-    # Store in a dedicated collection for approval queue
-    await session_service.update_session_state(session_id, {
-        "approval_checkpoint": checkpoint,
-        "workflow_paused": True,
-    })
+    # State changes travel in an Event; there is no in-place session update.
+    await session_service.append_event(
+        session,
+        Event(
+            author="approval_workflow",
+            actions=EventActions(
+                state_delta={
+                    "approval_checkpoint": checkpoint,
+                    "workflow_paused": True,
+                }
+            ),
+        ),
+    )
     return checkpoint
 
 
 async def resume_after_approval(
-    session_service: SessionService,
+    session_service: BaseSessionService,
+    graph_agent,
+    app_name: str,
+    user_id: str,
     session_id: str,
     approved: bool,
     reviewer_notes: str = "",
 ) -> dict:
-    """Resume a paused workflow after human decision.
-
-    Called by the approval UI/API after the human decides.
-    """
-    session = await session_service.get_session(session_id)
+    """Resume a paused workflow after human decision."""
+    session = await session_service.get_session(
+        app_name=app_name, user_id=user_id, session_id=session_id
+    )
     if not session.state.get("workflow_paused"):
         return {"status": "error", "message": "Workflow is not in pending state"}
 
-    session.state["pending_approval"]["status"] = "approved" if approved else "rejected"
-    session.state["pending_approval"]["reviewer_notes"] = reviewer_notes
-    session.state["workflow_paused"] = False
-
-    await session_service.update_session(session)
-
-    # Re-run the workflow from the checkpoint
-    runner = InProcessRunner(agent=graph_agent)
-    result = await runner.run(
-        user_id=session.user_id,
-        session_id=session_id,
+    pending = dict(session.state.get("pending_approval", {}))
+    pending["status"] = "approved" if approved else "rejected"
+    pending["reviewer_notes"] = reviewer_notes
+    await session_service.append_event(
+        session,
+        Event(
+            author="approval_workflow",
+            actions=EventActions(
+                state_delta={"pending_approval": pending, "workflow_paused": False}
+            ),
+        ),
     )
-    return {"status": "ok", "result": result}
+
+    # Re-run the workflow on the same session; the runner replays from the
+    # last event.
+    runner = Runner(agent=graph_agent, session_service=session_service)
+    events = [
+        event
+        async for event in runner.run_async(
+            user_id=user_id, session_id=session_id, new_message=None
+        )
+    ]
+    return {"status": "ok", "events": len(events)}
 ```
 
 ### User Confirmation Flow

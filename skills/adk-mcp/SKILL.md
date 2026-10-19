@@ -70,6 +70,6 @@ agent = Agent(
 
 ### Connection Types
 
-- **Stdio**: Local process communication; use current MCP `StdioServerParameters` examples.
+- **Stdio**: Local process communication; use current MCP `StdioConnectionParams` examples.
 - **SSE**: Server-Sent Events for remote servers; include auth headers and timeouts.
 - **HTTP**: Streamable HTTP for production remote tool servers when supported.

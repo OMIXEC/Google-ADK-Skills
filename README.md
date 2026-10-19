@@ -1,6 +1,6 @@
 # Google-ADK-Skills
 
-**26 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, Windsurf, and `.agents` libraries**
+**27 production-grade Google ADK skills for Codex, OpenCode, Claude, Cline, Cursor, Gemini CLI, Windsurf, and `.agents` libraries**
 
 Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-agent orchestration, LangGraph state machines, LiteLLM multi-provider routing, real-time bidirectional streaming, RAG pipelines, MCP tool integration, autonomous agents, and production deployment.
 
@@ -9,7 +9,7 @@ Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-
 - Target: `google-adk>=2.9.2,<3`, validated through **2.12.0** (2026-10-13).
 - The **1.x line is still shipping in parallel** (latest 1.39.1); 2.x is not yet a replacement for every 1.x user.
 - Python: **3.10** for 2.9.2–2.11.0, **3.11** for 2.12.0. Supported through 3.15. Use `uv` in repos that already standardize on it.
-- New workflow guidance should prefer the 2.x `Agent` plus `Workflow` graph/dynamic orchestration for complex flows. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic template workflows.
+- New workflow guidance should prefer the 2.x `Agent` plus `Workflow` graph/dynamic orchestration. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` still work in 2.12 but emit a `DeprecationWarning` and are slated for removal; use `Workflow` for new code.
 - Read [`COMPATIBILITY.md`](COMPATIBILITY.md) before changing examples, model IDs, or migration guidance. Each skill carries the same version floor in its own `references/adk-2x-baseline.md`, so a standalone install is never missing it.
 - **The SDK is never vendored.** `google-adk` installs from PyPI; always import from the installed `google.adk.*`. Context7 `/google/adk-docs` and the installed package are canonical. See [`MIGRATION.md`](MIGRATION.md).
 
@@ -122,7 +122,7 @@ The plugin is the only channel that installs the skills together with the bundle
 
 ---
 
-## Skills (26)
+## Skills (27)
 
 | Skill | Description |
 |-------|-------------|
@@ -146,6 +146,7 @@ The plugin is the only channel that installs the skills together with the bundle
 | `adk-memory` | Memory policy — session state, long-term memory, persistence, cross-session recall |
 | `adk-migration` | 1.x → 2.x through 2.12.0 — breaking changes, renamed APIs, session incompatibility |
 | `adk-model-routing` | Model selection — Gemini 3.x catalog, `thinking_level`, fallback chains, retirement |
+| `adk-performance-scaling` | Performance — latency, concurrency, quota, context caching, compaction, cost per turn |
 | `adk-prompts` | Instructions — system prompts, few-shot examples, output shape, token cost |
 | `adk-rag` | RAG — Pinecone or Vertex AI RAG, ingestion, chunking, grounding |
 | `adk-runtime` | Execution internals — event loop, Runner, callbacks, Reason-Act cycle |
@@ -216,12 +217,12 @@ Google-ADK-Skills/
 ├── .claude-plugin/
 │   ├── plugin.json          ← Claude plugin manifest
 │   └── marketplace.json     ← marketplace listing
-├── skills/                  ← 26 product skills (each: SKILL.md + references/)
+├── skills/                  ← 27 product skills (each: SKILL.md + references/)
 │   ├── adk-a2a/
 │   ├── adk-agent-builder/
 │   ├── adk-graph-workflows/
 │   ├── adk-agents/
-│   ├── ... (26 total)
+│   ├── ... (27 total)
 │   └── adk-tools/
 ├── contributing/            ← 8 contributor-only skills (opt-in: --with-contributing)
 ├── agents/                  ← Claude Code subagents (.md files, auto-loaded by Claude)

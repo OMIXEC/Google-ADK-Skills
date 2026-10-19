@@ -139,35 +139,20 @@ Agents communicate over HTTP via agent cards. Cross-service, cross-language. See
 ```
 
 **When**: Distributed systems, cross-language, separate deployment units.
-**Implementation**: `RemoteA2AAgent` wrapping remote agent cards.
+**Implementation**: `RemoteA2aAgent` wrapping remote agent cards.
 
 ```python
-from google.adk.agents import RemoteA2AAgent
-from google.adk.a2a import AgentCard
+from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 
-# Client side — calling a remote agent
-remote_agent = RemoteA2AAgent(
+# Client side — calling a remote agent. The card URL is resolved on first use.
+remote_agent = RemoteA2aAgent(
     name="go_processor",
-    agent_card=AgentCard(
-        name="Go Processor",
-        url="https://processor-service.run.app",
-        capabilities={"streaming": True},
-        auth_scheme="bearer_token",
-    ),
+    agent_card="https://processor-service.run.app/.well-known/agent-card.json",
 )
 
 # Server side — exposing your agent via A2A
-from google.adk.a2a import A2AServer
-server = A2AServer(
-    agent=my_agent,
-    card=AgentCard(
-        name="My Python Agent",
-        description="Handles X and Y",
-        url="https://my-agent.run.app",
-        capabilities={"streaming": True, "a2a": True},
-        auth_scheme="bearer_token",
-    ),
-)
+from google.adk.a2a.utils.agent_to_a2a import to_a2a
+app = to_a2a(my_agent, host="0.0.0.0", port=8000)
 ```
 
 **Cross-language A2A**: Python↔Go↔TS via standard JSON-RPC 2.0 serialization. Each side uses native ADK SDK. No shared code needed.
@@ -196,7 +181,7 @@ Coordination via shared MCP tool servers instead of direct agent-to-agent calls.
 
 ```python
 from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
-from google.adk.tools.mcp import StdioServerParameters
+from google.adk.tools.mcp_tool import StdioConnectionParams
 
 coordinator = Agent(
     name="mcp_coordinator",

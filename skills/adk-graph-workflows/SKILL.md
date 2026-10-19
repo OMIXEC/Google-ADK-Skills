@@ -32,9 +32,9 @@ version floor, Python matrix, and core imports.
 | **Template: parallel** | Independent concurrent work, then aggregate | `ParallelAgent` |
 | **Template: loop** | Iterate until a quality gate passes | `LoopAgent` with `max_iterations` |
 
-Prefer `Workflow` for new complex orchestration. The three template agents
-remain valid for genuinely linear, fan-out, or retry-until-good flows; do not
-wrap a straight line in a graph for its own sake.
+Prefer `Workflow` for new orchestration. The three template agents still run in
+2.12 but are deprecated and emit a `DeprecationWarning`; read an existing
+template, then port it to `Workflow` rather than adding new template code.
 
 ## Design pass
 

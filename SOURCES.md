@@ -75,5 +75,40 @@ changes status.
 5. **Loader behaviour** — verified by loading every skill in this repo through
    `google.adk.skills.load_skills_from_dir` under `google-adk==2.12.0`.
 
+## 2026-10-19 correctness sweep
+
+The library's code samples were re-checked against the pinned source and a live
+`google-adk[a2a,mcp]==2.12.0` install. The check was mechanical (every
+`google.adk.*` import resolved against the tag) plus a construct-and-import
+smoke test for each documented class.
+
+Verified in this sweep:
+
+| Claim | Verified against |
+|---|---|
+| `RunConfig` and `StreamingMode` live in `google.adk.agents.run_config` | `agents/run_config.py`; importing from `google.adk.runners` raises `AttributeError` |
+| `EventsCompactionConfig` is in `google.adk.apps.app`, not the `google.adk.apps` package export | `apps/_configs.py`, `apps/__init__.py` |
+| `ContextCacheConfig` minimums and defaults | `agents/context_cache_config.py` |
+| Compaction requires one complete trigger pair | `EventsCompactionConfig._validate_trigger_params` |
+| `RunConfig.max_llm_calls` defaults to 500, `ADK_MAX_LLM_CALLS` overrides it | `agents/run_config.py` |
+| `ToolThreadPoolConfig.max_workers` defaults to 4 | `agents/run_config.py` |
+| `HttpRetryOptions` defaults (5 attempts, 1.0 s initial, 60 s max, 6 status codes) | `google.genai.types` |
+| `InMemoryRunner` / `Runner` signatures and the sync `run` proxy | `runners.py` |
+| `BaseSessionService` has `append_event`; there is no `update_session` / `update_session_state` | `sessions/base_session_service.py` |
+| Firestore and Redis session services live under `google.adk.integrations.*` | `integrations/firestore`, `integrations/redis` |
+| `SqliteSessionService` is not re-exported from `google.adk.sessions` | `sessions/__init__.py` |
+| `RemoteA2aAgent` spelling, URL/path `agent_card`, experimental status | `a2a/agent/_remote_a2a_agent.py` |
+| A2A server is built by `to_a2a`, not `A2AServer` | `a2a/utils/agent_to_a2a.py` |
+| `AgentCard` fields come from `a2a.types`; the card is served at `/.well-known/agent-card.json` | installed `a2a` package |
+| `McpToolset`, `StdioConnectionParams`, `SseConnectionParams` | `tools/mcp_tool/` |
+| `CalendarToolset`, not `calendar_tool_set` | `tools/google_api_tool/google_api_toolsets.py` |
+| `maybe_set_otel_providers` is the telemetry entry point; `setup_telemetry` does not exist | `telemetry/setup.py` |
+| Native eval: `EvalSet` / `EvalCase` / `EvalConfig`, `AgentEvaluator.evaluate`, `PrebuiltMetrics` | `evaluation/` |
+| Model Armor lives in `google.adk.integrations.model_armor` and needs the `gcp` extra | `integrations/model_armor/_plugin.py` |
+| `SequentialAgent`, `ParallelAgent`, `LoopAgent` emit `DeprecationWarning` in 2.12 | live warning capture on construction |
+| `LoopAgent` has `max_iterations` only; termination is `exit_loop` | `agents/loop_agent.py`, `tools/exit_loop` |
+| `adk api_server` / `adk web` take the agents directory positionally; there is no `--app-dir` | `adk api_server --help` |
+| `adk deploy` subcommands are `cloud_run`, `agent_engine`, `gke`, `docker` | `adk deploy --help` |
+
 When a source and a skill disagree, the source wins. Open an issue with the
 tag, the file, and the line.

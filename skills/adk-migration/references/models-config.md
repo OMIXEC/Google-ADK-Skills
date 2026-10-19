@@ -67,5 +67,8 @@ google-genai>=2.0.0       # Interactions API (breaking changes from earlier)
 - 1.x and 2.x **session/state schemas are incompatible** — do not reuse persisted
   1.x sessions. Migration helpers live under `google.adk.sessions.migration`.
 - New database/serverless backends in 2.x: `DatabaseSessionService`
-  (Postgres/Cloud SQL/MySQL), `FirestoreSessionService`/`FirestoreMemoryService`
-  (`google.adk.integrations.firestore`). See the `adk-embeddings` skill.
+  (Postgres/Cloud SQL/MySQL/SQLite), `SqliteSessionService`
+  (`google.adk.sessions.sqlite_session_service`), and
+  `FirestoreSessionService`/`FirestoreMemoryService`
+  (`google.adk.integrations.firestore`). Spanner has no built-in service; write a
+  `BaseSessionService` subclass. See the `adk-embeddings` skill.

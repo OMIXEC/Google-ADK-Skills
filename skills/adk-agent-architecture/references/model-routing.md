@@ -140,7 +140,7 @@ def route_by_llm(query: str) -> str:
 ```python
 from google.adk import Agent
 from google.adk.agents import LiveRequestQueue
-from google.adk.run_config import RunConfig, StreamingMode
+from google.adk.agents.run_config import RunConfig, StreamingMode
 
 live_agent = Agent(
     name="voice_assistant",

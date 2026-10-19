@@ -119,7 +119,7 @@ agent_config:
 
 Deploy:
 ```bash
-adk deploy --project ${PROJECT_ID} --region ${REGION}
+adk deploy cloud_run app/ --project ${PROJECT_ID} --region ${REGION}
 ```
 
 ### Vertex AI (managed model + agent endpoint)
@@ -402,24 +402,39 @@ spec:
 # lambda_handler.py
 """ADK workflow as Lambda function behind API Gateway."""
 import asyncio
-from app.workflow import graph_agent
-from google.adk.runners import InProcessRunner
+import json
 
-runner = InProcessRunner(agent=graph_agent)
+from app.workflow import graph_agent
+from google.adk.runners import InMemoryRunner
+from google.genai import types
+
+runner = InMemoryRunner(agent=graph_agent, app_name="workflow")
+
 
 def handler(event, context):
     """API Gateway proxy integration → ADK workflow."""
     body = json.loads(event.get("body", "{}"))
     query = body.get("query", "")
     user_id = event["requestContext"]["authorizer"]["claims"]["sub"]
+    return asyncio.run(_invoke(query, user_id))
 
-    loop = asyncio.get_event_loop()
-    result = loop.run_until_complete(runner.run(query=query, user_id=user_id))
+
+async def _invoke(query: str, user_id: str) -> dict:
+    session = await runner.session_service.create_session(
+        app_name="workflow", user_id=user_id
+    )
+    message = types.Content(role="user", parts=[types.Part(text=query)])
+    chunks: list[str] = []
+    async for event in runner.run_async(
+        user_id=user_id, session_id=session.id, new_message=message
+    ):
+        if event.content and event.content.parts:
+            chunks.extend(part.text for part in event.content.parts if part.text)
 
     return {
         "statusCode": 200,
         "headers": {"Content-Type": "application/json"},
-        "body": json.dumps(result),
+        "body": json.dumps({"text": "".join(chunks)}),
     }
 ```
 
@@ -683,7 +698,7 @@ export GOOGLE_API_KEY="${GOOGLE_API_KEY:?Set GOOGLE_API_KEY}"
 export LOG_LEVEL=DEBUG
 
 # Run via ADK CLI
-adk api_server --app-dir app/ --port 8080
+adk api_server app/ --port 8080
 
 # Or run via uvicorn directly
 # uvicorn app.main:app --host 0.0.0.0 --port 8080 --reload
@@ -707,14 +722,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.workflow import graph_agent
-from google.adk.runners import InProcessRunner
+from google.adk.runners import InMemoryRunner
+from google.genai import types
 from middleware.security_headers import SecurityHeadersMiddleware
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Warm up runner on startup."""
-    app.state.runner = InProcessRunner(agent=graph_agent)
+    app.state.runner = InMemoryRunner(agent=graph_agent, app_name="workflow")
     app.state.ready = True
     yield
     app.state.ready = False
@@ -778,12 +794,24 @@ async def ready():
 async def run_workflow(req: RunRequest, request: Request):
     """Execute the ADK workflow."""
     try:
-        result = await app.state.runner.run(
-            query=req.query,
-            user_id=req.user_id,
-            session_id=req.session_id,
-        )
-        return RunResponse(status="ok", result=result)
+        runner = app.state.runner
+        if req.session_id:
+            session_id = req.session_id
+        else:
+            session = await runner.session_service.create_session(
+                app_name="workflow", user_id=req.user_id
+            )
+            session_id = session.id
+
+        message = types.Content(role="user", parts=[types.Part(text=req.query)])
+        chunks: list[str] = []
+        async for event in runner.run_async(
+            user_id=req.user_id, session_id=session_id, new_message=message
+        ):
+            if event.content and event.content.parts:
+                chunks.extend(part.text for part in event.content.parts if part.text)
+
+        return RunResponse(status="ok", result={"text": "".join(chunks)})
     except Exception as e:
         logger.exception("Workflow run failed")
         return RunResponse(status="error", error=str(e))

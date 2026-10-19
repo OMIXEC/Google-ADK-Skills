@@ -162,25 +162,31 @@ Pass the scheme and credential during toolset initialization. The toolset applie
       )
       ```
 
-**B. Using Google API Toolsets (e.g., `calendar_tool_set`)**
+**B. Using Google API Toolsets (e.g., `CalendarToolset`)**
 
-These toolsets often have dedicated configuration methods.
+Each Google API toolset is a `BaseToolset` constructed with OAuth credentials,
+and passed to the agent as a tool.
 
 Tip: For how to create a Google OAuth Client ID & Secret, see this guide: Get your Google API Client ID
 
 ```py
 # Example: Configuring Google Calendar Tools
-from google.adk.tools.google_api_tool import calendar_tool_set
+from google.adk.tools.google_api_tool import CalendarToolset
 
 client_id = "YOUR_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com"
 client_secret = "YOUR_GOOGLE_OAUTH_CLIENT_SECRET"
 
-# Use the specific configure method for this toolset type
-calendar_tool_set.configure_auth(
-    client_id=oauth_client_id, client_secret=oauth_client_secret
+calendar_toolset = CalendarToolset(
+    client_id=client_id,
+    client_secret=client_secret,
 )
 
-# agent = LlmAgent(..., tools=calendar_tool_set.get_tool('calendar_tool_set'))
+agent = LlmAgent(
+    name="scheduler",
+    model="gemini-3.8-flash",
+    instruction="Manage the user's calendar.",
+    tools=[calendar_toolset],
+)
 ```
 
 The sequence diagram of auth request flow (where tools are requesting auth credentials) looks like below:

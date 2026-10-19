@@ -47,57 +47,39 @@ session = await session_service.create_session(
 ### Firestore (production — serverless)
 
 ```python
-from google.adk.sessions import FirestoreSessionService
+from google.adk.integrations.firestore import FirestoreSessionService
 
 session_service = FirestoreSessionService(
-    project_id=os.getenv("GCP_PROJECT_ID"),
-    database="(default)",  # or named database
+    root_collection="adk-sessions",  # omit to use the default collection
 )
 ```
 
-### Spanner (production — global, high-throughput)
+### Spanner / Cloud SQL (production — relational)
+
+There is no Spanner-specific session service. Use `DatabaseSessionService`
+(SQLAlchemy) for any relational backend, or write a `BaseSessionService`
+subclass.
 
 ```python
-from google.adk.sessions import SpannerSessionService
+from google.adk.sessions import DatabaseSessionService
 
-session_service = SpannerSessionService(
-    instance_id="my-instance",
-    database_id="sessions-db",
+session_service = DatabaseSessionService(
+    db_url="postgresql+asyncpg://user:pass@host:5432/adk",
 )
 ```
 
-### Redis (custom SessionService)
+### Redis (built-in integration)
 
 ```python
-"""Custom Redis-backed SessionService for high-throughput caching layer."""
-import json
-import redis.asyncio as redis
-from google.adk.sessions import SessionService, Session
+from google.adk.integrations.redis import RedisSessionService, RedisSessionServiceConfig
 
-class RedisSessionService(SessionService):
-    def __init__(self, redis_url: str, ttl: int = 3600):
-        self.redis = redis.from_url(redis_url)
-        self.ttl = ttl
-
-    async def create_session(self, app_name: str, user_id: str, state: dict = {}) -> Session:
-        session = Session(
-            id=f"{app_name}:{user_id}:{uuid4().hex[:12]}",
-            app_name=app_name,
-            user_id=user_id,
-            state=state,
-        )
-        await self._save(session)
-        return session
-
-    async def get_session(self, session_id: str) -> Session | None:
-        data = await self.redis.get(f"session:{session_id}")
-        return Session(**json.loads(data)) if data else None
-
-    async def _save(self, session: Session):
-        await self.redis.setex(
-            f"session:{session.id}", self.ttl, json.dumps(session.model_dump())
-        )
+session_service = RedisSessionService(
+    config=RedisSessionServiceConfig(redis_url=os.getenv("REDIS_URL"))
+)
 ```
+
+To build your own, subclass `BaseSessionService` and implement its abstract
+methods.
 
 ## Working Memory — `session.state`
 
@@ -310,13 +292,14 @@ async def restore_checkpoint(session_id: str, store) -> SessionCheckpoint | None
 ADK provides `MemoryService` for storing and retrieving agent memories:
 
 ```python
-from google.adk.memory import InMemoryMemoryService, FirestoreMemoryService
+from google.adk.memory import InMemoryMemoryService
+from google.adk.integrations.firestore import FirestoreMemoryService
 
 # Development
 memory_service = InMemoryMemoryService()
 
-# Production — Firestore
-memory_service = FirestoreMemoryService(project_id=os.getenv("GCP_PROJECT_ID"))
+# Production — Firestore (pass a firestore.AsyncClient to control the project)
+memory_service = FirestoreMemoryService()
 
 # Attach to Runner
 runner = Runner(
@@ -405,7 +388,7 @@ def preload_memory(tool_context: ToolContext) -> dict:
 
 ```python
 """auto_save_callback.py — Persist learned facts on session exit."""
-from google.adk.memory import FirestoreMemoryService
+from google.adk.integrations.firestore import FirestoreMemoryService
 
 
 async def after_agent_auto_save(callback_context):
@@ -460,11 +443,14 @@ Three integration patterns for using Redis as a memory backend with ADK. Redis p
 ### Pattern 1: Framework-Managed (Simplest)
 
 ```python
-"""Redis as drop-in MemoryService via ADK Redis plugin."""
+"""Redis as a MemoryService via a custom BaseMemoryService."""
 import os
-from google.adk.memory import RedisMemoryService
+from google.adk.memory import BaseMemoryService
 
-memory_service = RedisMemoryService(
+# ADK ships a Redis session service, not a Redis memory service.
+# Subclass BaseMemoryService (or use the adk-redis package) to store
+# memories in Redis, then attach it to the runner.
+memory_service: BaseMemoryService = MyRedisMemoryService(
     redis_url=os.getenv("REDIS_URL", "redis://localhost:6379"),
 )
 
@@ -474,7 +460,6 @@ runner = Runner(
     session_service=session_service,
     memory_service=memory_service,
 )
-# ADK handles all read/write. No custom code needed.
 ```
 
 Best for: Standard use cases, minimal customization, fastest setup.
@@ -674,12 +659,16 @@ client.create_collection(
 
 ### Firestore (GCP NoSQL)
 
+ADK already ships `google.adk.integrations.firestore.FirestoreMemoryService`.
+The class below is only a starting point if you need a different collection
+layout; implement `BaseMemoryService` so a `Runner` can use it.
+
 ```python
-"""FirestoreMemoryService — serverless document memory."""
+"""FirestoreKeywordMemory — example custom BaseMemoryService."""
 from google.cloud import firestore_async
 
 
-class FirestoreMemoryService:
+class FirestoreKeywordMemory(BaseMemoryService):
     """Memory backend for serverless GCP deployments."""
 
     def __init__(self, project_id: str):

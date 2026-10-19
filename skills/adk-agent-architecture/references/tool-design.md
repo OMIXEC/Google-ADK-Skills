@@ -171,13 +171,13 @@ Use `McpToolset` to connect agents to tools in other processes/languages. See `r
 ```python
 from google.adk.tools import FunctionTool
 from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
-from google.adk.tools.mcp import StdioServerParameters, SseServerParams
+from google.adk.tools.mcp_tool import StdioConnectionParams, SseConnectionParams
 
 # MCP for side effects, external APIs, multi-language tools
 db_tools = McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(
     command="python3", args=["mcp_servers/db_server.py"]
 )))
-api_tools = McpToolset(connection_params=SseServerParams(
+api_tools = McpToolset(connection_params=SseConnectionParams(
     url="https://tools.example.com/sse",
     headers={"Authorization": "Bearer ${TOOLS_API_KEY}"},
 ))

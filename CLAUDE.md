@@ -1,6 +1,6 @@
 # ADK Skills — Routing Rules
 
-This repo provides 26 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
+This repo provides 27 Claude Code skills for building Google ADK (Agent Development Kit) agents. All skills live in `skills/` with standard SKILL.md format.
 
 ## ADK 2.x Source Policy
 
@@ -45,6 +45,7 @@ When a user request matches a trigger below, invoke the corresponding skill.
 | `adk-embeddings` | "embedding", "gemini-embedding-2", "pgvector", "DatabaseSessionService", "vector store" |
 | `adk-memory` | "memory", "SessionService", "long-term memory", "cross-session" |
 | `adk-model-routing` | "which model", "thinking level", "model catalog", "deprecated model", "fallback chain" |
+| `adk-performance-scaling` | "slow agent", "latency", "concurrency", "rate limit", "429", "too expensive", "token budget", "caching", "scaling" |
 | `adk-litellm` | "litellm", "OpenAI/Anthropic/Bedrock/OpenRouter", "non-Google model", "provider fallback" |
 | `adk-deploy-production` | "production readiness", "CI/CD for agents", "guardrails", "observability", "pre-deploy checklist", "retries" |
 | `adk-deployment` | "adk deploy", "Cloud Run", "GKE", "Agent Engine", "Dockerfile", "Kubernetes manifest" |

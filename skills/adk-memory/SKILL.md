@@ -61,5 +61,5 @@ memories = await memory_service.search(
 ### Persistence Backends
 
 - `InMemorySessionService`: Development/testing
-- `FirestoreSessionService`: Production with Firestore
+- `FirestoreSessionService`: Production with Firestore (`google.adk.integrations.firestore`)
 - `DatabaseSessionService`: Custom SQL/NoSQL backends

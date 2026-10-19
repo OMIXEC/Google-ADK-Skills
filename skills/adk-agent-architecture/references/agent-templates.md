@@ -203,7 +203,7 @@ Use `McpToolset` to connect agents to external tool servers. See `references/mcp
 from google.adk import Agent
 from google.adk.tools import FunctionTool
 from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
-from google.adk.tools.mcp import StdioServerParameters, SseServerParams
+from google.adk.tools.mcp_tool import StdioConnectionParams, SseConnectionParams
 
 # Local MCP server (stdio transport)
 local_mcp = McpToolset(
@@ -215,7 +215,7 @@ local_mcp = McpToolset(
 
 # Remote MCP server (SSE transport)
 remote_mcp = McpToolset(
-    connection_params=SseServerParams(
+    connection_params=SseConnectionParams(
         url="https://tools.example.com/sse",
         headers={"Authorization": "Bearer ${TOOLS_API_KEY}"},
     )

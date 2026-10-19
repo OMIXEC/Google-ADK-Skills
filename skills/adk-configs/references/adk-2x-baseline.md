@@ -19,7 +19,8 @@ Version and API facts this skill depends on. Checked against
 ```python
 from google.adk import Agent, Workflow
 from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent, LoopAgent
-from google.adk.runners import Runner, RunConfig, StreamingMode
+from google.adk.agents.run_config import RunConfig, StreamingMode
+from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools import FunctionTool, google_search, exit_loop
 ```
@@ -32,8 +33,9 @@ surface in examples.
 - `Agent` holds model, instruction, tools, and sub-agent delegation.
 - `Workflow` is the 2.x graph primitive: branching, fan-out/fan-in, loops,
   retries, dynamic nodes, human input, nested workflows.
-- `SequentialAgent`, `ParallelAgent`, and `LoopAgent` remain valid deterministic
-  templates; prefer `Workflow` for new complex orchestration.
+- `SequentialAgent`, `ParallelAgent`, and `LoopAgent` still work in 2.12 but
+  each emits a `DeprecationWarning`: they are deprecated in favour of
+  `Workflow` and will be removed. Use `Workflow` for new code.
 - `output_key` stores a node's output in session state for downstream nodes.
 - An LLM agent with `output_schema` must not also declare tools or tool-based
   transfer. Split schema leaves from tool leaves.
@@ -43,7 +45,8 @@ surface in examples.
 Prefer current IDs: `gemini-3.8-flash` (default), `gemini-3.5-flash-lite`,
 `gemini-3.1-pro-preview`, `gemini-4-argon` (frontier), and `gemini-3.8-live`
 (live audio; `gemini-3.8-live-extended-thinking` when background reasoning is
-needed). `gemini-3.8-flash` routes to 3.6; `gemini-3.7-flash` routes to 3.8.
+needed). `gemini-3.5-flash` redirects to 3.6 and `gemini-3.7-flash` to 3.8;
+`gemini-3.8-flash` is the model itself.
 Avoid stale `gemini-2.0-flash*` examples unless the project pins them.
 
 ## Migration cautions

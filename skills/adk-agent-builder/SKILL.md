@@ -51,9 +51,10 @@ neighbouring name.
   resume behavior, resumable vs replayed sessions.
 - [advanced-patterns.md](references/advanced-patterns.md) — nested workflows,
   retries, custom `BaseNode` subclasses, graph validation rules.
-- [multi-agent.md](references/multi-agent.md) — chat-transfer hierarchies, and
-  the deprecated `SequentialAgent` / `LoopAgent` / `ParallelAgent` shells that
-  `Workflow` replaces.
+- [multi-agent.md](references/multi-agent.md) — chat-transfer hierarchies, plus
+  `SequentialAgent` / `LoopAgent` / `ParallelAgent` as deprecated deterministic
+  templates. They still run in 2.12 but emit a `DeprecationWarning`; use
+  `Workflow` for new orchestration.
 
 ## Runtime and verification
 
@@ -62,6 +63,8 @@ neighbouring name.
 - [session-and-state.md](references/session-and-state.md) — session services,
   artifacts, memory, and state key scoping.
 - [callbacks-and-plugins.md](references/callbacks-and-plugins.md) — the six
-  agent callbacks and app-level plugins.
+  agent callbacks and app-level plugins. For production guardrails, the
+  security plugin, and Model Armor, pair this with
+  `adk-deploy-production` → `references/security-guardrails.md`.
 - [testing.md](references/testing.md) — `pytest` with `InMemoryRunner`, faking a
   model, asserting on node output.

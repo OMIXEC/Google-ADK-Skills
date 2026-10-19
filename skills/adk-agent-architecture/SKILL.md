@@ -1,14 +1,15 @@
 ---
 name: adk-agent-architecture
 description: >-
-  Designs the internals of an ADK 2.x agent or cooperating set: agent modes, tool
-  boundaries, MCP and A2A integration, session state and memory, structured output, and
-  model routing. Use when deciding what one agent is made of, which tools it may call,
-  how it talks to another agent, what it remembers between turns, or which model it
-  should use. Don't use for how nodes and edges connect (use adk-graph-workflows), for
-  CI/CD or cloud deployment (use adk-deploy-production), for autonomous loops or
-  LangGraph (use adk-agent-orchestration), or for non-Google provider wiring (use
-  adk-litellm).
+  Designs the internals of an ADK 2.x agent or cooperating set: agent modes, custom
+  BaseAgent subclasses, tool boundaries, MCP and A2A integration, session state,
+  context-window budget, memory, structured output, and model routing. Use when
+  deciding what one agent is made of, which tools it may call, how it talks to another
+  agent, what it remembers between turns, how much history to keep in the prompt, or
+  which model it should use. Don't use for how nodes and edges connect (use
+  adk-graph-workflows), for CI/CD or cloud deployment (use adk-deploy-production), for
+  autonomous loops or LangGraph (use adk-agent-orchestration), or for non-Google
+  provider wiring (use adk-litellm).
 compatibility: google-adk>=2.9.2,<3
 ---
 
@@ -28,7 +29,7 @@ Python matrix, core imports, and the migration cautions.
 | **Agent mode** | `Agent` / `LlmAgent`, workflow node, `SequentialAgent`, `ParallelAgent`, `LoopAgent`, custom `BaseAgent`, remote A2A | `references/agent-modes.md` |
 | **Tools** | Function tools, built-in tools, OpenAPI, MCP toolsets, agent-as-tool | `references/tool-design.md` |
 | **Protocol** | In-process delegation, MCP for external tools, A2A for cross-process agents | `references/mcp-integration.md`, `references/a2a-deep-dive.md` |
-| **State** | `session.state`, SessionService backend, persistent memory | `references/memory-management.md` |
+| **State and context** | `session.state`, SessionService backend, persistent memory, context-window budget and compaction | `references/memory-management.md` |
 | **Model** | Complexity tier, task type, live audio, embeddings | `references/model-routing.md` |
 
 ## Rules that decide the design
@@ -46,6 +47,10 @@ Python matrix, core imports, and the migration cautions.
 - **Memory has layers.** Session state for the turn, SessionService for the
   session, an external store for cross-session facts. Do not treat one as the
   other.
+- **Context is a budget, not a store.** The prompt window holds only what this
+  turn needs. Prefer `EventsCompactionConfig` and `ContextCacheConfig` on the
+  `App` over ad-hoc history trimming; see `references/memory-management.md` for
+  the policy and `adk-performance-scaling` for the tuning.
 - **Models are pinned.** Route by complexity (`gemini-3.1-flash-lite`,
   `gemini-3.8-flash`, `gemini-3.1-pro-preview`) and never ship a `latest` alias
   or a retired model ID.

@@ -1,6 +1,6 @@
 !!! warning "Advanced Concept"
 
-    Building custom agents by directly implementing `_run_async_impl` (or its equivalent in other languages) provides powerful control but is more complex than using the predefined `LlmAgent` or standard `WorkflowAgent` types. We recommend understanding those foundational agent types first before tackling custom orchestration logic.
+    Building custom agents by directly implementing `_run_async_impl` (or its equivalent in other languages) provides powerful control but is more complex than using the predefined `LlmAgent` or the standard `Workflow` types. We recommend understanding those foundational agent types first before tackling custom orchestration logic.
 
 # Custom agents
 

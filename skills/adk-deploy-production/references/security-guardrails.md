@@ -458,7 +458,7 @@ MCP tools run in separate processes. Apply these security controls:
 
 ```python
 from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
-from google.adk.tools.mcp import StdioServerParameters
+from google.adk.tools.mcp_tool import StdioConnectionParams
 
 # Allowlist specific tools from MCP server
 secure_mcp = McpToolset(

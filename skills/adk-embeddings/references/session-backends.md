@@ -19,7 +19,7 @@ pip install "google-cloud-firestore>=2.11,<3"
 ## SQLite (local file, dev/single-node)
 
 ```python
-from google.adk.sessions import SqliteSessionService
+from google.adk.sessions.sqlite_session_service import SqliteSessionService
 
 session_service = SqliteSessionService(db_path="./sessions.db")
 ```

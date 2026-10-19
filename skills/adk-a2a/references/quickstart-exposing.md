@@ -8,7 +8,7 @@ This sample demonstrates how you can easily expose an ADK agent so that it can b
 
 There are two main ways to expose an ADK agent via A2A.
 
-* **by using the `to_a2a(root_agent)` function**: use this function if you just want to convert an existing agent to work with A2A, and be able to expose it via a server through `uvicorn`, instead of `adk deploy api_server`. This means that you have tighter control over what you want to expose via `uvicorn` when you want to productionize your agent. Furthermore, the `to_a2a()` function auto-generates an agent card based on your agent code.
+* **by using the `to_a2a(root_agent)` function**: use this function if you just want to convert an existing agent to work with A2A, and be able to expose it via a server through `uvicorn`, instead of running the ADK API server with `--a2a`. This means that you have tighter control over what you want to expose via `uvicorn` when you want to productionize your agent. Furthermore, the `to_a2a()` function auto-generates an agent card based on your agent code.
 * **by creating your own agent card (`agent.json`) and hosting it using `adk api_server --a2a`**: There are two main benefits of using this approach. First, `adk api_server --a2a` works with `adk web`, making it easy to use, debug, and test your agent. Second, with `adk api_server`, you can specify a parent folder with multiple, separate agents. Those agents that have an agent card (`agent.json`), will automatically be usable via A2A by other agents through the same server. However, you will need to create your own agent cards. To create an agent card, you can follow the A2A Python tutorial.
 
 This quickstart will focus on `to_a2a()`, as it is the easiest way to expose your agent and will also autogenerate the agent card behind-the-scenes. If you'd like to use the `adk api_server` approach, you can see it being used in the [A2A Quickstart (Consuming) documentation](quickstart-consuming.md).
@@ -68,19 +68,17 @@ You can also provide your own agent card by using the `agent_card` parameter. Th
 **Example with an `AgentCard` object:**
 ```python
 from google.adk.a2a.utils.agent_to_a2a import to_a2a
-from a2a.types import AgentCard
+from a2a.types import AgentCard, AgentCapabilities
 
-# Define A2A agent card
+# Define A2A agent card. Field names come from a2a.types.AgentCard.
 my_agent_card = AgentCard(
-    "name": "file_agent",
-    "url": "http://example.com",
-    "description": "Test agent from file",
-    "version": "1.0.0",
-    "capabilities": {},
-    "skills": [],
-    "defaultInputModes": ["text/plain"],
-    "defaultOutputModes": ["text/plain"],
-    "supportsAuthenticatedExtendedCard": False,
+    name="file_agent",
+    description="Test agent from file",
+    version="1.0.0",
+    capabilities=AgentCapabilities(streaming=True),
+    default_input_modes=["text/plain"],
+    default_output_modes=["text/plain"],
+    skills=[],
 )
 a2a_app = to_a2a(root_agent, port=8001, agent_card=my_agent_card)
 ```

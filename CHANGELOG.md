@@ -20,6 +20,63 @@ marketplace entry. It is deliberately independent of every ADK version.
 
 ---
 
+## [1.1.0] — 2026-10-19
+
+Adds one skill and closes the deferred-name backlog. The other eight names from
+the original map are answered by existing skills rather than duplicated, so
+the product count moves 26 → 27, not 35.
+
+### Added
+
+- **`adk-performance-scaling`** — latency decomposition, concurrent
+  invocations, `max_llm_calls` and tool-thread caps, 429/5xx retry policy,
+  context caching, event compaction, token accounting, and deployment sizing.
+  Four references plus its own 2.x baseline.
+- `skills/adk-agents` gains a custom-`BaseAgent` example and a routing section,
+  absorbing `adk-router` and `adk-custom-agents`.
+- `adk-agent-architecture` gains explicit context-window coverage, absorbing
+  `adk-context-management`.
+- `adk-deploy-production` states that evaluation, testing, observability, and
+  guardrails are answered there, absorbing those four deferred names.
+
+### Changed
+
+- The five large references that carried invented APIs were corrected against
+  the pinned source (see `SOURCES.md` § correctness sweep). Highlights:
+  - `InProcessRunner` did not exist; every runnable example now uses
+    `InMemoryRunner` with explicit session creation.
+  - `StreamingMode` and `RunConfig` import from `google.adk.agents.run_config`,
+    not `google.adk.runners`.
+  - `EventsCompactionConfig` imports from `google.adk.apps.app`.
+  - `RemoteA2aAgent` replaces `RemoteA2AAgent`; the server is `to_a2a`, not
+    `A2AServer`; `AgentCard` comes from `a2a.types`.
+  - Firestore and Redis services moved to `google.adk.integrations.*`;
+    `SpannerSessionService` does not exist.
+  - `CalendarToolset` replaces `calendar_tool_set`.
+  - `maybe_set_otel_providers` replaces the non-existent `setup_telemetry`.
+  - Testing examples used a non-existent `AgentContext` and
+    `agent.run(ctx, query=...)`; they now drive `run_async`.
+  - The eval section described a bespoke YAML harness. It now documents the
+    native `EvalSet` / `test_config.json` / `AgentEvaluator` path.
+  - `adk api_server` / `adk web` take the agents directory positionally; the
+    documented `--app-dir` flag does not exist.
+- `SequentialAgent`, `ParallelAgent`, and `LoopAgent` are documented as
+  deprecated in 2.12 (they still run and warn). `LoopAgent` termination is
+  `exit_loop`, not a `stop_condition` argument.
+- The model-ID baseline in every skill now states that `gemini-3.5-flash`
+  redirects to 3.6 and `gemini-3.7-flash` to 3.8; the previous text wrongly
+  claimed `gemini-3.8-flash` was a redirect.
+- `skills.sh.json`, `CLAUDE.md`, `README.md`, `agents/workflow-builder.md`, and
+  `agents/workflow-designer.md` route to the new skill.
+
+### Not added
+
+- `adk-accessibility-agents` is parked: no source-backed ADK material exists
+  behind it. The one real slice — Live audio transcription — is already in
+  `adk-bidi-live`.
+
+---
+
 ## [1.0.2] — 2026-10-19
 
 Patch release.
