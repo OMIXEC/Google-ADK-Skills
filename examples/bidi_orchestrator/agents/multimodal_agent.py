@@ -100,7 +100,7 @@ class MultimodalAgent(BidiAgent):
         super().__init__(
             name=name,
             instruction=enhanced_instruction,
-            model="gemini-2.0-flash-live-001",
+            model="gemini-3.8-live",
             tools=tools,
             working_memory=working_memory,
             shared_memory=shared_memory,

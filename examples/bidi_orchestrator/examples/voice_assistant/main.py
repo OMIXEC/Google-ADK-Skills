@@ -96,7 +96,7 @@ Guidelines:
 async def run_voice_session():
     """Run an interactive voice session."""
     print("Initializing Voice Assistant...")
-    print("Using native audio model: gemini-live-2.5-flash-native-audio")
+    print("Using native audio model: gemini-3.8-live")
     print("-" * 50)
 
     # Create the assistant

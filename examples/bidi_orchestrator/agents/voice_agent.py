@@ -58,8 +58,8 @@ class VoiceAgent(BidiAgent):
     """
 
     # Native audio model
-    NATIVE_AUDIO_MODEL = "gemini-live-2.5-flash-native-audio"
-    STANDARD_LIVE_MODEL = "gemini-2.0-flash-live-001"
+    NATIVE_AUDIO_MODEL = "gemini-3.8-live"
+    STANDARD_LIVE_MODEL = "gemini-3.8-live"
 
     # Personality templates
     PERSONALITY_INSTRUCTIONS = {

@@ -108,7 +108,7 @@ Use the think() tool to record your observations and reasoning.
 Use create_plan() to structure your research approach.
 Store important findings in long-term memory.
 """,
-        model="gemini-live-2.5-flash-native-audio",
+        model="gemini-3.8-live",
         max_thoughts=100,
         enable_proactivity=True,
         working_memory=working_memory,
@@ -128,7 +128,7 @@ Store important findings in long-term memory.
 async def run_research_session():
     """Run an interactive research session."""
     print("Initializing Autonomous Researcher...")
-    print("Using model: gemini-live-2.5-flash-native-audio")
+    print("Using model: gemini-3.8-live")
     print("-" * 50)
 
     # Create the researcher

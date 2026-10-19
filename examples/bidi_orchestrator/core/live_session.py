@@ -180,8 +180,7 @@ class MultimodalLiveSession(LiveSession):
         session_id: str,
         user_id: str = "default",
         enable_video: bool = True,
-        enable_affective_dialog: bool = False,
-        enable_proactivity: bool = False,
+        enable_proactivity: bool = True,
     ):
         """
         Initialize a multimodal live session.
@@ -190,8 +189,7 @@ class MultimodalLiveSession(LiveSession):
             session_id: Unique identifier for this session
             user_id: User identifier
             enable_video: Enable video frame processing
-            enable_affective_dialog: Enable emotion-aware responses
-            enable_proactivity: Enable proactive agent behavior
+            enable_proactivity: Kept for compatibility; proactive audio is always on
         """
         super().__init__(
             session_id=session_id,
@@ -202,14 +200,11 @@ class MultimodalLiveSession(LiveSession):
         # Extend config for multimodal
         config_kwargs = {
             "streaming_mode": StreamingMode.BIDI,
-            "response_modalities": ["TEXT", "AUDIO"],
+            "response_modalities": ["AUDIO"],
             "input_audio_transcription": types.AudioTranscriptionConfig(),
             "output_audio_transcription": types.AudioTranscriptionConfig(),
             "session_resumption": types.SessionResumptionConfig(),
         }
-
-        if enable_affective_dialog:
-            config_kwargs["enable_affective_dialog"] = True
 
         if enable_proactivity:
             config_kwargs["proactivity"] = types.ProactivityConfig(proactive_audio=True)

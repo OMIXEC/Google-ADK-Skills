@@ -41,15 +41,15 @@ class BidiAgent:
         agent = BidiAgent(
             name="assistant",
             instruction="You are a helpful assistant.",
-            model="gemini-2.0-flash-live-001"
+            model="gemini-3.8-live"
         )
         await agent.initialize()
         agent.working_memory.add("user_name", "Alice", importance=0.8)
     """
 
     # Default models for bidirectional streaming
-    DEFAULT_MODEL = "gemini-2.0-flash-live-001"
-    NATIVE_AUDIO_MODEL = "gemini-live-2.5-flash-native-audio"
+    DEFAULT_MODEL = "gemini-3.8-live"
+    NATIVE_AUDIO_MODEL = "gemini-3.8-live"
 
     def __init__(
         self,
@@ -69,7 +69,7 @@ class BidiAgent:
         Args:
             name: Agent name (identifier)
             instruction: Agent instruction/system prompt
-            model: LLM model to use (default: gemini-2.0-flash-live-001)
+            model: LLM model to use (default: gemini-3.8-live)
             description: Agent description for multi-agent systems
             tools: List of tools/functions available to the agent
             working_memory: Working memory instance (created if not provided)
@@ -308,7 +308,7 @@ class TextBidiAgent(BidiAgent):
         super().__init__(
             name=name,
             instruction=instruction,
-            model="gemini-2.0-flash-live-001",
+            model="gemini-3.8-live",
             **kwargs,
         )
 

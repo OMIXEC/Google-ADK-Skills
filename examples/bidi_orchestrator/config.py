@@ -67,7 +67,7 @@ class AgentConfig:
     """Configuration for a specialist agent."""
     name: str
     instruction: str
-    model: str = "gemini-2.5-flash"
+    model: str = "gemini-3.8-flash"
     description: str = ""
     tools: List[str] = field(default_factory=list)
 
@@ -166,7 +166,7 @@ class OrchestratorConfig:
     ```yaml
     name: my_orchestrator
     mode: multimodal
-    model: gemini-live-2.5-flash-native-audio
+    model: gemini-3.8-live
 
     agents:
       - name: researcher
@@ -190,7 +190,7 @@ class OrchestratorConfig:
     # Core settings
     name: str = "adk_orchestrator"
     mode: OrchestratorMode = OrchestratorMode.TEXT
-    model: str = "gemini-live-2.5-flash-native-audio"
+    model: str = "gemini-3.8-live"
 
     # Agent configuration
     agents: List[AgentConfig] = field(default_factory=list)
@@ -379,7 +379,7 @@ def get_voice_preset() -> OrchestratorConfig:
     return OrchestratorConfig(
         name="voice_assistant",
         mode=OrchestratorMode.VOICE,
-        model="gemini-live-2.5-flash-native-audio",
+        model="gemini-3.8-live",
         voice=VoiceConfig(
             personality=VoicePersonalityType.FRIENDLY,
             enable_emotions=True,
@@ -394,7 +394,7 @@ def get_multimodal_preset() -> OrchestratorConfig:
     return OrchestratorConfig(
         name="multimodal_assistant",
         mode=OrchestratorMode.MULTIMODAL,
-        model="gemini-live-2.5-flash-native-audio",
+        model="gemini-3.8-live",
         voice=VoiceConfig(
             personality=VoicePersonalityType.PROFESSIONAL,
             enable_emotions=True,
@@ -413,7 +413,7 @@ def get_autonomous_preset(goal: str) -> OrchestratorConfig:
     return OrchestratorConfig(
         name="autonomous_agent",
         mode=OrchestratorMode.AUTONOMOUS,
-        model="gemini-2.5-flash",
+        model="gemini-3.8-flash",
         autonomous=AutonomousConfig(
             goal=goal,
             enable_proactivity=True,
@@ -432,24 +432,24 @@ def get_enterprise_preset() -> OrchestratorConfig:
     return OrchestratorConfig(
         name="enterprise_orchestrator",
         mode=OrchestratorMode.MULTIMODAL,
-        model="gemini-live-2.5-flash-native-audio",
+        model="gemini-3.8-live",
         agents=[
             AgentConfig(
                 name="researcher",
                 instruction="You are a research specialist. Search for information and verify facts.",
-                model="gemini-2.5-flash",
+                model="gemini-3.8-flash",
                 description="Research and information gathering",
             ),
             AgentConfig(
                 name="analyst",
                 instruction="You analyze data and extract actionable insights.",
-                model="gemini-2.5-pro",
+                model="gemini-3.1-pro-preview",
                 description="Data analysis and insights",
             ),
             AgentConfig(
                 name="writer",
                 instruction="You create clear, well-structured content and reports.",
-                model="gemini-2.5-flash",
+                model="gemini-3.8-flash",
                 description="Content creation and documentation",
             ),
         ],

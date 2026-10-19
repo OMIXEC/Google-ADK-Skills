@@ -20,7 +20,7 @@ from bidi_orchestrator.agents.bidi_agent import BidiAgent
 
 
 # Native audio model for real-time streaming
-LIVE_MODEL = "gemini-live-2.5-flash-native-audio"
+LIVE_MODEL = "gemini-3.8-live"
 
 
 @dataclass

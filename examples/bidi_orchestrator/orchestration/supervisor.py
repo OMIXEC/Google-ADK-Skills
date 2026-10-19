@@ -20,7 +20,7 @@ from bidi_orchestrator.agents.bidi_agent import BidiAgent
 
 
 # Native audio model for real-time streaming
-LIVE_MODEL = "gemini-live-2.5-flash-native-audio"
+LIVE_MODEL = "gemini-3.8-live"
 
 
 class DelegationStrategy(Enum):
@@ -85,7 +85,7 @@ class MultiAgentSupervisor:
             working_memory: Working memory for context
             config: Supervisor configuration
             instruction: Optional custom instruction
-            model: LLM model for the supervisor (default: gemini-live-2.5-flash-native-audio)
+            model: LLM model for the supervisor (default: gemini-3.8-live)
         """
         self.config = config or SupervisorConfig()
         self.shared_memory = shared_memory or SharedMemory()

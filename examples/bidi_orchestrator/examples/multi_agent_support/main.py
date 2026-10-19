@@ -26,7 +26,7 @@ from bidi_orchestrator.core.streaming_config import StreamingPresets
 
 
 # Native audio model
-LIVE_MODEL = "gemini-live-2.5-flash-native-audio"
+LIVE_MODEL = "gemini-3.8-live"
 
 
 # Support tools for different specialists
@@ -258,7 +258,7 @@ def create_intent_router(supervisor: MultiAgentSupervisor) -> IntentRouter:
 async def run_support_session():
     """Run an interactive support session."""
     print("Initializing Multi-Agent Support Team...")
-    print("Using model: gemini-live-2.5-flash-native-audio")
+    print("Using model: gemini-3.8-live")
     print("-" * 50)
 
     # Create the support team

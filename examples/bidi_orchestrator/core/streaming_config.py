@@ -13,6 +13,16 @@ from google.adk.agents.run_config import RunConfig, StreamingMode
 from google.genai import types
 
 
+_START_SENSITIVITY = {
+    "LOW": types.StartSensitivity.START_SENSITIVITY_LOW,
+    "HIGH": types.StartSensitivity.START_SENSITIVITY_HIGH,
+}
+_END_SENSITIVITY = {
+    "LOW": types.EndSensitivity.END_SENSITIVITY_LOW,
+    "HIGH": types.EndSensitivity.END_SENSITIVITY_HIGH,
+}
+
+
 class StreamingPresets:
     """
     Pre-configured streaming configurations for common use cases.
@@ -52,8 +62,14 @@ class StreamingPresets:
 
         if enable_vad:
             # Map sensitivity strings to types
-            start_sens = getattr(types.StartSensitivity, speech_start_sensitivity, types.StartSensitivity.LOW)
-            end_sens = getattr(types.EndSensitivity, speech_end_sensitivity, types.EndSensitivity.HIGH)
+            start_sens = _START_SENSITIVITY.get(
+                str(speech_start_sensitivity).upper(),
+                types.StartSensitivity.START_SENSITIVITY_LOW,
+            )
+            end_sens = _END_SENSITIVITY.get(
+                str(speech_end_sensitivity).upper(),
+                types.EndSensitivity.END_SENSITIVITY_HIGH,
+            )
 
             config_kwargs["realtime_input_config"] = types.RealtimeInputConfig(
                 automatic_activity_detection=types.AutomaticActivityDetection(
@@ -101,7 +117,7 @@ class StreamingPresets:
         """
         config_kwargs = {
             "streaming_mode": StreamingMode.BIDI,
-            "response_modalities": ["TEXT", "AUDIO"],
+            "response_modalities": ["AUDIO"],
             "session_resumption": types.SessionResumptionConfig(),
         }
 
@@ -112,38 +128,25 @@ class StreamingPresets:
         return RunConfig(**config_kwargs)
 
     @staticmethod
-    def autonomous_proactive(
-        enable_affective_dialog: bool = True,
-        proactive_audio: bool = True,
-    ) -> RunConfig:
+    def autonomous_proactive() -> RunConfig:
         """
-        Autonomous agent with proactive behavior.
+        Live session with proactive audio.
 
-        Enables the agent to initiate actions and responses without
-        explicit user prompts, with emotion-aware dialogue.
-
-        Args:
-            enable_affective_dialog: Enable emotion detection and adaptation
-            proactive_audio: Enable proactive audio responses
+        Proactive audio is permanently enabled on Gemini 3.8 Live;
+        `proactive_audio=False` is an error. Affective dialogue was removed
+        from the API, so no emotion flag is emitted here.
 
         Returns:
             RunConfig configured for autonomous proactive behavior
         """
-        config_kwargs = {
-            "streaming_mode": StreamingMode.BIDI,
-            "response_modalities": ["TEXT", "AUDIO"],
-            "input_audio_transcription": types.AudioTranscriptionConfig(),
-            "output_audio_transcription": types.AudioTranscriptionConfig(),
-            "session_resumption": types.SessionResumptionConfig(),
-        }
-
-        if enable_affective_dialog:
-            config_kwargs["enable_affective_dialog"] = True
-
-        if proactive_audio:
-            config_kwargs["proactivity"] = types.ProactivityConfig(proactive_audio=True)
-
-        return RunConfig(**config_kwargs)
+        return RunConfig(
+            streaming_mode=StreamingMode.BIDI,
+            response_modalities=["AUDIO"],
+            input_audio_transcription=types.AudioTranscriptionConfig(),
+            output_audio_transcription=types.AudioTranscriptionConfig(),
+            session_resumption=types.SessionResumptionConfig(),
+            proactivity=types.ProactivityConfig(proactive_audio=True),
+        )
 
     @staticmethod
     def video_streaming(
@@ -185,7 +188,7 @@ class StreamingPresets:
         """
         Native audio model configuration for speech-to-speech.
 
-        Optimized for models like gemini-live-2.5-flash-native-audio
+        Optimized for models like gemini-3.8-live
         that process audio natively without transcription.
 
         Args:
@@ -201,8 +204,8 @@ class StreamingPresets:
             realtime_input_config=types.RealtimeInputConfig(
                 automatic_activity_detection=types.AutomaticActivityDetection(
                     disabled=False,
-                    start_of_speech_sensitivity=types.StartSensitivity.LOW,
-                    end_of_speech_sensitivity=types.EndSensitivity.HIGH,
+                    start_of_speech_sensitivity=types.StartSensitivity.START_SENSITIVITY_LOW,
+                    end_of_speech_sensitivity=types.EndSensitivity.END_SENSITIVITY_HIGH,
                 )
             ),
         )
@@ -212,8 +215,7 @@ class StreamingPresets:
         modalities: list[str],
         enable_vad: bool = False,
         enable_transcription: bool = False,
-        enable_affective_dialog: bool = False,
-        enable_proactivity: bool = False,
+        enable_proactivity: bool = True,
         enable_session_resumption: bool = True,
         vad_config: Optional[dict] = None,
     ) -> RunConfig:
@@ -224,8 +226,7 @@ class StreamingPresets:
             modalities: List of response modalities (["TEXT"], ["AUDIO"], or both)
             enable_vad: Enable voice activity detection
             enable_transcription: Enable audio transcription
-            enable_affective_dialog: Enable emotion-aware responses
-            enable_proactivity: Enable proactive behavior
+            enable_proactivity: Kept for API compatibility; proactive audio is always on
             enable_session_resumption: Enable session resumption
             vad_config: Custom VAD configuration dict
 
@@ -244,9 +245,6 @@ class StreamingPresets:
             config_kwargs["input_audio_transcription"] = types.AudioTranscriptionConfig()
             config_kwargs["output_audio_transcription"] = types.AudioTranscriptionConfig()
 
-        if enable_affective_dialog:
-            config_kwargs["enable_affective_dialog"] = True
-
         if enable_proactivity:
             config_kwargs["proactivity"] = types.ProactivityConfig(proactive_audio=True)
 
@@ -256,10 +254,10 @@ class StreamingPresets:
                 automatic_activity_detection=types.AutomaticActivityDetection(
                     disabled=False,
                     start_of_speech_sensitivity=vad_settings.get(
-                        "start_sensitivity", types.StartSensitivity.LOW
+                        "start_sensitivity", types.StartSensitivity.START_SENSITIVITY_LOW
                     ),
                     end_of_speech_sensitivity=vad_settings.get(
-                        "end_sensitivity", types.EndSensitivity.HIGH
+                        "end_sensitivity", types.EndSensitivity.END_SENSITIVITY_HIGH
                     ),
                     prefix_padding_ms=vad_settings.get("prefix_padding_ms", 0),
                     silence_duration_ms=vad_settings.get("silence_duration_ms", 500),

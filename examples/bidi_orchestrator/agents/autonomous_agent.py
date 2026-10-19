@@ -78,7 +78,7 @@ class AutonomousAgent(BidiAgent):
         name: str,
         goal: str,
         instruction: Optional[str] = None,
-        model: str = "gemini-2.0-flash-live-001",
+        model: str = "gemini-3.8-live",
         tools: Optional[List[Any]] = None,
         working_memory: Optional[WorkingMemory] = None,
         shared_memory: Optional[SharedMemory] = None,

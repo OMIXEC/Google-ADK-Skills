@@ -13,7 +13,7 @@ from datetime import datetime
 try:
     from pinecone import Pinecone, EmbedModel
     PINECONE_AVAILABLE = True
-except ImportError:
+except Exception:  # noqa: BLE001 - optional dependency; some builds raise on import
     PINECONE_AVAILABLE = False
 
 

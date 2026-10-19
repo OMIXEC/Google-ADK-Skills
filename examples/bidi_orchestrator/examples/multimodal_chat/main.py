@@ -106,7 +106,7 @@ def encode_image_base64(image_bytes: bytes) -> str:
 async def run_multimodal_session():
     """Run an interactive multimodal session."""
     print("Initializing Multimodal Chat...")
-    print("Using model: gemini-2.0-flash-live-001")
+    print("Using model: gemini-3.8-live")
     print("-" * 50)
 
     # Create the assistant

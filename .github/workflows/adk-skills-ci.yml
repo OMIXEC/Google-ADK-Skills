@@ -214,6 +214,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # gitleaks diffs against the parent of the first pushed commit, which
+          # a shallow clone does not contain.
+          fetch-depth: 0
 
       # Pinned to commit SHA for supply-chain security
       - uses: gitleaks/gitleaks-action@aa6c132071730e14d28e89080e0adeebc4df4512  # v2.1.0

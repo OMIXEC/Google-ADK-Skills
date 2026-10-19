@@ -10,9 +10,8 @@
 
 name: enterprise_adk_orchestrator
 mode: multimodal  # text, voice, multimodal, autonomous
-# Gemini 3.1 Flash Live is still served but Google now marks it legacy;
-# Gemini 3.8 Live is the recommended successor once it has a public model ID.
-model: gemini-3.1-flash-live-preview
+# Gemini 3.8 Live: default low-latency voice model.
+model: gemini-3.8-live
 
 # Specialist agents for delegation
 agents:
@@ -24,7 +23,7 @@ agents:
       - Provide citations when possible
       - Summarize findings clearly
     description: Research and information gathering
-    model: gemini-3.5-flash
+    model: gemini-3.8-flash
     tools:
       - brave_search
 
@@ -48,7 +47,7 @@ agents:
       - Explain technical concepts
       - Follow best practices
     description: Code and development assistance
-    model: gemini-3.5-flash
+    model: gemini-3.8-flash
     tools:
       - github
 
