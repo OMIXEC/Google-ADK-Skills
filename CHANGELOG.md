@@ -18,6 +18,13 @@ Format based on Keep a Changelog. Dates are UTC.
 The library's version is recorded in `.claude-plugin/plugin.json` and the
 marketplace entry. It is deliberately independent of every ADK version.
 
+## [1.1.2] — Unreleased
+
+### Fixed
+
+- Add selected ADK 2.14.0 API migration guidance and a pinned-version CI smoke
+  check while keeping the full skill-pack validation claim at 2.12.0.
+
 ---
 
 ## [1.1.1] — 2026-10-19

@@ -4,17 +4,19 @@ Every API claim in this library is traceable to one of these sources. Where a
 skill states a signature, a limit, or a default, that value was read from the
 source below — not inferred from a neighbouring API.
 
-Retrieval date for every row: **2026-10-19**.
+Retrieval date for baseline sources: **2026-10-19**. ADK 2.14.0 API/package facts were refreshed **2026-11-10**.
 
 ## Google ADK — Python
 
 | What | Source | Pin |
 |---|---|---|
 | Skills subsystem, runtime API | [`google/adk-python`](https://github.com/google/adk-python) | tag `v2.12.0`, commit [`38381f65f2bee0f70a89f938ee64e51b34916fa7`](https://github.com/google/adk-python/commit/38381f65f2bee0f70a89f938ee64e51b34916fa7) |
+| Selected 2.14.0 API review | [`google/adk-python`](https://github.com/google/adk-python/tree/v2.14.0) | tag `v2.14.0`; smoke-checked with isolated `google-adk==2.14.0` on Python 3.12, 2026-11-10 |
 | Contributor skills | `google/adk-python:.agents/skills` at the tag above | 11 skills |
 | Skills contract | `src/google/adk/skills/models.py`, `_utils.py`, `skill_registry.py` | at the tag above |
 | `SkillToolset` | `src/google/adk/tools/skill_toolset.py` | at the tag above |
 | Package metadata | [PyPI `google-adk` 2.12.0](https://pypi.org/project/google-adk/2.12.0/) | `requires_python >=3.11`, uploaded 2026-10-13 |
+| Package metadata | [PyPI `google-adk` 2.14.0](https://pypi.org/project/google-adk/2.14.0/) | `requires_python >=3.11`, uploaded 2026-11-07 |
 | Version floor | [PyPI `google-adk` 2.9.2](https://pypi.org/project/google-adk/2.9.2/) | `requires_python >=3.10`, uploaded 2026-09-18 |
 | Intermediate versions | [2.10.0](https://pypi.org/project/google-adk/2.10.0/) (2026-09-25), [2.11.0](https://pypi.org/project/google-adk/2.11.0/) (2026-10-02) | `requires_python >=3.10` |
 | 1.x line | [PyPI `google-adk`](https://pypi.org/project/google-adk/) | latest `1.39.1` |

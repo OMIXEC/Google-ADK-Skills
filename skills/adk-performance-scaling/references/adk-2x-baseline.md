@@ -3,10 +3,11 @@
 Version and API facts this skill depends on. Checked against
 `google/adk-python@v2.12.0` (SHA `38381f65f2bee0f70a89f938ee64e51b34916fa7`).
 
+Selected ADK 2.14.0 APIs have been reviewed against the v2.14.0 tag and an isolated install; the full skill-pack validation ceiling remains 2.12.0. This distinction is intentional.
 ## Version baseline
 
-- Target: `google-adk>=2.9.2,<3`; validated through **2.12.0** (2026-10-13).
-- Python: **3.10** for 2.9.2–2.11.0; **3.11** for 2.12.0. Supported through 3.15.
+- Target: `google-adk>=2.9.2,<3`; full skill-pack validation through **2.12.0** (2026-10-13); selected API compatibility reviewed on **2.14.0** (2026-11-10).
+- Python: **3.10** for 2.9.2–2.11.0; **3.11+** for 2.12.0 and 2.14.0. Supported through 3.15.
 - The **1.x line still ships in parallel** (1.39.1). 2.x is not a drop-in
   replacement for every 1.x project.
 - The SDK is never vendored. Import from the installed `google.adk.*`.

@@ -1,7 +1,8 @@
 ---
 name: adk-migration
 description: >-
-  Migrates ADK code from 1.x to the 2.x line through 2.12.0: breaking API changes
+  Migrates ADK code from 1.x to the 2.x line, including selected ADK 2.14.0 API changes:
+  breaking API changes
   (Workflow versus GraphAgent, McpToolset, BuiltInCodeExecutor, ctx.resume_inputs, agent
   modes), renamed imports, deploy CLI changes, model and embedding updates, and session
   incompatibility. Use when upgrading an existing 1.x codebase or auditing for
@@ -11,7 +12,7 @@ description: >-
 compatibility: google-adk>=2.9.2,<3
 ---
 
-# adk-migration — ADK 1.x → 2.3
+# adk-migration — ADK 1.x → 2.x
 
 Port an ADK 1.x codebase to 2.x (`google-adk>=2.9.2,<3`). Every mapping below is
 verified through Context7 `/google/adk-docs` and the installed `google.adk`
@@ -19,15 +20,21 @@ package.
 
 ## When to use
 
-- Upgrading an ADK 1.x project to 2.3.
-- Diagnosing 2.3 `ImportError`/`AttributeError` from old symbol names.
+- Upgrading an ADK 1.x project to the current 2.x line (2.14.0 API review).
+- Diagnosing 2.x `ImportError`/`AttributeError` from old symbol names.
 - Auditing a codebase for deprecated 1.x patterns before shipping.
+
+## 2.14.0 API changes
+
+For the selected 2.14.0 API review, migrate plugin registration from `Runner(plugins=...)` to `App(plugins=[...])` and pass `app=app` to `Runner`. Move global instructions to `GlobalInstructionPlugin` on the `App`. Prefer `Workflow` for new compositions; `SequentialAgent`, `ParallelAgent`, and `LoopAgent` are deprecated, and `Workflow` is not currently an `LlmAgent` sub-agent. For bidirectional live sessions, use `input_audio_transcription`, `output_audio_transcription`, `realtime_input_config`, `session_resumption`, and `save_live_blob`; `save_live_audio` is deprecated. See `references/adk-2.14-compatibility.md`.
+
+The full skill-pack suite is validated only through 2.12.0; this 2.14.0 coverage is a selected API review.
 
 ## Breaking-change checklist
 
 Scan the codebase (`grep`) for each left-hand pattern and apply the fix:
 
-| 1.x (deprecated / removed) | 2.3 |
+| 1.x (deprecated / removed) | 2.x |
 |----------------------------|-----|
 | `GraphAgent`, `builder.add_node/add_edge`, `Condition`, `google.adk.agents.graph` | `Workflow` + `node()` + `Edge(from_node, to_node, route)` + `JoinNode` |
 | `@edge` decorator | `Edge(...)` class instances |
@@ -43,12 +50,12 @@ Scan the codebase (`grep`) for each left-hand pattern and apply the fix:
 | `gemini-2.0-*`, `gemini-1.5-*`, `gemini-2.5-*`, `gemini-pro` | `gemini-3.8-flash` / `gemini-3.1-flash-lite` / `gemini-3.1-pro-preview` |
 | `gemini-live-2.5-flash-native-audio`, `gemini-2.0-flash-live-001` | `gemini-3.8-live` |
 | `text-embedding-004`, `embedding-001` | `gemini-embedding-2` |
-| `google-adk` 1.x pin, Python 3.11-only | `google-adk>=2.9.2,<3`, Python **3.10+**, `google-genai` v2.0.0+ |
+| `google-adk` 1.x pin, Python 3.11-only | `google-adk>=2.9.2,<3`, Python **3.11+** for ADK 2.12+ and 2.14.0, `google-genai` v2.0.0+ |
 
 Full old→new code samples: `references/api-changes.md`. Model/thinking/embedding
 detail: `references/models-config.md`.
 
-## Structural rules new/enforced in 2.3
+## Structural rules in the 2.x line
 
 - **`output_schema` XOR tools** — an `LlmAgent` with `output_schema` may not have
   tools, sub-agents, or transfer. Split reasoning leaves (schema) from tool leaves.
@@ -59,7 +66,7 @@ detail: `references/models-config.md`.
 
 ## Data / state incompatibility
 
-- **Session/state schema is not compatible** between 1.x and 2.3. Do not reuse
+- **Session/state schema is not compatible** between 1.x and 2.x. Do not reuse
   1.x-persisted sessions; start fresh or migrate with tools under
   `google.adk.sessions.migration`.
 - **Embedding spaces are incompatible** across embedding models — moving to
@@ -67,7 +74,7 @@ detail: `references/models-config.md`.
 
 ## Migration procedure
 
-1. Pin `google-adk>=2.9.2,<3` and `google-genai>=2.0.0`; set Python 3.10+.
+1. Pin `google-adk>=2.9.2,<3` and `google-genai>=2.0.0`; use Python 3.10+ for ADK 2.9.2–2.11, and Python 3.11+ for ADK 2.12+ (including 2.14.0).
 2. Run the checklist grep-and-replace (start with imports, then call sites).
 3. Convert any `GraphAgent`/`add_edge` graphs to `Workflow`/`Edge`/`JoinNode`.
 4. Split any `LlmAgent` that has both `output_schema` and tools.
@@ -80,7 +87,7 @@ detail: `references/models-config.md`.
 ```bash
 # no deprecated symbols remain
 grep -rnE "GraphAgent|add_edge\(|MCPToolset[^a-z]|ctx\.resume_data|@edge\b|thinking_budget|gemini-(2\.|1\.)" src/
-python -c "import google.adk; print(google.adk.__version__)"   # 2.3.x
+python -c "import google.adk; print(google.adk.__version__)"   # verify the pinned version
 ```
 
 Then run the app / tests. Related skills: `adk-model-routing` (models + thinking),

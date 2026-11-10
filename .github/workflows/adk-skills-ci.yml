@@ -3,8 +3,9 @@
 # Gates every change on: manifest parseability, skill frontmatter/spec
 # conformance, Python/Go/TS syntax, and the ADK version matrix.
 #
-# Target: google-adk >= 2.9.2, validated through 2.12.0.
-# Python floor is 3.10 for 2.9.2-2.11.0 and 3.11 for 2.12.0.
+# Target: google-adk >= 2.9.2. Full skill-pack matrix is validated through 2.12.0;
+# selected 2.14.0 APIs are reviewed separately (see COMPATIBILITY.md).
+# Python floor is 3.10 for 2.9.2-2.11.0 and 3.11 for 2.12.0+.
 
 name: ADK Skills CI
 
@@ -177,6 +178,10 @@ jobs:
       matrix:
         adk: ["2.9.2", "2.10.0", "2.11.0", "2.12.0"]
         python: ["3.10", "3.11", "3.12", "3.13"]
+        include:
+          # Selected API smoke only; the full skill pack remains validated through 2.12.0.
+          - adk: "2.14.0"
+            python: "3.12"
         exclude:
           # 2.12.0 raised the floor to Python 3.11
           - adk: "2.12.0"
@@ -199,6 +204,16 @@ jobs:
 
           # Core agent + workflow surface
           from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent, LoopAgent
+          if google.adk.__version__ == "2.14.0":
+              from google.adk import Workflow
+              from google.adk.apps import App
+              from google.adk.plugins import GlobalInstructionPlugin
+              from google.adk.runners import Runner
+              from google.adk.agents.run_config import RunConfig
+              assert "plugins" in App.model_fields
+              assert "app" in __import__("inspect").signature(Runner).parameters
+              assert "input_audio_transcription" in RunConfig.model_fields
+              assert GlobalInstructionPlugin and Workflow
 
           # Skills subsystem: the headline 2.x feature
           from google.adk.skills import (

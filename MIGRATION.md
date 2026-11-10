@@ -1,8 +1,8 @@
 # Migration & Restructure Record
 
-Status: **current.** The bundle targets ADK **2.9.2 → 2.12.0** (`google-adk>=2.9.2,<3`) and tracks the **1.x line in parallel** (still shipping; latest 1.39.1, 2026-08-27).
+Status: **current.** The bundle targets ADK **2.9.2 → 2.14.0** (`google-adk>=2.9.2,<3`); the full skill-pack test ceiling remains **2.12.0**, while selected 2.14.0 APIs have been reviewed against the tagged package. The **1.x line** ships in parallel (latest 1.39.1, 2026-08-27).
 
-Python floor: **3.10** for ADK 2.9.2–2.11.0, **3.11** for 2.12.0 (2.12.0 raised `requires_python`). Supported through 3.15.
+Python floor: **3.10** for ADK 2.9.2–2.11.0, **3.11** for 2.12.0 and 2.14.0. Supported through 3.15.
 
 ## The SDK is never vendored
 

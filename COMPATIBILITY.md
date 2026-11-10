@@ -13,6 +13,7 @@ in `compatibility`.
 | 2.10.0 | 2026-09-25 | `>=3.10` | Yes | Skills lifecycle (EPHEMERAL, unload, max active), MongoDB toolset, eval metrics |
 | 2.11.0 | 2026-10-02 | `>=3.10` | Yes | |
 | 2.12.0 | 2026-10-13 | `>=3.11` | **validated target** | Python 3.10 dropped; constraints files cover 3.11–3.15 |
+| 2.14.0 | 2026-11-07 | `>=3.11` | **API reviewed** | Selected runtime, workflow, agent, and live APIs checked against the tagged package; full skill-pack CI remains validated through 2.12.0 |
 | 1.39.1 | 2026-08-27 | — | **migration source only** | 1.x still ships in parallel |
 
 ### Python
@@ -21,8 +22,9 @@ in `compatibility`.
 |---|---|---|---|---|---|---|
 | 2.9.2 – 2.11.0 | Yes | Yes | Yes | Yes | Yes | Yes |
 | 2.12.0 | **No** | Yes | Yes | Yes | Yes | Yes |
+| 2.14.0 | **No** | Yes | Yes | Yes | Yes | Yes |
 
-Do not run 2.12.0 on Python 3.10; the package refuses to install.
+Do not run 2.12.0 or 2.14.0 on Python 3.10; the package refuses to install.
 
 CI runs the matrix in `.github/workflows/adk-skills-ci.yml`.
 
@@ -46,7 +48,8 @@ the only 1.x material it carries is the migration path.
 - Sessions from older 1.x are **not** readable by 2.x.
 - Do not reuse persisted 1.x session or state data after upgrading.
 - `adk-migration` is the entry point; it covers the breaking API changes
-  through 2.12.0.
+  through 2.12.0 and includes a selected 2.14.0 API review. The full skill-pack
+  suite has not yet been validated on 2.14.0.
 
 ## Deprecation table
 
@@ -60,6 +63,9 @@ the only 1.x material it carries is the migration path.
 | Standalone `Task` class | task mode plus task request/result concepts | `adk-migration` |
 | `thinking_budget` | `thinking_level` (`minimal` / `low` / `medium` / `high`) | `adk-model-routing` |
 | `temperature` / `top_p` / `top_k` / `candidate_count` on Gemini 3.x | Omit; control via `thinking_level` | `adk-model-routing` |
+| `Runner(plugins=...)` | Register plugins on `App(plugins=[...])` and pass `app=` to `Runner` | `adk-migration`, `adk-runtime` |
+| `LlmAgent(global_instruction=...)` | `GlobalInstructionPlugin` on `App` | `adk-migration`, `adk-agent-architecture` |
+| New compositions built with `SequentialAgent`, `ParallelAgent`, or `LoopAgent` | Prefer `Workflow`; these agent classes are deprecated in 2.14.0 | `adk-migration`, `adk-graph-workflows` |
 
 ### Models
 

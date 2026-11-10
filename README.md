@@ -6,10 +6,10 @@ Build sophisticated AI agents using Google's Agent Development Kit (ADK): multi-
 
 ## ADK Python 2.x Baseline
 
-- Target: `google-adk>=2.9.2,<3`, validated through **2.12.0** (2026-10-13).
+- Target: `google-adk>=2.9.2,<3`; full skill-pack validation through **2.12.0** (2026-10-13), with selected **2.14.0** API compatibility reviewed (2026-11-10).
 - The **1.x line is still shipping in parallel** (latest 1.39.1); 2.x is not yet a replacement for every 1.x user.
-- Python: **3.10** for 2.9.2–2.11.0, **3.11** for 2.12.0. Supported through 3.15. Use `uv` in repos that already standardize on it.
-- New workflow guidance should prefer the 2.x `Agent` plus `Workflow` graph/dynamic orchestration. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` still work in 2.12 but emit a `DeprecationWarning` and are slated for removal; use `Workflow` for new code.
+- Python: **3.10** for 2.9.2–2.11.0, **3.11+** for 2.12.0 and 2.14.0. Supported through 3.15. Use `uv` in repos that already standardize on it.
+- New workflow guidance should prefer the 2.x `Agent` plus `Workflow` graph/dynamic orchestration. `SequentialAgent`, `ParallelAgent`, and `LoopAgent` are deprecated in 2.14; use `Workflow` for new code. See the compatibility matrix for the current full-suite validation ceiling.
 - Read [`COMPATIBILITY.md`](COMPATIBILITY.md) before changing examples, model IDs, or migration guidance. Each skill carries the same version floor in its own `references/adk-2x-baseline.md`, so a standalone install is never missing it.
 - **The SDK is never vendored.** `google-adk` installs from PyPI; always import from the installed `google.adk.*`. Context7 `/google/adk-docs` and the installed package are canonical. See [`MIGRATION.md`](MIGRATION.md).
 
@@ -116,7 +116,7 @@ The plugin is the only channel that installs the skills together with the bundle
 ### Prerequisites
 
 - Skills-only install: `bash` plus either `git`, `curl`, or `wget`.
-- Runtime helpers: Python 3.10+ and pip, enabled with `--with-runtime` (ADK 2.3 requires Python 3.10+).
+- Runtime helpers: Python 3.10+ and pip for the compatibility floor; ADK 2.14.0 requires Python 3.11+. Enable with `--with-runtime`.
 - ADK usage after install: `GOOGLE_API_KEY` or the credentials required by the models/tools you choose.
 - Optional: `PINECONE_API_KEY` for RAG and `LITELLM_*` keys for multi-provider routing.
 
@@ -144,7 +144,7 @@ The plugin is the only channel that installs the skills together with the bundle
 | `adk-litellm` | Provider routing — 100+ providers, fallbacks, cost trade-offs |
 | `adk-mcp` | MCP — `McpToolset`, stdio/streamable HTTP, discovery, database toolboxes |
 | `adk-memory` | Memory policy — session state, long-term memory, persistence, cross-session recall |
-| `adk-migration` | 1.x → 2.x through 2.12.0 — breaking changes, renamed APIs, session incompatibility |
+| `adk-migration` | 1.x → 2.x, including selected 2.14.0 API changes — breaking changes, renamed APIs, session incompatibility |
 | `adk-model-routing` | Model selection — Gemini 3.x catalog, `thinking_level`, fallback chains, retirement |
 | `adk-performance-scaling` | Performance — latency, concurrency, quota, context caching, compaction, cost per turn |
 | `adk-prompts` | Instructions — system prompts, few-shot examples, output shape, token cost |
